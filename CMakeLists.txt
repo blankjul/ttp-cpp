@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 2.8.8)
+set(PROJECT_NAME_STR travelling-thief-problem)
+project(${PROJECT_NAME_STR} C CXX)
+
+
+ADD_DEFINITIONS(
+    -std=c++11
+)
+
+ADD_SUBDIRECTORY(vendor/gtest-1.7.0)
+ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(lib)
+ADD_SUBDIRECTORY(main)
+
+
+
+
