@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "ttp.h"
 
   int main(void)
   {
