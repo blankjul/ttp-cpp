@@ -34,7 +34,7 @@ TEST(MapTest, Symetrical) {
 
 }
 
-TEST(TourTest, Costs) {
+TEST(MapTest, Costs) {
     std::vector<int> v = {0,1,3,2};
     TTP::Tour t(v);
 
