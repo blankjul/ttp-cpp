@@ -2,62 +2,75 @@
 #define TRAVELLING_THIEF_PROBLEM_KNAPSACK_H
 
 #include "item.h"
+#include <unordered_set>
+
 
 
 using namespace std;
 
 namespace TTP {
 
+
+    /*! This class represents the knapsack that could be filled with items.
+     *
+     * The pointer to items are saved in a set. The current weight und value
+     * is provided by the class.
+     *
+     */
     class Knapsack {
 
     public:
 
-        Knapsack(double w) : maxWeight(w){};
+        /**
+         * Create an empty Knapsack without any items.
+         */
+        Knapsack() : weight(0), value(0) {};
 
-        bool add(Item i) {
-            if (isOverloaded(i)) return false;
-            else {
-                items.push_back(i);
-                currentWeight += i.getWeight();
-                currentValue += i.getValue();
-                return true;
-            }
-        }
+        /**
+         * Add an item to the knapsack. Each item could only be once in a knapsack!
+         */
+        bool add(ItemPtr &i);
 
-        bool isOverloaded() const {
-            return currentWeight > maxWeight;
-        }
-
-        bool isOverloaded(Item& i) const {
-            return currentWeight + i.getWeight() > maxWeight;
-        }
-
-        int size() const {
-            return items.size();
-        }
-
-        double getValue() const {
-            return currentValue;
-        }
-
-        double getWeight() const {
-            return currentWeight;
-        }
+        /**
+         * Add an item to the knapsack.
+         */
+        bool remove(ItemPtr &i);
 
 
+        /**
+         * Check wether an item is contained or not.
+         */
+        bool contains(ItemPtr &i);
+
+        /**
+         * Returns the current number of items that are in the knapsack.
+         */
+        int size() const;
+
+
+        /**
+         * Returns the current value of all items -> Here is no renting rate considered.
+         */
+        double getValue() const;
+
+
+        /**
+         * Returns the current weight of all items.
+         */
+        double getWeight() const;
 
     private:
 
-        vector<Item> items;
 
-        double maxWeight;
+        unordered_set<ItemPtr> items; /*!< Set of all the items which were picked */
 
-        double currentWeight;
-        double currentValue;
+        double weight; /*!< current weight */
+
+        double value; /*!< current value */
 
 
     };
 }
 
 
-#endif //TRAVELLING_THIEF_PROBLEM_ITEM_H
+#endif //TRAVELLING_THIEF_PROBLEM_KNAPSACK_H

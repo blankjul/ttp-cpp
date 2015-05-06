@@ -3,40 +3,51 @@
 
 #include <string>
 #include <iostream>
-#include <vector>
+#include <memory>
 
-using namespace std;
 
 namespace TTP {
 
+    /*! This class represents an item that has a weight and a value. */
     class Item {
 
     public:
 
-        Item(const double v, const double w) : value(v), weight(w), name("NoName"){}
-        Item(const double v, const double w, const string n) : value(v), weight(w), name(n) {}
+        /**
+         * Construct an item with a constant value and weight.
+         */
+        Item(const double v, const double w) : value(v), weight(w) { }
+
+        /**
+         * Returns the weight of the item.
+         */
+        const double getWeight() const;
 
 
-        double getWeight() const {return weight;}
+        /**
+         * Returns the value of the item
+         */
+        const double getValue() const;
 
-        double getValue() const {return value;}
 
-        string getName() const {return name;}
-
-        friend std::ostream & operator<<(std::ostream & s, Item const & i) {
-            s << "[ " << i.name << ", weight: " << i.weight << " , value: " << i.value << " ]";
-            return s;
-        }
+        friend std::ostream & operator<<(std::ostream &, Item const &);
 
 
     private:
 
-        string name;
-        double value;
-        double weight;
+        const double value;
+
+        const double weight;
 
 
     };
+
+    /**
+     * Definition for using the shared pointer with ItemPtr
+     */
+    typedef std::shared_ptr<Item> ItemPtr;
+
+
 }
 
 

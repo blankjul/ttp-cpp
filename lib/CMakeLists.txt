@@ -6,3 +6,5 @@ file(GLOB_RECURSE HEADERS *.hpp)
 
 add_library(libttp ${SOURCES} ${HEADERS})
 install (TARGETS libttp ARCHIVE DESTINATION bin)
+
+

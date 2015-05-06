@@ -10,31 +10,50 @@ using namespace std;
 
 namespace TTP {
 
+
+    /*!
+     * This class represents a tour that could be traveled by a salesman.
+     *
+     * Basically it is just a vector with integer values. But there are also some
+     * additional functions like getting the symmetric tour or operator<< provided.
+     *
+     */
     class Tour {
 
 
+    private:
+
+        /*!< The vector that saves the order of the tour */
+        vector<int> v;
 
     public:
 
-        vector<int> v;
 
-        Tour() {}
-        Tour(vector<int>& v) : v(v) {};
+        /**
+         * Create a tour from a vector of integers.
+         */
+        Tour(vector<int>& array) : v(array) {};
 
-
+        /**
+         * Return the city at the index of the tour.
+         */
         int const& operator[](int) const;
 
+
+        /**
+         * Return how many cities are visited. (the home is only counting once)
+         */
         int size() const;
 
 
-        friend std::ostream & operator<<(std::ostream & s, Tour const & t) {
-            s << "[";
-            for (int i = 0; i < t.v.size()-1; ++i) {
-                s << t.v[i] << ",";
-            }
-            s << t.v[t.size()-1] << "]";
-            return s;
-        }
+        /**
+         * Returns the symmetrical tour to this object. The starting city always stays the same.
+         * e.g. [0,1,2,3] -> [0,3,2,1]
+         */
+        Tour getSymmetrical() const;
+
+
+        friend std::ostream & operator<<(std::ostream & s, Tour const & t);
 
 
     };
