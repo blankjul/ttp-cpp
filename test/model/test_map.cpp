@@ -7,6 +7,7 @@ TEST(MapTest, Initialize) {
     TTP::Map m(2);
     EXPECT_EQ(std::numeric_limits<double>::max(), m.get(0,1));
     EXPECT_EQ(std::numeric_limits<double>::max(), m.get(2,2));
+
 }
 
 

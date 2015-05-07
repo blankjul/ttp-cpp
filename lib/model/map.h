@@ -79,6 +79,9 @@ namespace TTP {
         int count() const;
 
 
+        friend std::ostream & operator<<(std::ostream & s, Map const & t);
+
+
 
     };
 

@@ -18,14 +18,7 @@ namespace TTP {
     void  TravellingThiefProblem::setMaxSpeed(double maxSpeed) {
         TravellingThiefProblem::maxSpeed = maxSpeed;
     }
-
-    double  TravellingThiefProblem::getDroppingRate() const {
-        return droppingRate;
-    }
-
-    void  TravellingThiefProblem::setDroppingRate(double droppingRate) {
-        TravellingThiefProblem::droppingRate = droppingRate;
-    }
+    
 
     int  TravellingThiefProblem::getMaxWeight() const {
         return maxWeight;
@@ -76,5 +69,38 @@ namespace TTP {
             it->second.push_back(i);
         }
         items.push_back(make_pair(i, city));
+    }
+
+
+    void TravellingThiefProblem::calcTour(Tour &t, Knapsack &k, double & currentTime , vector<pair<ItemPtr,double>> & pickedItems) {
+
+        // initialize the values
+        double currentSpeed = maxSpeed;
+        double currentWeight = 0;
+
+        // for all visited cities
+        for (int i = 1; i < t.size(); ++i) {
+
+            // when the thief arrives at the city -> add the elapsed time and observe the rent
+            currentTime += m.get(t[i - 1], t[i]) / currentSpeed;
+
+            // update the current knapsack weight by looking at new picked itemsMap
+            vector<ItemPtr> availableItems = getItems(t[i]);
+            for (ItemPtr i : availableItems) {
+                if (k.contains(i)) {
+                    currentWeight += i->getWeight();
+                    auto p = make_pair(i, currentTime);
+                    pickedItems.push_back(p);
+                }
+            }
+
+            // update the velocity for the next run
+            currentSpeed = maxSpeed - currentWeight * (maxSpeed - minSpeed) / maxWeight;
+
+        }
+
+        // go back to the starting point
+        currentTime += m.get(t[t.size() - 1], t[0]) / currentSpeed;
+
     }
 }

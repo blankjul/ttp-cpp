@@ -3,7 +3,7 @@
 namespace TTP {
 
 
-    bool Knapsack::add(ItemPtr &i) {
+    bool Knapsack::add(ItemPtr i) {
         if (items.find(i) != items.end()) return false;
         weight += i->getWeight();
         value += i->getValue();
@@ -23,12 +23,12 @@ namespace TTP {
         return weight;
     }
 
-    bool Knapsack::contains(ItemPtr &i) {
+    bool Knapsack::contains(ItemPtr i) {
         return items.find(i) != items.end();
     }
 
 
-    bool Knapsack::remove(ItemPtr &i) {
+    bool Knapsack::remove(ItemPtr i) {
         if (items.find(i) == items.end()) return false;
         weight -= i->getWeight();
         value -= i->getValue();

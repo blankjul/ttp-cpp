@@ -28,3 +28,25 @@ TEST(KNP, ConvertKnapsack) {
 
 
 
+TEST(KNP, Evaluate1) {
+
+    vector<ItemPtr> v;
+
+    v.push_back(std::make_shared<Item>(100,3));
+    v.push_back(std::make_shared<Item>(40,1));
+    v.push_back(std::make_shared<Item>(40,1));
+    v.push_back(std::make_shared<Item>(20,2));
+    v.push_back(std::make_shared<Item>(30,3));
+    v.push_back(std::make_shared<Item>(20,2));
+
+    KnapsackProblem knp(v, 3);
+
+    Knapsack k;
+    k.add(v[0]);
+
+    double result = knp.evaluate(k);
+
+    EXPECT_EQ(100, result);
+
+
+}

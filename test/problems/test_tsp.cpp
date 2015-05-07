@@ -51,3 +51,29 @@ TEST(TSP, Evaluate2) {
 
 
 }
+
+
+TEST(TSP, Evaluate3) {
+
+    Map m = Map(4);
+
+
+    // set the weights
+    m.set(0,1,5);
+    m.set(0,2,6);
+    m.set(0,3,6);
+    m.set(1,2,5);
+    m.set(1,3,6);
+    m.set(2,3,4);
+
+    std::vector<int> v = {0,1,2,3};
+    Tour t(v);
+
+    auto mPtr = make_shared<Map>(m);
+    TTP::TravellingSalesmanProblem tsp(mPtr);
+
+    double distance  = tsp.evaluate(t);
+
+    EXPECT_EQ(20, distance);
+
+}

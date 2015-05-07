@@ -32,9 +32,6 @@ namespace TTP {
         /*!< Maximal speed of the salesman */
         double maxSpeed;
 
-        /*!< Dropping rate of the items */
-        double droppingRate;
-
         /*!< Maximal weight of the knapsack */
         int maxWeight;
 
@@ -49,11 +46,26 @@ namespace TTP {
 
 
 
+        /**
+         * This is just a helper method for calculating the target. Since only the calculation
+         * of the item values is different this calculates the time and collect the items picking time stamps.
+         */
+        void calcTour(Tour &t, Knapsack &k, double & currentTime , vector<pair<ItemPtr,double>> & pickedItems) ;
+
+
+
+        /**
+         * Constructor for the classes that inherit from this one.
+         */
+        TravellingThiefProblem(Map &map, int maxWeight) : minSpeed(TravellingThiefProblem::DEFAULT_MIN_SPEED),
+                                                          maxSpeed(TravellingThiefProblem::DEFAULT_MAX_SPEED),
+                                                          m(map),
+                                                          maxWeight(maxWeight){}
+
+
 
     public:
 
-        /*!< Default dropping rate per time unit of each item if nothing is specified */
-        static constexpr double DEFAULT_DROPPING_RATE = 0.9;
 
         /*!< Default maximal speed or velocity of the thief */
         static constexpr double DEFAULT_MAX_SPEED = 1;
@@ -63,14 +75,6 @@ namespace TTP {
 
 
 
-        /**
-         * Constructor for the classes that inherit from this one.
-         */
-        TravellingThiefProblem(Map &map, int maxWeight) : minSpeed(TravellingThiefProblem::DEFAULT_MIN_SPEED),
-                                                          maxSpeed(TravellingThiefProblem::DEFAULT_MAX_SPEED),
-                                                          droppingRate(TravellingThiefProblem::DEFAULT_DROPPING_RATE),
-                                                          m(map),
-                                                          maxWeight(maxWeight){}
 
         /**
          * Converts a boolean vector to a knapsack.
@@ -101,13 +105,10 @@ namespace TTP {
         /*
          * Setter and Getter
          */
-
         double getMinSpeed() const;
         void  setMinSpeed(double minSpeed);
         double  getMaxSpeed() const;
         void  setMaxSpeed(double maxSpeed);
-        double  getDroppingRate() const;
-        void  setDroppingRate(double droppingRate);
         int  getMaxWeight() const;
         void  setMaxWeight(int maxWeight);
 

@@ -29,18 +29,18 @@ namespace TTP {
         /**
          * Add an item to the knapsack. Each item could only be once in a knapsack!
          */
-        bool add(ItemPtr &i);
+        bool add(ItemPtr i);
 
         /**
          * Add an item to the knapsack.
          */
-        bool remove(ItemPtr &i);
+        bool remove(ItemPtr i);
 
 
         /**
          * Check wether an item is contained or not.
          */
-        bool contains(ItemPtr &i);
+        bool contains(ItemPtr i);
 
         /**
          * Returns the current number of items that are in the knapsack.
