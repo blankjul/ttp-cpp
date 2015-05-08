@@ -222,8 +222,10 @@ void ReadProblem()
     int i, K;
     char *Line, *Keyword;
 
-    if (!(ProblemFile = fopen(ProblemFileName, "r")))
-        eprintf("Cannot open PROBLEM_FILE: \"%s\"", ProblemFileName);
+    if (!(ProblemFile = fopen(ProblemFileName, "r"))) {
+        if (TraceLevel >= 1) printf("Cannot open PROBLEM_FILE: \"%s\"", ProblemFileName);
+        return;
+    }
     if (TraceLevel >= 1)
         printff("Reading PROBLEM_FILE: \"%s\" ... ", ProblemFileName);
     FreeStructures();
@@ -276,10 +278,13 @@ void ReadProblem()
             Read_TOUR_SECTION(&ProblemFile);
         else if (!strcmp(Keyword, "TYPE"))
             Read_TYPE();
-        else
-            eprintf("Unknown keyword: %s", Keyword);
+        else {
+            if (TraceLevel >= 1) printf("Unknown keyword: %s", Keyword);
+            return;
+        }
     }
     Swaps = 0;
+
 
     /* Adjust parameters */
     if (Seed == 0)
@@ -384,9 +389,7 @@ void ReadProblem()
     if (TraceLevel >= 1) {
         printff("done\n");
         PrintParameters();
-    } else
-        printff("PROBLEM_FILE = %s\n",
-                ProblemFileName ? ProblemFileName : "");
+    } //else printff("PROBLEM_FILE = %s\n", ProblemFileName ? ProblemFileName : "");
     fclose(ProblemFile);
     if (InitialTourFileName)
         ReadTour(InitialTourFileName, &InitialTourFile);

@@ -12,16 +12,16 @@ using namespace TTP;
 
 TEST(TTPMO, TestCase) {
 
-    Map m = Map(4);
+    MapPtr m = make_shared<Map>(4);
 
 
     // set the weights
-    m.set(0,1,5);
-    m.set(0,2,6);
-    m.set(0,3,6);
-    m.set(1,2,5);
-    m.set(1,3,6);
-    m.set(2,3,4);
+    m->set(0,1,5);
+    m->set(0,2,6);
+    m->set(0,3,6);
+    m->set(1,2,5);
+    m->set(1,3,6);
+    m->set(2,3,4);
 
     MultiObjectiveTravellingThiefProblem ttpmo(m, 3);
     ttpmo.setDroppingRate(0.9);
@@ -48,5 +48,20 @@ TEST(TTPMO, TestCase) {
 
     EXPECT_NEAR(133.14, p.first, 0.01);
     EXPECT_NEAR(1.694, p.second, 0.1);
+
+
+
+    std::vector<int> v2 = {0,1,3,2};
+    Tour t2(v2);
+
+    Knapsack k2 = ttpmo.convertKnapsack(std::vector<bool> {false,true,true,false,false,false});
+
+
+    auto p2 = ttpmo.evaluate(t2, k2);
+
+
+    EXPECT_NEAR(30, p2.first, 0.01);
+    EXPECT_NEAR(7.2, p2.second, 0.1);
+
 
 }

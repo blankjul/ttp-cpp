@@ -14,10 +14,12 @@ namespace TTP {
 
         // calculate the values of the knapsack when arrived
         double finalValue = 0;
-        for (auto p : pickedItems) {
-            double value = p.first->getValue();
-            double time = elapsedTime - p.second;
-            finalValue += p.first->getValue() * pow(droppingRate, time / DEFAULT_DROPPING_CONSTANT);
+        if (k.getWeight() <= maxWeight) {
+            for (auto p : pickedItems) {
+                double value = p.first->getValue();
+                double time = elapsedTime - p.second;
+                finalValue += p.first->getValue() * pow(droppingRate, time / DEFAULT_DROPPING_CONSTANT);
+            }
         }
 
         return pair<double, double>(elapsedTime, finalValue);

@@ -25,7 +25,7 @@ namespace TTP {
         /*!< Default dropping rate per time unit of each item if nothing is specified */
         static constexpr double DEFAULT_RENTING_RATE = 0.9;
 
-        SingleObjectiveTravellingThiefProblem(Map &map, int maxWeight) : TravellingThiefProblem(map,maxWeight) {};
+        SingleObjectiveTravellingThiefProblem(MapPtr &map, int maxWeight) : TravellingThiefProblem(map,maxWeight) {};
 
         double evaluate(Tour &t, Knapsack &k);
 

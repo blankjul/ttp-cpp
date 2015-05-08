@@ -1,6 +1,16 @@
 #include "ttp.h"
+#include <cmath>
 
 namespace TTP {
+
+
+    TravellingThiefProblem::TravellingThiefProblem(MapPtr map, vector<ItemPtr> items, int maxWeight) : TravellingThiefProblem(map,maxWeight){
+        int itemsPerCity = items.size() / map->count();
+        for (int i = 0; i < items.size(); ++i) {
+            int currentCity = i / itemsPerCity;
+            add(currentCity, items[i]);
+        }
+    }
 
 
     double TravellingThiefProblem::getMinSpeed() const {
@@ -82,7 +92,7 @@ namespace TTP {
         for (int i = 1; i < t.size(); ++i) {
 
             // when the thief arrives at the city -> add the elapsed time and observe the rent
-            currentTime += m.get(t[i - 1], t[i]) / currentSpeed;
+            currentTime += m->get(t[i - 1], t[i]) / currentSpeed;
 
             // update the current knapsack weight by looking at new picked itemsMap
             vector<ItemPtr> availableItems = getItems(t[i]);
@@ -100,7 +110,25 @@ namespace TTP {
         }
 
         // go back to the starting point
-        currentTime += m.get(t[t.size() - 1], t[0]) / currentSpeed;
+        currentTime += m->get(t[t.size() - 1], t[0]) / currentSpeed;
 
+    }
+
+
+    int TravellingThiefProblem::sizeOfCities() {
+        return m->count();
+    }
+
+    int TravellingThiefProblem::sizeOfItems() {
+        return items.size();
+    }
+
+    const MapPtr& TravellingThiefProblem::getMap() const {
+        return m;
+    }
+
+
+    vector<pair<ItemPtr, int>> TravellingThiefProblem::getItemList() {
+        return getItemList();
     }
 }

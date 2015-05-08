@@ -35,4 +35,8 @@ namespace TTP {
         return k;
     }
 
+    double KnapsackProblem::getMaxWeight() const {
+        return maxWeight;
+    }
+
 }

@@ -11,16 +11,16 @@ using namespace TTP;
 
 TEST(TTPSO, Evaluate1) {
 
-    Map m = Map(4);
+    MapPtr m = make_shared<Map>(4);
 
 
     // set the weights
-    m.set(0,1,5);
-    m.set(0,2,6);
-    m.set(0,3,6);
-    m.set(1,2,5);
-    m.set(1,3,6);
-    m.set(2,3,4);
+    m->set(0,1,5);
+    m->set(0,2,6);
+    m->set(0,3,6);
+    m->set(1,2,5);
+    m->set(1,3,6);
+    m->set(2,3,4);
 
     SingleObjectiveTravellingThiefProblem ttpso(m, 3);
     ttpso.setRentingRate(1);
@@ -53,16 +53,16 @@ TEST(TTPSO, Evaluate1) {
 
 TEST(TTPSO, Evaluate2) {
 
-    Map m = Map(4);
+    MapPtr m = make_shared<Map>(4);
 
 
     // set the weights
-    m.set(0,1,5);
-    m.set(0,2,6);
-    m.set(0,3,6);
-    m.set(1,2,5);
-    m.set(1,3,6);
-    m.set(2,3,4);
+    m->set(0,1,5);
+    m->set(0,2,6);
+    m->set(0,3,6);
+    m->set(1,2,5);
+    m->set(1,3,6);
+    m->set(2,3,4);
 
     SingleObjectiveTravellingThiefProblem ttpso(m, 3);
     ttpso.setRentingRate(1);

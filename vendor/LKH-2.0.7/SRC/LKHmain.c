@@ -2,7 +2,7 @@
 #include "Genetic.h"
 
 /*
- * This file contains the main function of the program.
+ * This file contains the executables function of the program.
  */
 
 int main(int argc, char *argv[])

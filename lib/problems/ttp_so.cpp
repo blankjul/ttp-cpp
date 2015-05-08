@@ -15,8 +15,9 @@ namespace TTP {
 
         // calculate the values of the knapsack when arrived
         double finalValue = 0;
-        for (auto p : pickedItems) finalValue += p.first->getValue();
-
+        if (k.getWeight() <= maxWeight) {
+            for (auto p : pickedItems) finalValue += p.first->getValue();
+        }
         double result = finalValue - rentingRate * (elapsedTime);
         return result;
 

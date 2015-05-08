@@ -36,7 +36,7 @@ namespace TTP {
         int maxWeight;
 
         /*!< The map that contains the cities and distances */
-        Map m;
+        MapPtr m;
 
         /*!< The mapping of cities and the item list */
         unordered_map<int, vector<ItemPtr>> itemsMap;
@@ -54,16 +54,6 @@ namespace TTP {
 
 
 
-        /**
-         * Constructor for the classes that inherit from this one.
-         */
-        TravellingThiefProblem(Map &map, int maxWeight) : minSpeed(TravellingThiefProblem::DEFAULT_MIN_SPEED),
-                                                          maxSpeed(TravellingThiefProblem::DEFAULT_MAX_SPEED),
-                                                          m(map),
-                                                          maxWeight(maxWeight){}
-
-
-
     public:
 
 
@@ -73,6 +63,18 @@ namespace TTP {
         /*!< Default minimal speed or velocity of the thief */
         static constexpr double DEFAULT_MIN_SPEED = 0.1;
 
+
+        /**
+         * Constructor for the classes that inherit from this one.
+         */
+        TravellingThiefProblem(MapPtr map, int maxWeight) : minSpeed(TravellingThiefProblem::DEFAULT_MIN_SPEED),
+                                                          maxSpeed(TravellingThiefProblem::DEFAULT_MAX_SPEED),
+                                                          m(map),
+                                                          maxWeight(maxWeight){}
+        /**
+         * Constructor for the classes that inherit from this one.
+         */
+        TravellingThiefProblem(MapPtr map, vector<ItemPtr>, int maxWeight);
 
 
 
@@ -91,7 +93,7 @@ namespace TTP {
         /**
          * Returns all the items at the specific city.
          */
-        vector< shared_ptr<Item> > getItems(int city);
+        vector<ItemPtr > getItems(int city);
 
 
         /**
@@ -100,7 +102,21 @@ namespace TTP {
         void add(int city, ItemPtr i);
 
 
+        /**
+         * Returns the number of cities to visit
+         */
+        int sizeOfCities();
 
+        /**
+         * Returns the number of items to pick
+         */
+        int sizeOfItems();
+
+
+        /**
+         * Returns the Map where the thief travels on
+         */
+        const MapPtr &getMap() const;
 
         /*
          * Setter and Getter
@@ -111,6 +127,7 @@ namespace TTP {
         void  setMaxSpeed(double maxSpeed);
         int  getMaxWeight() const;
         void  setMaxWeight(int maxWeight);
+        vector<pair<ItemPtr, int>> getItemList();
 
 
     };

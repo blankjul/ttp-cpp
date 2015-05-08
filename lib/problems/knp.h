@@ -64,6 +64,11 @@ namespace TTP {
         const int count() const;
 
 
+        /**
+         * Returns the maximal weight
+         */
+        double getMaxWeight() const;
+
     };
 
 
