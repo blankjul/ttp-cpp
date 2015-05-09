@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,31 +88,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classTTP_1_1Tour-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">TTP::Tour Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="tour_8h_source.html">tour.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4896bf941927bec4ab11b0f9ee2c558a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4896bf941927bec4ab11b0f9ee2c558a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Tour</b> (vector&lt; int &gt; &amp;v)</td></tr>
-<tr class="separator:a4896bf941927bec4ab11b0f9ee2c558a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d3fb292cbed3564cd36ecf983c39e10"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d3fb292cbed3564cd36ecf983c39e10"></a>
-int const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (int) const </td></tr>
-<tr class="separator:a4d3fb292cbed3564cd36ecf983c39e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d61476e26e96182a73e21fc3ec2ef51"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d61476e26e96182a73e21fc3ec2ef51"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const </td></tr>
-<tr class="separator:a0d61476e26e96182a73e21fc3ec2ef51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a3e1e652f5da5cb49bcbaa6ad7e95067f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e1e652f5da5cb49bcbaa6ad7e95067f"></a>
-vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>v</b></td></tr>
-<tr class="separator:a3e1e652f5da5cb49bcbaa6ad7e95067f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4f129bb4d58ce7366383693f464a921"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Tour.html#ab4f129bb4d58ce7366383693f464a921">Tour</a> (vector&lt; int &gt; &amp;array)</td></tr>
+<tr class="separator:ab4f129bb4d58ce7366383693f464a921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53a8e0acfc184ad92f73c843da93cc42"><td class="memItemLeft" align="right" valign="top">int const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Tour.html#a53a8e0acfc184ad92f73c843da93cc42">operator[]</a> (int) const </td></tr>
+<tr class="separator:a53a8e0acfc184ad92f73c843da93cc42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabb70a76c693e2dd28b277088625c533"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Tour.html#aabb70a76c693e2dd28b277088625c533">size</a> () const </td></tr>
+<tr class="separator:aabb70a76c693e2dd28b277088625c533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ffa22d273191a3f0f83e36cdda4116"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTTP_1_1Tour.html">Tour</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Tour.html#ac2ffa22d273191a3f0f83e36cdda4116">getSymmetrical</a> () const </td></tr>
+<tr class="separator:ac2ffa22d273191a3f0f83e36cdda4116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -120,6 +114,85 @@ Friends</h2></td></tr>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;s, <a class="el" href="classTTP_1_1Tour.html">Tour</a> const &amp;t)</td></tr>
 <tr class="separator:a3fcf44a2a991f9f484ca1e4553d4965b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class represents a tour that could be traveled by a salesman.</p>
+<p>Basically it is just a vector with integer values. But there are also some additional functions like getting the symmetric tour or operator&lt;&lt; provided. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ab4f129bb4d58ce7366383693f464a921"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTP::Tour::Tour </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>array</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a tour from a vector of integers. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ac2ffa22d273191a3f0f83e36cdda4116"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classTTP_1_1Tour.html">Tour</a> TTP::Tour::getSymmetrical </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the symmetrical tour to this object. The starting city always stays the same. e.g. [0,1,2,3] -&gt; [0,3,2,1] </p>
+
+</div>
+</div>
+<a class="anchor" id="a53a8e0acfc184ad92f73c843da93cc42"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int const &amp; TTP::Tour::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Return the city at the index of the tour. </p>
+
+</div>
+</div>
+<a class="anchor" id="aabb70a76c693e2dd28b277088625c533"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TTP::Tour::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Return how many cities are visited. (the home is only counting once) </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>lib/model/<a class="el" href="tour_8h_source.html">tour.h</a></li>
 <li>lib/model/tour.cpp</li>
@@ -127,7 +200,7 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operato
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 6 2015 07:32:29 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 8 2015 20:39:11 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

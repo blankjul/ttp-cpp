@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -94,38 +94,103 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">TTP::Item Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="item_8h_source.html">item.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a82ebf6737a636b16a379f5f7d4befd2f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a82ebf6737a636b16a379f5f7d4befd2f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Item</b> (const double v, const double w)</td></tr>
+<tr class="memitem:a82ebf6737a636b16a379f5f7d4befd2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Item.html#a82ebf6737a636b16a379f5f7d4befd2f">Item</a> (const double v, const double w)</td></tr>
 <tr class="separator:a82ebf6737a636b16a379f5f7d4befd2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42e76f0fd3d44e00f3f186a84993f3fc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42e76f0fd3d44e00f3f186a84993f3fc"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Item</b> (const double v, const double w, const string n)</td></tr>
-<tr class="separator:a42e76f0fd3d44e00f3f186a84993f3fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af591ca2c345592945529e921243b3bcf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af591ca2c345592945529e921243b3bcf"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getWeight</b> () const </td></tr>
-<tr class="separator:af591ca2c345592945529e921243b3bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7577436ce1f80c872ce324e1682e7d9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7577436ce1f80c872ce324e1682e7d9"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getValue</b> () const </td></tr>
-<tr class="separator:ac7577436ce1f80c872ce324e1682e7d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49878f13e95055b3665d149cc82b4a2b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49878f13e95055b3665d149cc82b4a2b"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const </td></tr>
-<tr class="separator:a49878f13e95055b3665d149cc82b4a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42d58c23dd211b1ed3b3552d7c124fc0"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Item.html#a42d58c23dd211b1ed3b3552d7c124fc0">getWeight</a> () const </td></tr>
+<tr class="separator:a42d58c23dd211b1ed3b3552d7c124fc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b2fdedc14965fc14f3fa0a04bccbb9b"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Item.html#a4b2fdedc14965fc14f3fa0a04bccbb9b">getValue</a> () const </td></tr>
+<tr class="separator:a4b2fdedc14965fc14f3fa0a04bccbb9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a1d18daac134513d52aafe51bb6b2ffae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1d18daac134513d52aafe51bb6b2ffae"></a>
-std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;s, <a class="el" href="classTTP_1_1Item.html">Item</a> const &amp;i)</td></tr>
-<tr class="separator:a1d18daac134513d52aafe51bb6b2ffae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24be714ed99cbe8ae127f16645dc58fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24be714ed99cbe8ae127f16645dc58fb"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;, <a class="el" href="classTTP_1_1Item.html">Item</a> const &amp;)</td></tr>
+<tr class="separator:a24be714ed99cbe8ae127f16645dc58fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class represents an item that has a weight and a value. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a82ebf6737a636b16a379f5f7d4befd2f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTP::Item::Item </td>
+          <td>(</td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>w</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Construct an item with a constant value and weight. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a4b2fdedc14965fc14f3fa0a04bccbb9b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double TTP::Item::getValue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the value of the item </p>
+
+</div>
+</div>
+<a class="anchor" id="a42d58c23dd211b1ed3b3552d7c124fc0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double TTP::Item::getWeight </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the weight of the item. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>lib/model/<a class="el" href="item_8h_source.html">item.h</a></li>
+<li>lib/model/item.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 6 2015 07:32:29 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 8 2015 20:39:11 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

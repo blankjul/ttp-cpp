@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,48 +89,234 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classTTP_1_1Map-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">TTP::Map Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for TTP::Map:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classTTP_1_1Map.png" usemap="#TTP::Map_map" alt=""/>
-  <map id="TTP::Map_map" name="TTP::Map_map">
-<area href="classTTP_1_1ThiefMap.html" alt="TTP::ThiefMap" shape="rect" coords="0,56,93,80"/>
-</map>
- </div></div>
+
+<p><code>#include &lt;<a class="el" href="map_8h_source.html">map.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a20d7a337920dc5ed4d3cd901fe4df533"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20d7a337920dc5ed4d3cd901fe4df533"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Map</b> (int numOfCities)</td></tr>
-<tr class="separator:a20d7a337920dc5ed4d3cd901fe4df533"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1f2e993f3ace98e028c5dad17292f33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa1f2e993f3ace98e028c5dad17292f33"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (int i, int j) const </td></tr>
-<tr class="separator:aa1f2e993f3ace98e028c5dad17292f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada347ca373a3db9ac9282286aa3228eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada347ca373a3db9ac9282286aa3228eb"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>set</b> (int i, int j, double value)</td></tr>
-<tr class="separator:ada347ca373a3db9ac9282286aa3228eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2d5b0214e7c97b4828d4141776c23b9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2d5b0214e7c97b4828d4141776c23b9"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>evaluate</b> (<a class="el" href="classTTP_1_1Tour.html">Tour</a> t) const </td></tr>
-<tr class="separator:af2d5b0214e7c97b4828d4141776c23b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99e2c851273b5c3d12642ff5d93a2e13"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a99e2c851273b5c3d12642ff5d93a2e13"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>countCities</b> () const </td></tr>
-<tr class="separator:a99e2c851273b5c3d12642ff5d93a2e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21752fbdd02aa1626e46ae50cb6bb594"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#a21752fbdd02aa1626e46ae50cb6bb594">Map</a> (int numOfCities)</td></tr>
+<tr class="separator:a21752fbdd02aa1626e46ae50cb6bb594"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1ef9248e730f76bbdc0792c78be038d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#aa1ef9248e730f76bbdc0792c78be038d">Map</a> (int numOfCities, bool <a class="el" href="classTTP_1_1Map.html#af94924cab22d6f0a844df74028b244fe">symmetrical</a>)</td></tr>
+<tr class="separator:aa1ef9248e730f76bbdc0792c78be038d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a151fea1bf4414c2b2cda0b936d7bf2e9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#a151fea1bf4414c2b2cda0b936d7bf2e9">get</a> (int i, int j) const </td></tr>
+<tr class="separator:a151fea1bf4414c2b2cda0b936d7bf2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22bff85b9789a054c713c174602cde4c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#a22bff85b9789a054c713c174602cde4c">set</a> (int i, int j, double value)</td></tr>
+<tr class="separator:a22bff85b9789a054c713c174602cde4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a468236234f705f4014c58343117d2281"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#a468236234f705f4014c58343117d2281">count</a> () const </td></tr>
+<tr class="separator:a468236234f705f4014c58343117d2281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ae1caade485475f8c82ed52be026556b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae1caade485475f8c82ed52be026556b2"></a>
-vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>costs</b></td></tr>
-<tr class="separator:ae1caade485475f8c82ed52be026556b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad16db69440173bfc3b15ce551c2171c2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad16db69440173bfc3b15ce551c2171c2"></a>
-const int&#160;</td><td class="memItemRight" valign="bottom"><b>n</b></td></tr>
+<tr class="memitem:a531f8c86533f79720878f24c57033afe"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#a531f8c86533f79720878f24c57033afe">costs</a></td></tr>
+<tr class="separator:a531f8c86533f79720878f24c57033afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad16db69440173bfc3b15ce551c2171c2"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#ad16db69440173bfc3b15ce551c2171c2">n</a></td></tr>
 <tr class="separator:ad16db69440173bfc3b15ce551c2171c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94924cab22d6f0a844df74028b244fe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Map.html#af94924cab22d6f0a844df74028b244fe">symmetrical</a></td></tr>
+<tr class="separator:af94924cab22d6f0a844df74028b244fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:ad9de7efc1cd476ec309087a624399352"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9de7efc1cd476ec309087a624399352"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;s, <a class="el" href="classTTP_1_1Map.html">Map</a> const &amp;t)</td></tr>
+<tr class="separator:ad9de7efc1cd476ec309087a624399352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class represents a map that contains cities and distances from one to each other.</p>
+<p>It saves the costs from one vertex or city to each other. The map is useful for getting symmetric access to the costs or to evaluate the length of a specific tour. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a21752fbdd02aa1626e46ae50cb6bb594"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTP::Map::Map </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numOfCities</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Creates a map that is symmetrical by default and provides n * n distances.</p>
+<p>Initial the matrix is like:</p>
+<p>[0 , -inf, -inf] [-inf, 0, -inf] [-inf, -inf, 0] </p>
+
+</div>
+</div>
+<a class="anchor" id="aa1ef9248e730f76bbdc0792c78be038d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTP::Map::Map </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numOfCities</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>symmetrical</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Creates a map that could also by asymmetrical -&gt; ATSP. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a468236234f705f4014c58343117d2281"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TTP::Map::count </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the number of cities. </p>
+
+</div>
+</div>
+<a class="anchor" id="a151fea1bf4414c2b2cda0b936d7bf2e9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double TTP::Map::get </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Return the costs if the salesman wants to travel from i to j. </p>
+
+</div>
+</div>
+<a class="anchor" id="a22bff85b9789a054c713c174602cde4c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TTP::Map::set </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the costs from i to j to the given value. Be aware of the symmetrical value! </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a531f8c86533f79720878f24c57033afe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix TTP::Map::costs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Cost Matrix that saves the cost from one city to the other </p>
+
+</div>
+</div>
+<a class="anchor" id="ad16db69440173bfc3b15ce551c2171c2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int TTP::Map::n</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Number of cities </p>
+
+</div>
+</div>
+<a class="anchor" id="af94924cab22d6f0a844df74028b244fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TTP::Map::symmetrical</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>If true it is always a symmetrical cost matrix! </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>lib/model/<a class="el" href="map_8h_source.html">map.h</a></li>
 <li>lib/model/map.cpp</li>
@@ -138,7 +324,7 @@ const int&#160;</td><td class="memItemRight" valign="bottom"><b>n</b></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 6 2015 07:32:29 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 8 2015 20:39:11 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

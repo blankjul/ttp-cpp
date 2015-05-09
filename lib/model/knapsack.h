@@ -59,6 +59,15 @@ namespace TTP {
          */
         double getWeight() const;
 
+
+        /**
+         * Returns all the items in the knapsack
+         */
+        const unordered_set<ItemPtr> &getItems() const;
+
+
+        friend std::ostream & operator<<(std::ostream &, Knapsack const &);
+
     private:
 
 

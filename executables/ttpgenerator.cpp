@@ -56,14 +56,16 @@ int main(int argc, char **argv) {
         std::string filePath = argFilePath.getValue();
         int itemPerCity = argItemsCount.getValue();
         int range = argUpperBound.getValue();
-        int type = argItemsType.getValue();
+        ProblemFactory::KnapsackType type = static_cast<ProblemFactory::KnapsackType>(argItemsType.getValue());
         int c = argCapacity.getValue();
 
         // parse optional argument
         long seed = argRandomSeed.getValue();
         if (seed == -1) seed = time(NULL);
 
-        TravellingThiefProblem ttp = ProblemFactory::createTTP(filePath,itemPerCity, range, type, c, seed);
+        KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity, range, type, c, seed);
+        TravellingSalesmanProblem tsp = ProblemFactory::createTSP(filePath);
+        TravellingThiefProblem ttp = ProblemFactory::createTTP(tsp, knp);
 
 
         // write results to a file

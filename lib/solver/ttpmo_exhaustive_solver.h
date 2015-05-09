@@ -1,5 +1,3 @@
-
-
 #ifndef TRAVELLING_THIEF_PROBLEM_TTPMOExhaustiveSolver_H
 #define TRAVELLING_THIEF_PROBLEM_TTPMOExhaustiveSolver_H
 
@@ -19,7 +17,7 @@ namespace TTP {
     public:
 
 
-        pair<Tour,Knapsack> solve(MultiObjectiveTravellingThiefProblem &ttp) {
+        pair<Tour, Knapsack> solve(MultiObjectiveTravellingThiefProblem &ttp) {
 
             MapPtr m = ttp.getMap();
 
@@ -29,8 +27,8 @@ namespace TTP {
                 v.push_back(i);
             }
 
-            double minCosts =  numeric_limits<double>::max();
-            Tour* bestTour;
+            double minCosts = numeric_limits<double>::max();
+            Tour *bestTour;
 
 
             // for all the possible tsp tours
@@ -41,50 +39,46 @@ namespace TTP {
 
 
                 // create the start solution
-                std::vector<bool> b( ttp.sizeOfItems() , false );
 
-                // for all possible array -> no order
-                for (int i = 0; i < ttp.sizeOfItems(); ++i) {
+                for (int i = 0; i < pow(2, ttp.sizeOfItems()); i++) {
 
-                    // for each permutation
-                    do {
-
-                        // save if it's a new best tour
-                        Knapsack k = ttp.convertKnapsack(b);
-                        auto p = ttp.evaluate(t, k);
-
-                        double costs = p.first;
-                        if (costs < minCosts) {
-                            bestTour = & t;
-                        }
-
-                        /*
-                        cout << t << " , ";
-                        for (size_t nIndex = 0; nIndex < b.size (); ++ nIndex)
-                            cout << b [nIndex] << ' ';
-                        cout << " -> " << fixed << p.second << " , " << p.first <<'\n';
-                         */
+                    std::vector<int> b;
+                    for (int j = 0; j < ttp.sizeOfItems(); j++) {
+                        bool tmp = i & (1 << j);
+                        if (tmp) b.push_back(1);
+                        else b.push_back(0);
+                    }
 
 
-                    } while ( next_permutation(b.begin(),b.end()));
+                    // save if it's a new best tour
+                    Knapsack k = ttp.convertKnapsack(b);
+                    pair<double, double> p = ttp.evaluate(t, k);
 
-                    b[i] = true;
+                    double time = p.first;
+                    double value = p.second;
+                    if (time < minCosts) {
+                        bestTour = &t;
+                    }
+
+
+                    cout << t << " , ";
+                    for (int j = 0; j < b.size(); ++j) cout << b[j] << ' ';
+                    cout << "[" << k.size() << "]" << " -> " << fixed << time << " , " << value << '\n';
+
 
                 }
 
 
+            } while (next_permutation(v.begin(), v.end()) && v[0] == 0);
 
-            } while ( next_permutation(v.begin(),v.end()) && v[0] == 0);
 
-
-            return make_pair(*bestTour,Knapsack());
+            return make_pair(*bestTour, Knapsack());
 
 
         }
 
     };
 }
-
 
 
 #endif //TRAVELLING_THIEF_PROBLEM_TTPMOExhaustiveSolver_H

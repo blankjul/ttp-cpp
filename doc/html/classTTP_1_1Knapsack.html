@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -93,41 +93,162 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">TTP::Knapsack Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="knapsack_8h_source.html">knapsack.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7dd7afa3f8cf4e8976da3c08ae8e4807"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7dd7afa3f8cf4e8976da3c08ae8e4807"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Knapsack</b> (double w)</td></tr>
-<tr class="separator:a7dd7afa3f8cf4e8976da3c08ae8e4807"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abedcbd1dd2e3471115f34b3e2abe6bf8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abedcbd1dd2e3471115f34b3e2abe6bf8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (ItemPtr &amp;i)</td></tr>
-<tr class="separator:abedcbd1dd2e3471115f34b3e2abe6bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2a8c68f7c8031325a9cd9716b991a57"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa2a8c68f7c8031325a9cd9716b991a57"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>contains</b> (ItemPtr &amp;i) const </td></tr>
-<tr class="separator:aa2a8c68f7c8031325a9cd9716b991a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68ced48e69566afa68a9a12099ff46e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68ced48e69566afa68a9a12099ff46e3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOverloaded</b> () const </td></tr>
-<tr class="separator:a68ced48e69566afa68a9a12099ff46e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa923888892d8f8bf9d47ebc31ff5c341"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa923888892d8f8bf9d47ebc31ff5c341"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOverloaded</b> (ItemPtr &amp;i) const </td></tr>
-<tr class="separator:aa923888892d8f8bf9d47ebc31ff5c341"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa427456f82ddb4b72c2d3848ee53941f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa427456f82ddb4b72c2d3848ee53941f"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const </td></tr>
+<tr class="memitem:abc0d3f1197d4f8ec2acf823168062d98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#abc0d3f1197d4f8ec2acf823168062d98">Knapsack</a> ()</td></tr>
+<tr class="separator:abc0d3f1197d4f8ec2acf823168062d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fdc1a5e8f789856247a7817200dd70e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#a3fdc1a5e8f789856247a7817200dd70e">add</a> (ItemPtr i)</td></tr>
+<tr class="separator:a3fdc1a5e8f789856247a7817200dd70e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e47211ee205ed21c0b4c3d3f507ca13"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#a0e47211ee205ed21c0b4c3d3f507ca13">remove</a> (ItemPtr i)</td></tr>
+<tr class="separator:a0e47211ee205ed21c0b4c3d3f507ca13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f35fdbb4a08a87a23533257bf1310bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#a8f35fdbb4a08a87a23533257bf1310bd">contains</a> (ItemPtr i)</td></tr>
+<tr class="separator:a8f35fdbb4a08a87a23533257bf1310bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa427456f82ddb4b72c2d3848ee53941f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#aa427456f82ddb4b72c2d3848ee53941f">size</a> () const </td></tr>
 <tr class="separator:aa427456f82ddb4b72c2d3848ee53941f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa61f56907ab641b95323b8660fa0493a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa61f56907ab641b95323b8660fa0493a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getValue</b> () const </td></tr>
+<tr class="memitem:aa61f56907ab641b95323b8660fa0493a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#aa61f56907ab641b95323b8660fa0493a">getValue</a> () const </td></tr>
 <tr class="separator:aa61f56907ab641b95323b8660fa0493a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51ef6158edabbec1bbed4cd5bfa8940a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51ef6158edabbec1bbed4cd5bfa8940a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getWeight</b> () const </td></tr>
+<tr class="memitem:a51ef6158edabbec1bbed4cd5bfa8940a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1Knapsack.html#a51ef6158edabbec1bbed4cd5bfa8940a">getWeight</a> () const </td></tr>
 <tr class="separator:a51ef6158edabbec1bbed4cd5bfa8940a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class represents the knapsack that could be filled with items.</p>
+<p>The pointer to items are saved in a set. The current weight und value is provided by the class. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="abc0d3f1197d4f8ec2acf823168062d98"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTP::Knapsack::Knapsack </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create an empty <a class="el" href="classTTP_1_1Knapsack.html">Knapsack</a> without any items. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a3fdc1a5e8f789856247a7817200dd70e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TTP::Knapsack::add </td>
+          <td>(</td>
+          <td class="paramtype">ItemPtr&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Add an item to the knapsack. Each item could only be once in a knapsack! </p>
+
+</div>
+</div>
+<a class="anchor" id="a8f35fdbb4a08a87a23533257bf1310bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TTP::Knapsack::contains </td>
+          <td>(</td>
+          <td class="paramtype">ItemPtr&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check wether an item is contained or not. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa61f56907ab641b95323b8660fa0493a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double TTP::Knapsack::getValue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the current value of all items -&gt; Here is no renting rate considered. </p>
+
+</div>
+</div>
+<a class="anchor" id="a51ef6158edabbec1bbed4cd5bfa8940a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double TTP::Knapsack::getWeight </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the current weight of all items. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0e47211ee205ed21c0b4c3d3f507ca13"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TTP::Knapsack::remove </td>
+          <td>(</td>
+          <td class="paramtype">ItemPtr&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Add an item to the knapsack. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa427456f82ddb4b72c2d3848ee53941f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TTP::Knapsack::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the current number of items that are in the knapsack. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>lib/model/<a class="el" href="knapsack_8h_source.html">knapsack.h</a></li>
+<li>lib/model/knapsack.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 6 2015 07:32:29 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 8 2015 20:39:11 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

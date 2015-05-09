@@ -30,8 +30,15 @@ namespace TTP {
         static constexpr double DEFAULT_DROPPING_RATE = 0.9;
 
 
-        MultiObjectiveTravellingThiefProblem(MapPtr &map, int maxWeight) : TravellingThiefProblem(map,maxWeight),
+        MultiObjectiveTravellingThiefProblem(MapPtr map, int maxWeight) : TravellingThiefProblem(map,maxWeight),
                           droppingRate(MultiObjectiveTravellingThiefProblem::DEFAULT_DROPPING_RATE){};
+
+        MultiObjectiveTravellingThiefProblem(MapPtr map, vector<ItemPtr> items, int maxWeight) : TravellingThiefProblem(map,items,maxWeight),
+                                                                           droppingRate(MultiObjectiveTravellingThiefProblem::DEFAULT_DROPPING_RATE){};
+
+
+
+
 
         pair<double,double> evaluate(Tour &t, Knapsack &k);
 

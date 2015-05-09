@@ -8,17 +8,18 @@ namespace TTP {
 
         // calculate the tour
         double elapsedTime = 0;
-        vector<pair<ItemPtr,double>> pickedItems;
+        vector<pair<ItemPtr, double>> pickedItems;
 
-        calcTour(t,k,elapsedTime, pickedItems);
+        calcTour(t, k, elapsedTime, pickedItems);
 
         // calculate the values of the knapsack when arrived
         double finalValue = 0;
+
         if (k.getWeight() <= maxWeight) {
             for (auto p : pickedItems) {
                 double value = p.first->getValue();
-                double time = elapsedTime - p.second;
-                finalValue += p.first->getValue() * pow(droppingRate, time / DEFAULT_DROPPING_CONSTANT);
+                double pickedTime = elapsedTime - p.second;
+                finalValue += value * pow(droppingRate, pickedTime / DEFAULT_DROPPING_CONSTANT);
             }
         }
 
@@ -32,7 +33,6 @@ namespace TTP {
     void  MultiObjectiveTravellingThiefProblem::setDroppingRate(double droppingRate) {
         droppingRate = droppingRate;
     }
-
 
 
 }

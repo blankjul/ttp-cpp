@@ -3,6 +3,8 @@
 #include "gtest/gtest.h"
 #include <memory>
 #include <vector>
+#include "examples/test_examples.h"
+
 
 
 using namespace TTP;
@@ -11,35 +13,18 @@ using namespace TTP;
 
 TEST(TTPSO, Evaluate1) {
 
-    MapPtr m = make_shared<Map>(4);
-
-
-    // set the weights
-    m->set(0,1,5);
-    m->set(0,2,6);
-    m->set(0,3,6);
-    m->set(1,2,5);
-    m->set(1,3,6);
-    m->set(2,3,4);
+    MapPtr m = exampleMap();
+    vector<pair<ItemPtr, int>> items = exampleItemsLarge();
 
     SingleObjectiveTravellingThiefProblem ttpso(m, 3);
     ttpso.setRentingRate(1);
-
-
-    ttpso.add(2, std::make_shared<Item>(100,3));
-    ttpso.add(2, std::make_shared<Item>(40,1));
-    ttpso.add(2, std::make_shared<Item>(40,1));
-
-    ttpso.add(1, std::make_shared<Item>(20,2));
-    ttpso.add(1, std::make_shared<Item>(30,3));
-
-    ttpso.add(3, std::make_shared<Item>(20,2));
+    ttpso.addItems(items);
 
 
     std::vector<int> v = {0,2,1,3};
     Tour t(v);
 
-    Knapsack k = ttpso.convertKnapsack(std::vector<bool> {false,true,false,true,false,false});
+    Knapsack k = ttpso.convertKnapsack(std::vector<int> {0,1,0,1,0,0});
 
 
     double targetValue = ttpso.evaluate(t, k);
@@ -53,35 +38,19 @@ TEST(TTPSO, Evaluate1) {
 
 TEST(TTPSO, Evaluate2) {
 
-    MapPtr m = make_shared<Map>(4);
-
-
-    // set the weights
-    m->set(0,1,5);
-    m->set(0,2,6);
-    m->set(0,3,6);
-    m->set(1,2,5);
-    m->set(1,3,6);
-    m->set(2,3,4);
+    MapPtr m = exampleMap();
+    vector<pair<ItemPtr, int>> items = exampleItemsLarge();
 
     SingleObjectiveTravellingThiefProblem ttpso(m, 3);
     ttpso.setRentingRate(1);
+    ttpso.addItems(items);
 
-
-    ttpso.add(2, std::make_shared<Item>(100,3));
-    ttpso.add(2, std::make_shared<Item>(40,1));
-    ttpso.add(2, std::make_shared<Item>(40,1));
-
-    ttpso.add(1, std::make_shared<Item>(20,2));
-    ttpso.add(1, std::make_shared<Item>(30,3));
-
-    ttpso.add(3, std::make_shared<Item>(20,2));
 
 
     std::vector<int> v = {0,1,3,2};
     Tour t(v);
 
-    Knapsack k = ttpso.convertKnapsack(std::vector<bool> {false,true,true,false,false,false});
+    Knapsack k = ttpso.convertKnapsack(std::vector<int> {0,1,1,0,0,0});
 
 
     double targetValue = ttpso.evaluate(t, k);

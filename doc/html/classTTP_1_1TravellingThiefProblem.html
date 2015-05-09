@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,6 +89,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classTTP_1_1TravellingThiefProblem-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">TTP::TravellingThiefProblem Class Reference</div>  </div>
@@ -96,34 +98,95 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="ttp_8h_source.html">ttp.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for TTP::TravellingThiefProblem:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classTTP_1_1TravellingThiefProblem.png" usemap="#TTP::TravellingThiefProblem_map" alt=""/>
+  <map id="TTP::TravellingThiefProblem_map" name="TTP::TravellingThiefProblem_map">
+<area href="classTTP_1_1MultiObjectiveTravellingThiefProblem.html" alt="TTP::MultiObjectiveTravellingThiefProblem" shape="rect" coords="0,56,259,80"/>
+<area href="classTTP_1_1SingleObjectiveTravellingThiefProblem.html" alt="TTP::SingleObjectiveTravellingThiefProblem" shape="rect" coords="269,56,528,80"/>
+</map>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5ca5dd1ffe1d3a8573c96b6e6a767cb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ca5dd1ffe1d3a8573c96b6e6a767cb9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>TravellingThiefProblem</b> (<a class="el" href="classTTP_1_1ThiefMap.html">ThiefMap</a> &amp;tm, int maxWeight)</td></tr>
-<tr class="separator:a5ca5dd1ffe1d3a8573c96b6e6a767cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7822b38de47408397bcaebdc246c692"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa7822b38de47408397bcaebdc246c692"></a>
-pair&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>evaluate</b> (<a class="el" href="classTTP_1_1Tour.html">Tour</a> &amp;t, <a class="el" href="classTTP_1_1Knapsack.html">Knapsack</a> &amp;k)</td></tr>
-<tr class="separator:aa7822b38de47408397bcaebdc246c692"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a371185ce7034abb7f3187ae059df9c32"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a371185ce7034abb7f3187ae059df9c32"></a>
-const <a class="el" href="classTTP_1_1ThiefMap.html">ThiefMap</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getThiefMap</b> () const </td></tr>
-<tr class="separator:a371185ce7034abb7f3187ae059df9c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f56fbca59d1858176850a4ec3ce1f9d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a4f56fbca59d1858176850a4ec3ce1f9d">TravellingThiefProblem</a> (MapPtr map, int <a class="el" href="classTTP_1_1TravellingThiefProblem.html#a7e35f903df98ede0e730c8ba222433e0">maxWeight</a>)</td></tr>
+<tr class="separator:a4f56fbca59d1858176850a4ec3ce1f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4de0b562224f63c8fcfdb54f6a7f67e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#ac4de0b562224f63c8fcfdb54f6a7f67e">TravellingThiefProblem</a> (MapPtr map, vector&lt; ItemPtr &gt;, int <a class="el" href="classTTP_1_1TravellingThiefProblem.html#a7e35f903df98ede0e730c8ba222433e0">maxWeight</a>)</td></tr>
+<tr class="separator:ac4de0b562224f63c8fcfdb54f6a7f67e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cdc2c567d625b8188ed503ada0e00c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTTP_1_1Knapsack.html">Knapsack</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a5cdc2c567d625b8188ed503ada0e00c5">convertKnapsack</a> (vector&lt; bool &gt;)</td></tr>
+<tr class="separator:a5cdc2c567d625b8188ed503ada0e00c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ba63500be097d30ff9ffa23f448b763"><td class="memItemLeft" align="right" valign="top">const vector&lt; pair&lt; ItemPtr, <br class="typebreak"/>
+int &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a4ba63500be097d30ff9ffa23f448b763">getItems</a> () const </td></tr>
+<tr class="separator:a4ba63500be097d30ff9ffa23f448b763"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaa8e7426b3db02eb438eb49ea547d58"><td class="memItemLeft" align="right" valign="top">vector&lt; ItemPtr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#adaa8e7426b3db02eb438eb49ea547d58">getItems</a> (int city)</td></tr>
+<tr class="separator:adaa8e7426b3db02eb438eb49ea547d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2a2e36704269193404d7a4418ff1312"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#aa2a2e36704269193404d7a4418ff1312">add</a> (int city, ItemPtr i)</td></tr>
+<tr class="separator:aa2a2e36704269193404d7a4418ff1312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e077ff76f2ee0011c3ae8081a5ef213"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a2e077ff76f2ee0011c3ae8081a5ef213">sizeOfCities</a> ()</td></tr>
+<tr class="separator:a2e077ff76f2ee0011c3ae8081a5ef213"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2647ec5bc63cb11dfc3cc7fe7f074ae3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a2647ec5bc63cb11dfc3cc7fe7f074ae3">sizeOfItems</a> ()</td></tr>
+<tr class="separator:a2647ec5bc63cb11dfc3cc7fe7f074ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ae45797c3eb538fda66f1b2f8d3884b"><td class="memItemLeft" align="right" valign="top">const MapPtr &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a1ae45797c3eb538fda66f1b2f8d3884b">getMap</a> () const </td></tr>
+<tr class="separator:a1ae45797c3eb538fda66f1b2f8d3884b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5668b2460d0dd969bf89821d6569d15"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa5668b2460d0dd969bf89821d6569d15"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getMinSpeed</b> () const </td></tr>
+<tr class="separator:aa5668b2460d0dd969bf89821d6569d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5dc630f03af6e3dbc5bd6789253783e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac5dc630f03af6e3dbc5bd6789253783e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMinSpeed</b> (double <a class="el" href="classTTP_1_1TravellingThiefProblem.html#a13620eaab69858b01fcb1975bdf286ca">minSpeed</a>)</td></tr>
+<tr class="separator:ac5dc630f03af6e3dbc5bd6789253783e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fc827f02d3272d7cce8f8c02cf87f39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1fc827f02d3272d7cce8f8c02cf87f39"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxSpeed</b> () const </td></tr>
+<tr class="separator:a1fc827f02d3272d7cce8f8c02cf87f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa93bd9254e5059ea57cdd3e97a68a6b0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa93bd9254e5059ea57cdd3e97a68a6b0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMaxSpeed</b> (double <a class="el" href="classTTP_1_1TravellingThiefProblem.html#afd138143b5fd1885cc9d01a9c525867f">maxSpeed</a>)</td></tr>
+<tr class="separator:aa93bd9254e5059ea57cdd3e97a68a6b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69ec2f62fc110e229c5e5fad73308c5c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69ec2f62fc110e229c5e5fad73308c5c"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxWeight</b> () const </td></tr>
+<tr class="separator:a69ec2f62fc110e229c5e5fad73308c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64033a0e9b1c7feeb3e58ff8ca95870a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a64033a0e9b1c7feeb3e58ff8ca95870a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMaxWeight</b> (int <a class="el" href="classTTP_1_1TravellingThiefProblem.html#a7e35f903df98ede0e730c8ba222433e0">maxWeight</a>)</td></tr>
+<tr class="separator:a64033a0e9b1c7feeb3e58ff8ca95870a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f4fb2141eace77212b698c5c4efd008"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f4fb2141eace77212b698c5c4efd008"></a>
+vector&lt; pair&lt; ItemPtr, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getItemList</b> ()</td></tr>
+<tr class="separator:a1f4fb2141eace77212b698c5c4efd008"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a4590ff0d719978ba3fb69d666101efdf"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a4590ff0d719978ba3fb69d666101efdf">DEFAULT_DROPPING_RATE</a> = 0.9</td></tr>
-<tr class="separator:a4590ff0d719978ba3fb69d666101efdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a905f2cda1f14d52a037998117371c984"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a905f2cda1f14d52a037998117371c984">DEFAULT_DROPPING_CONSTANT</a> = 10</td></tr>
-<tr class="separator:a905f2cda1f14d52a037998117371c984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c0988f65d5c896f4c16cd79d08c0af3"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a3c0988f65d5c896f4c16cd79d08c0af3">DEFAULT_MAX_SPEED</a> = 1</td></tr>
 <tr class="separator:a3c0988f65d5c896f4c16cd79d08c0af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6c99f58cf2a04bb1284701c10a9b809"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#aa6c99f58cf2a04bb1284701c10a9b809">DEFAULT_MIN_SPEED</a> = 0.1</td></tr>
+<tr class="memitem:aa6c99f58cf2a04bb1284701c10a9b809"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6c99f58cf2a04bb1284701c10a9b809"></a>
+static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT_MIN_SPEED</b> = 0.1</td></tr>
 <tr class="separator:aa6c99f58cf2a04bb1284701c10a9b809"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:ace9541400d5a6501d2ab11185942dbe8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#ace9541400d5a6501d2ab11185942dbe8">calcTour</a> (<a class="el" href="classTTP_1_1Tour.html">Tour</a> &amp;t, <a class="el" href="classTTP_1_1Knapsack.html">Knapsack</a> &amp;k, double &amp;currentTime, vector&lt; pair&lt; ItemPtr, double &gt;&gt; &amp;pickedItems)</td></tr>
+<tr class="separator:ace9541400d5a6501d2ab11185942dbe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a13620eaab69858b01fcb1975bdf286ca"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a13620eaab69858b01fcb1975bdf286ca">minSpeed</a></td></tr>
+<tr class="separator:a13620eaab69858b01fcb1975bdf286ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd138143b5fd1885cc9d01a9c525867f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#afd138143b5fd1885cc9d01a9c525867f">maxSpeed</a></td></tr>
+<tr class="separator:afd138143b5fd1885cc9d01a9c525867f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e35f903df98ede0e730c8ba222433e0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a7e35f903df98ede0e730c8ba222433e0">maxWeight</a></td></tr>
+<tr class="separator:a7e35f903df98ede0e730c8ba222433e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a653c1853d553b8fa35be74b26c55db32"><td class="memItemLeft" align="right" valign="top">MapPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a653c1853d553b8fa35be74b26c55db32">m</a></td></tr>
+<tr class="separator:a653c1853d553b8fa35be74b26c55db32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53e06b199a5ac7057f46650f8e4a6676"><td class="memItemLeft" align="right" valign="top">unordered_map&lt; int, vector<br class="typebreak"/>
+&lt; ItemPtr &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTTP_1_1TravellingThiefProblem.html#a53e06b199a5ac7057f46650f8e4a6676">itemsMap</a></td></tr>
+<tr class="separator:a53e06b199a5ac7057f46650f8e4a6676"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5315a070cb461bf32c5c820cfd3ae78b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5315a070cb461bf32c5c820cfd3ae78b"></a>
+vector&lt; pair&lt; ItemPtr, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>items</b></td></tr>
+<tr class="separator:a5315a070cb461bf32c5c820cfd3ae78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A test class </p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a905f2cda1f14d52a037998117371c984"></a>
+<div class="textblock"><p>This class represents the travelling thief problem which occurs in two different version.</p>
+<p>There is the single objective and the multi objective version which has different target and evaluation functions. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a4f56fbca59d1858176850a4ec3ce1f9d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -131,20 +194,95 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr double TTP::TravellingThiefProblem::DEFAULT_DROPPING_CONSTANT = 10</td>
+          <td class="memname">TTP::TravellingThiefProblem::TravellingThiefProblem </td>
+          <td>(</td>
+          <td class="paramtype">MapPtr&#160;</td>
+          <td class="paramname"><em>map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxWeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Default constant for the exponent for the equation of the dropping rate </p>
+<p>Constructor for the classes that inherit from this one. </p>
 
 </div>
 </div>
-<a class="anchor" id="a4590ff0d719978ba3fb69d666101efdf"></a>
+<a class="anchor" id="ac4de0b562224f63c8fcfdb54f6a7f67e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTP::TravellingThiefProblem::TravellingThiefProblem </td>
+          <td>(</td>
+          <td class="paramtype">MapPtr&#160;</td>
+          <td class="paramname"><em>map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; ItemPtr &gt;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxWeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Constructor for the classes that inherit from this one. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aa2a2e36704269193404d7a4418ff1312"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TTP::TravellingThiefProblem::add </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>city</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ItemPtr&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Add an item to city. ATTENTION: One item could be added multiple times here. </p>
+
+</div>
+</div>
+<a class="anchor" id="ace9541400d5a6501d2ab11185942dbe8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -152,19 +290,144 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr double TTP::TravellingThiefProblem::DEFAULT_DROPPING_RATE = 0.9</td>
+          <td class="memname">void TTP::TravellingThiefProblem::calcTour </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTTP_1_1Tour.html">Tour</a> &amp;&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classTTP_1_1Knapsack.html">Knapsack</a> &amp;&#160;</td>
+          <td class="paramname"><em>k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>currentTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; pair&lt; ItemPtr, double &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>pickedItems</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Default dropping rate per time unit of each item if nothing is specified </p>
+<p>This is just a helper method for calculating the target. Since only the calculation of the item values is different this calculates the time and collect the items picking time stamps. </p>
 
 </div>
 </div>
+<a class="anchor" id="a5cdc2c567d625b8188ed503ada0e00c5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classTTP_1_1Knapsack.html">Knapsack</a> TTP::TravellingThiefProblem::convertKnapsack </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; bool &gt;&#160;</td>
+          <td class="paramname"><em>b</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Converts a boolean vector to a knapsack. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4ba63500be097d30ff9ffa23f448b763"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const vector&lt; pair&lt; ItemPtr, int &gt; &gt; &amp; TTP::TravellingThiefProblem::getItems </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns all items with mapping to the city. </p>
+
+</div>
+</div>
+<a class="anchor" id="adaa8e7426b3db02eb438eb49ea547d58"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; shared_ptr&lt; <a class="el" href="classTTP_1_1Item.html">Item</a> &gt; &gt; TTP::TravellingThiefProblem::getItems </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>city</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns all the items at the specific city. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1ae45797c3eb538fda66f1b2f8d3884b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const MapPtr &amp; TTP::TravellingThiefProblem::getMap </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the <a class="el" href="classTTP_1_1Map.html">Map</a> where the thief travels on </p>
+
+</div>
+</div>
+<a class="anchor" id="a2e077ff76f2ee0011c3ae8081a5ef213"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TTP::TravellingThiefProblem::sizeOfCities </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the number of cities to visit </p>
+
+</div>
+</div>
+<a class="anchor" id="a2647ec5bc63cb11dfc3cc7fe7f074ae3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TTP::TravellingThiefProblem::sizeOfItems </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the number of items to pick </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="a3c0988f65d5c896f4c16cd79d08c0af3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -182,11 +445,11 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Default maximal speed or velocity of the thief </p>
+<p>&lt; Default maximal speed or velocity of the thief Default minimal speed or velocity of the thief </p>
 
 </div>
 </div>
-<a class="anchor" id="aa6c99f58cf2a04bb1284701c10a9b809"></a>
+<a class="anchor" id="a53e06b199a5ac7057f46650f8e4a6676"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -194,27 +457,111 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr double TTP::TravellingThiefProblem::DEFAULT_MIN_SPEED = 0.1</td>
+          <td class="memname">unordered_map&lt;int, vector&lt;ItemPtr&gt; &gt; TTP::TravellingThiefProblem::itemsMap</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Default minimal speed or velocity of the thief </p>
+<p>List that knows the insertion order and could easily map each pointer to a city </p>
+
+</div>
+</div>
+<a class="anchor" id="a653c1853d553b8fa35be74b26c55db32"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">MapPtr TTP::TravellingThiefProblem::m</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The mapping of cities and the item list </p>
+
+</div>
+</div>
+<a class="anchor" id="afd138143b5fd1885cc9d01a9c525867f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double TTP::TravellingThiefProblem::maxSpeed</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Maximal weight of the knapsack </p>
+
+</div>
+</div>
+<a class="anchor" id="a7e35f903df98ede0e730c8ba222433e0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int TTP::TravellingThiefProblem::maxWeight</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The map that contains the cities and distances </p>
+
+</div>
+</div>
+<a class="anchor" id="a13620eaab69858b01fcb1975bdf286ca"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double TTP::TravellingThiefProblem::minSpeed</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>&lt; Minimal speed of the salesman Maximal speed of the salesman </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>lib/model/<a class="el" href="ttp_8h_source.html">ttp.h</a></li>
-<li>lib/model/ttp.cpp</li>
+<li>lib/problems/<a class="el" href="ttp_8h_source.html">ttp.h</a></li>
+<li>lib/problems/ttp.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 6 2015 07:32:29 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 8 2015 20:39:11 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

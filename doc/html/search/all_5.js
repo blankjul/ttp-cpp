@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['filepath',['FilePath',['../classtesting_1_1internal_1_1FilePath.html',1,'testing::internal']]],
-  ['floatingpoint',['FloatingPoint',['../classtesting_1_1internal_1_1FloatingPoint.html',1,'testing::internal']]],
-  ['formatforcomparison',['FormatForComparison',['../classtesting_1_1internal_1_1FormatForComparison.html',1,'testing::internal']]],
-  ['formatforcomparison_3c_20toprint_5bn_5d_2c_20otheroperand_20_3e',['FormatForComparison&lt; ToPrint[N], OtherOperand &gt;',['../classtesting_1_1internal_1_1FormatForComparison_3_01ToPrint[N]_00_01OtherOperand_01_4.html',1,'testing::internal']]]
+  ['item',['Item',['../classTTP_1_1Item.html',1,'TTP']]],
+  ['item',['Item',['../classTTP_1_1Item.html#a82ebf6737a636b16a379f5f7d4befd2f',1,'TTP::Item']]],
+  ['itemsmap',['itemsMap',['../classTTP_1_1TravellingThiefProblem.html#a53e06b199a5ac7057f46650f8e4a6676',1,'TTP::TravellingThiefProblem']]]
 ];

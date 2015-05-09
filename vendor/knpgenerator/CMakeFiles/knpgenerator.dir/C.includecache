@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/julesy/Workspace/travelling-thief-problem/vendor/knpgenerator/pisinger_generator.c
+pisinger_generator.h
+/home/julesy/Workspace/travelling-thief-problem/vendor/knpgenerator/pisinger_generator.h
+
+/home/julesy/Workspace/travelling-thief-problem/vendor/knpgenerator/pisinger_generator.h
+stdlib.h
+-
+stdio.h
+-
+stdarg.h
+-
+values.h
+-
+string.h
+-
+malloc.h
+-
+

@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -93,17 +93,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>This is the complete list of members for <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>costs</b> (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>countCities</b>() const  (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>evaluate</b>(Tour t) const  (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>get</b>(int i, int j) const  (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Map</b>(int numOfCities) (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>n</b> (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>set</b>(int i, int j, double value) (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classTTP_1_1Map.html#a531f8c86533f79720878f24c57033afe">costs</a></td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classTTP_1_1Map.html#a468236234f705f4014c58343117d2281">count</a>() const </td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classTTP_1_1Map.html#a151fea1bf4414c2b2cda0b936d7bf2e9">get</a>(int i, int j) const </td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classTTP_1_1Map.html#a21752fbdd02aa1626e46ae50cb6bb594">Map</a>(int numOfCities)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classTTP_1_1Map.html#aa1ef9248e730f76bbdc0792c78be038d">Map</a>(int numOfCities, bool symmetrical)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classTTP_1_1Map.html#ad16db69440173bfc3b15ce551c2171c2">n</a></td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator&lt;&lt;</b> (defined in <a class="el" href="classTTP_1_1Map.html">TTP::Map</a>)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classTTP_1_1Map.html#a22bff85b9789a054c713c174602cde4c">set</a>(int i, int j, double value)</td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classTTP_1_1Map.html#af94924cab22d6f0a844df74028b244fe">symmetrical</a></td><td class="entry"><a class="el" href="classTTP_1_1Map.html">TTP::Map</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 6 2015 07:32:29 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 8 2015 20:39:11 for travelling-thief-problem by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

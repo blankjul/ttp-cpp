@@ -8,7 +8,14 @@ namespace TTP {
         int itemsPerCity = items.size() / map->count();
         for (int i = 0; i < items.size(); ++i) {
             int currentCity = i / itemsPerCity;
-            add(currentCity, items[i]);
+            add(items[i], currentCity);
+        }
+    }
+
+
+    void TravellingThiefProblem::addItems(vector<pair<ItemPtr, int>> items) {
+        for (int i = 0; i < items.size(); ++i) {
+            add(items[i].first, items[i].second);
         }
     }
 
@@ -38,12 +45,12 @@ namespace TTP {
         TravellingThiefProblem::maxWeight = maxWeight;
     }
 
-    Knapsack TravellingThiefProblem::convertKnapsack(vector<bool> b) {
+    Knapsack TravellingThiefProblem::convertKnapsack(vector<int> b) {
         Knapsack k;
         if (b.size() != items.size()) return k;
         for (int i = 0; i < b.size(); ++i) {
             auto item = items[i];
-            if (b[i]) {
+            if (b[i] != 0) {
                 k.add(item.first);
             }
         }
@@ -63,7 +70,7 @@ namespace TTP {
 
 
 
-    void TravellingThiefProblem::add(int city, ItemPtr i) {
+    void TravellingThiefProblem::add(ItemPtr i, int city) {
         auto it = itemsMap.find(city);
 
         if (it == itemsMap.end()) {
@@ -82,7 +89,7 @@ namespace TTP {
     }
 
 
-    void TravellingThiefProblem::calcTour(Tour &t, Knapsack &k, double & currentTime , vector<pair<ItemPtr,double>> & pickedItems) {
+    void TravellingThiefProblem::calcTour(Tour &t, Knapsack &k, double &currentTime , vector<pair<ItemPtr,double>> & pickedItems) {
 
         // initialize the values
         double currentSpeed = maxSpeed;
@@ -96,16 +103,16 @@ namespace TTP {
 
             // update the current knapsack weight by looking at new picked itemsMap
             vector<ItemPtr> availableItems = getItems(t[i]);
-            for (ItemPtr i : availableItems) {
-                if (k.contains(i)) {
-                    currentWeight += i->getWeight();
-                    auto p = make_pair(i, currentTime);
+            for (ItemPtr item : availableItems) {
+                if (k.contains(item)) {
+                    currentWeight += item->getWeight();
+                    auto p = make_pair(item, currentTime);
                     pickedItems.push_back(p);
                 }
             }
 
             // update the velocity for the next run
-            currentSpeed = maxSpeed - currentWeight * (maxSpeed - minSpeed) / maxWeight;
+            currentSpeed = max(minSpeed, maxSpeed - currentWeight * (maxSpeed - minSpeed) / maxWeight);
 
         }
 

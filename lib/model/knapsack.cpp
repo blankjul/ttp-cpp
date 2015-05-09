@@ -35,6 +35,23 @@ namespace TTP {
         items.erase(i);
         return true;
     }
+
+    const unordered_set<ItemPtr> &Knapsack::getItems() const {
+        return items;
+    }
+
+
+    std::ostream & operator<<(std::ostream & s, Knapsack const &k) {
+        s << "Knapsack[size:" << k.size() << ",weight:" << k.getWeight() << ",value:" << k.getValue() << "]\n";
+        auto items = k.getItems();
+        unordered_set<::std::shared_ptr<::TTP::Item>>::const_iterator it = items.begin();
+        int counter = 0;
+        for(; it != items.end(); ++it) {
+            s << counter++ << *it << "\n";
+        }
+    }
+
+
 }
 
 

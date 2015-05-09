@@ -69,7 +69,7 @@
    ====================================================================== */
 
 //#define srand(x)     srand48x(x)
-#define randm(x)     (lrand48x() % (x))
+#define randm(x)     (rand() % (x))
 #define NO(f,i)      ((int) ((i+1)-f))
 #define TRUE  1
 #define FALSE 0

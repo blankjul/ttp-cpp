@@ -27,6 +27,8 @@ namespace TTP {
 
         SingleObjectiveTravellingThiefProblem(MapPtr &map, int maxWeight) : TravellingThiefProblem(map,maxWeight) {};
 
+        SingleObjectiveTravellingThiefProblem(MapPtr &map,vector<ItemPtr> items, int maxWeight) : TravellingThiefProblem(map,items,maxWeight) {};
+
         double evaluate(Tour &t, Knapsack &k);
 
 
@@ -34,7 +36,6 @@ namespace TTP {
         /*
          * Setter and Getter
          */
-
         double getRentingRate() const ;
         void setRentingRate(double rentingRate);
 

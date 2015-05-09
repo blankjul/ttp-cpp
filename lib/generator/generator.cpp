@@ -40,7 +40,7 @@ namespace TTP {
 
         ReadProblem();
 
-        if (CostMatrix == 0) throw std::runtime_error("Eror while parsing " + pathToFile + ". Wrong Format.");
+        if (CostMatrix == 0) throw std::runtime_error("Could not parse " + pathToFile + ". Wrong Format.");
 
         /*
          * Parse the file and write the Map.
@@ -75,8 +75,9 @@ namespace TTP {
     }
 
 
-    KnapsackProblem ProblemFactory::createKNP(int numberOfItems, int upperBound, int type, int capacityFactor,
+    KnapsackProblem ProblemFactory::createKNP(int numberOfItems, int upperBound, KnapsackType type, int capacityFactor,
                                               long randomSeed) {
+
 
         auto result = createRandomItems(numberOfItems, upperBound, type, randomSeed);
 
@@ -88,8 +89,8 @@ namespace TTP {
     }
 
 
-    vector<KnapsackProblem> ProblemFactory::createMultipleKNP(int numberOfItems, int upperBound,
-                                                              int capacityFactorRange, int type, long randomSeed) {
+    vector<KnapsackProblem> ProblemFactory::createMultipleKNP(int numberOfItems, int upperBound, KnapsackType type,
+                                                              int capacityFactorRange,  long randomSeed) {
 
         vector<KnapsackProblem> knps;
 
@@ -106,7 +107,12 @@ namespace TTP {
 
 
 
-    pair<vector<ItemPtr>,long> ProblemFactory::createRandomItems(int numberOfItems, int upperBound, int type, long randomSeed = time(NULL)) {
+    pair<vector<ItemPtr>,long> ProblemFactory::createRandomItems(int numberOfItems, int upperBound, KnapsackType type, long randomSeed) {
+
+
+        if (numberOfItems <= 0) throw std::runtime_error("The number of items has to be higher than 0.");
+        if (upperBound <= 0) throw std::runtime_error("The upper bound of weight and value has to be higher than 0.");
+
 
         vector<ItemPtr> items;
 
@@ -121,14 +127,14 @@ namespace TTP {
             double value;
 
             switch (type) {
-                case 1: value = (rand() % upperBound) + 1;
+                case KnapsackType::UNCORRELATED: value = (rand() % upperBound) + 1;
                     break;
-                case 2: value = (rand() % (2*r1+1)) + weight - r1;
+                case KnapsackType::WEAKLY_CORRELATED: value = (rand() % (2*r1+1)) + weight - r1;
                     if (value <= 0) value = 1;
                     break;
-                case 3: value = weight + 10;
+                case KnapsackType::STRONLY_CORRELATED: value = weight + 10;
                     break;
-                case 4: value = weight;
+                case KnapsackType::SUBSET_SUM: value = weight;
                     break;
             }
             sum += weight;
@@ -142,26 +148,20 @@ namespace TTP {
     }
 
 
-    TravellingThiefProblem ProblemFactory::createTTP(string pathToFile, int itemPerCity, int upperBound, int type,
-                                                     int capacityFactor, long randomSeed) {
-        TravellingSalesmanProblem tsp = ProblemFactory::createTSP(pathToFile);
-        KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity*tsp.count(), upperBound, type, capacityFactor, randomSeed);
-        TravellingThiefProblem ttp(tsp.getMap(), knp.getItems(), knp.getMaxWeight());
 
+    TravellingThiefProblem ProblemFactory::createTTP(TravellingSalesmanProblem tsp, KnapsackProblem knp) {
+        TravellingThiefProblem ttp(tsp.getMap(), knp.getItems(), knp.getMaxWeight());
         return ttp;
     }
 
 
-    vector<TravellingThiefProblem> ProblemFactory::createMultipleTTP(string pathToFile, int itemPerCity, int upperBound, int type,
-                                                             int capacityFactor, long randomSeed) {
-        vector<TravellingThiefProblem> result;
-        TravellingSalesmanProblem tsp = ProblemFactory::createTSP(pathToFile);
-        vector<KnapsackProblem> knps = ProblemFactory::createMultipleKNP(itemPerCity*tsp.count(), upperBound, type, capacityFactor, randomSeed);
 
+
+    vector<TravellingThiefProblem> ProblemFactory::createMultipleTTP(TravellingSalesmanProblem tsp, vector<KnapsackProblem> knps) {
+        vector<TravellingThiefProblem> result;
         for (int i = 0; i < knps.size(); ++i) {
             TravellingThiefProblem ttp(tsp.getMap(), knps[i].getItems(), knps[i].getMaxWeight());
         }
-
         return result;
 
     }

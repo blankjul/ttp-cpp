@@ -2,6 +2,8 @@
 #include "problems/tsp.h"
 #include "gtest/gtest.h"
 #include <memory>
+#include "examples/test_examples.h"
+
 
 using namespace std;
 using namespace TTP;
@@ -28,18 +30,8 @@ TEST(TSP, Evaluate1) {
 
 TEST(TSP, Evaluate2) {
 
-    Map m = Map(4);
+    MapPtr mPtr = exampleMap();
 
-    // set the weights
-    m.set(0,1,5);
-    m.set(0,2,6);
-    m.set(0,3,6);
-    m.set(1,2,5);
-    m.set(1,3,6);
-    m.set(2,3,4);
-
-
-    auto mPtr = make_shared<Map>(m);
     TTP::TravellingSalesmanProblem tsp(mPtr);
 
 
@@ -55,21 +47,11 @@ TEST(TSP, Evaluate2) {
 
 TEST(TSP, Evaluate3) {
 
-    Map m = Map(4);
-
-
-    // set the weights
-    m.set(0,1,5);
-    m.set(0,2,6);
-    m.set(0,3,6);
-    m.set(1,2,5);
-    m.set(1,3,6);
-    m.set(2,3,4);
+    MapPtr mPtr = exampleMap();
 
     std::vector<int> v = {0,1,2,3};
     Tour t(v);
 
-    auto mPtr = make_shared<Map>(m);
     TTP::TravellingSalesmanProblem tsp(mPtr);
 
     double distance  = tsp.evaluate(t);
@@ -77,3 +59,4 @@ TEST(TSP, Evaluate3) {
     EXPECT_EQ(20, distance);
 
 }
+

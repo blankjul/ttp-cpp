@@ -73,15 +73,20 @@ namespace TTP {
                                                           maxWeight(maxWeight){}
         /**
          * Constructor for the classes that inherit from this one.
+         *
+         * The items are distributed to the cities automatically.
          */
         TravellingThiefProblem(MapPtr map, vector<ItemPtr>, int maxWeight);
 
-
+        /**
+         * Add multpile items to this problem
+         */
+        void addItems(vector<pair<ItemPtr,int>>);
 
         /**
          * Converts a boolean vector to a knapsack.
          */
-        Knapsack convertKnapsack(vector<bool>);
+        Knapsack convertKnapsack(vector<int>);
 
 
         /**
@@ -99,7 +104,7 @@ namespace TTP {
         /**
          * Add an item to city. ATTENTION: One item could be added multiple times here.
          */
-        void add(int city, ItemPtr i);
+        void add(ItemPtr i, int city);
 
 
         /**

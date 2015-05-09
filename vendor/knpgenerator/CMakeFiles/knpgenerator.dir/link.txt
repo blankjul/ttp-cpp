@@ -1,0 +1,2 @@
+/usr/bin/ar cr libknpgenerator.a  CMakeFiles/knpgenerator.dir/pisinger_generator.c.o
+/usr/bin/ranlib libknpgenerator.a

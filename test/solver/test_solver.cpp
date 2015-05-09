@@ -5,6 +5,8 @@
 #include "problems/ttp_so.h"
 #include "model/tour.h"
 #include "gtest/gtest.h"
+#include "examples/test_examples.h"
+
 
 using namespace TTP;
 
@@ -25,48 +27,33 @@ TEST(TSPExhaustiveSolver, solve) {
 
 
 
+TEST(TTPExhaustiveSolver, solveSO) {
 
-TEST(TTPExhaustiveSolver, solve) {
-
-    MapPtr m = make_shared<Map>(4);
-
-
-    // set the weights
-    m->set(0,1,5);
-    m->set(0,2,6);
-    m->set(0,3,6);
-    m->set(1,2,5);
-    m->set(1,3,6);
-    m->set(2,3,4);
-
-
-
-    MultiObjectiveTravellingThiefProblem ttp(m,3);
-
-
-    ttp.add(2, std::make_shared<Item>(10,3));
-    ttp.add(2, std::make_shared<Item>(4,1));
-    ttp.add(2, std::make_shared<Item>(4,1));
-    ttp.add(1, std::make_shared<Item>(2,2));
-    ttp.add(1, std::make_shared<Item>(3,3));
-    ttp.add(3, std::make_shared<Item>(2,2));
-
-
-    TTPMOExhaustiveSolver s;
-    s.solve(ttp);
+    MapPtr m = exampleMap();
 
 
     SingleObjectiveTravellingThiefProblem ttps(m,3);
+    vector<pair<ItemPtr, int>> items = exampleItemsSmall();
     ttps.setRentingRate(1);
+    ttps.addItems(items);
 
-    ttps.add(2, std::make_shared<Item>(10,3));
-    ttps.add(2, std::make_shared<Item>(4,1));
-    ttps.add(2, std::make_shared<Item>(4,1));
-    ttps.add(1, std::make_shared<Item>(2,2));
-    ttps.add(1, std::make_shared<Item>(3,3));
-    ttps.add(3, std::make_shared<Item>(2,2));
 
     TTPSOExhaustiveSolver s2;
     s2.solve(ttps);
+
+}
+
+TEST(TTPExhaustiveSolver, solveMO) {
+
+    MapPtr m = exampleMap();
+    vector<pair<ItemPtr, int>> items = exampleItemsSmall();
+
+    MultiObjectiveTravellingThiefProblem ttpmo(m, 3);
+    ttpmo.setDroppingRate(0.9);
+    ttpmo.addItems(items);
+
+    TTPMOExhaustiveSolver s;
+    s.solve(ttpmo);
+
 
 }
