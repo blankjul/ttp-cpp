@@ -6,7 +6,7 @@
 #include <memory>
 
 
-namespace TTP {
+namespace ttp {
 
     /*! This class represents an item that has a weight and a value. */
     class Item {

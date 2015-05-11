@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
     class TSPGreedySolver : public TSPSolver {
 

@@ -4,13 +4,13 @@
 #include <iostream>
 
 TEST(ItemTest, Constructor) {
-    TTP::Item i(2,3);
+    ttp::Item i(2,3);
     EXPECT_EQ(2, i.getValue());
     EXPECT_EQ(3, i.getWeight());
 }
 
 TEST(ItemTest, StreamOperator) {
-    TTP::Item i(2,3);
+    ttp::Item i(2,3);
     std::stringstream ss;
     ss << i;
     std::string s = ss.str();

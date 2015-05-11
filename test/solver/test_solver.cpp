@@ -2,23 +2,23 @@
 #include "solver/ttpmo_exhaustive_solver.h"
 #include "solver/ttpso_exhaustive_solver.h"
 #include "solver/tsp_greedy_solver.h"
-#include "problems/ttp_so.h"
+#include "problems/ttp.h"
 #include "model/tour.h"
 #include "gtest/gtest.h"
 #include "examples/test_examples.h"
 
 
-using namespace TTP;
+using namespace ttp;
 
 
 TEST(TSPExhaustiveSolver, solve) {
 
-    TTP::Map m(4);
+    Map m(4);
     m.set(0,1,2);
     m.set(0,2,3);
     m.set(2,3,4);
     m.set(1,3,5);
-    TTP::TSPExhaustiveSolver s;
+    TSPExhaustiveSolver s;
 
     //TTP::Tour t = s.solve(m);
 
@@ -31,15 +31,17 @@ TEST(TTPExhaustiveSolver, solveSO) {
 
     MapPtr m = exampleMap();
 
-
-    SingleObjectiveTravellingThiefProblem ttps(m,3);
-    vector<pair<ItemPtr, int>> items = exampleItemsSmall();
+    TravellingThiefProblem ttps(m,3);
+    vector<pair<ItemPtr, int>> items = exampleItemsLarge();
     ttps.setRentingRate(1);
     ttps.addItems(items);
 
+    TTPSOExhaustiveSolver s;
+    auto result = s.solve(ttps);
 
-    TTPSOExhaustiveSolver s2;
-    s2.solve(ttps);
+    std::vector<int> v = {0,1,3,2};
+    //std::cout << result.first;
+    //EXPECT_EQ(v, result.first.getVector());
 
 }
 
@@ -48,7 +50,7 @@ TEST(TTPExhaustiveSolver, solveMO) {
     MapPtr m = exampleMap();
     vector<pair<ItemPtr, int>> items = exampleItemsSmall();
 
-    MultiObjectiveTravellingThiefProblem ttpmo(m, 3);
+    TravellingThiefProblem ttpmo(m, 3);
     ttpmo.setDroppingRate(0.9);
     ttpmo.addItems(items);
 

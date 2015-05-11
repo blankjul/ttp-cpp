@@ -2,19 +2,18 @@
 #include <limits>
 #include <iomanip>
 
-namespace TTP {
+namespace ttp {
 
     Map::Map(int numOfCities) : Map(numOfCities, true) { }
 
     Map::Map(int numOfCities, bool symmetrical) : n(numOfCities), symmetrical(symmetrical) {
-        double noConnection = numeric_limits<double>::max();
-        for (int i = 0; i < n; ++i) {
-            vector<double> v;
-            for (int j = 0; j < n; ++j) {
-                if (i == j) v.push_back(0);
-                else v.push_back(noConnection);
+        costs = (double **)malloc(n * sizeof(double *));
+        for(int i = 0; i < n; ++i) {
+            costs[i] = (double *)malloc(n * sizeof(double));
+            for(int j = 0; j < n; ++j) {
+                if (i == j) costs[i][j] = 0;
+                else costs[i][j] = numeric_limits<double>::max();
             }
-            costs.push_back(v);
         }
     }
 

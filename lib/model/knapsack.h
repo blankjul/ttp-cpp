@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
 
     /*! This class represents the knapsack that could be filled with items.

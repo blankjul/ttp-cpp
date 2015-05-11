@@ -1,7 +1,7 @@
 #include "test_examples.h"
 
 
-using namespace TTP;
+using namespace ttp;
 
 MapPtr exampleMap() {
     MapPtr m = make_shared<Map>(4);

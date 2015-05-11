@@ -16,7 +16,7 @@ extern "C"
 
 
 
-namespace TTP {
+namespace ttp {
 
 
 
@@ -84,7 +84,7 @@ namespace TTP {
         long c = (randomSeed * (double) result.second) / (capacityFactor + 1);
         if (c <= upperBound) c = upperBound + 1;
 
-        TTP::KnapsackProblem knp(result.first, c);
+        KnapsackProblem knp(result.first, c);
         return knp;
     }
 
@@ -99,7 +99,7 @@ namespace TTP {
         for (int j = 1; j <= capacityFactorRange; ++j) {
             long c = (randomSeed * (double) result.second) / (j + 1);
             if (c <= upperBound) c = upperBound + 1;
-            TTP::KnapsackProblem knp(result.first, c);
+            KnapsackProblem knp(result.first, c);
             knps.push_back(knp);
         }
         return knps;
@@ -163,8 +163,12 @@ namespace TTP {
             TravellingThiefProblem ttp(tsp.getMap(), knps[i].getItems(), knps[i].getMaxWeight());
         }
         return result;
-
     }
+
+
+
+
+
 }
 
 

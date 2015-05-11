@@ -4,7 +4,7 @@
 
 
 TEST(MapTest, Initialize) {
-    TTP::Map m(2);
+    ttp::Map m(2);
     EXPECT_EQ(std::numeric_limits<double>::max(), m.get(0,1));
     EXPECT_EQ(std::numeric_limits<double>::max(), m.get(2,2));
 
@@ -12,7 +12,7 @@ TEST(MapTest, Initialize) {
 
 
 TEST(MapTest, Set) {
-    TTP::Map m(2);
+    ttp::Map m(2);
 
     // set value in index
     EXPECT_EQ(0, m.get(1,1));
@@ -27,7 +27,7 @@ TEST(MapTest, Set) {
 }
 
 TEST(MapTest, Symetrical) {
-    TTP::Map m(2);
+    ttp::Map m(2);
 
     m.set(0,1,6);
     EXPECT_EQ(6, m.get(0,1));

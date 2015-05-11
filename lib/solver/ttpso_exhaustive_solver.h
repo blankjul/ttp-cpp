@@ -13,14 +13,14 @@
 using namespace std;
 
 
-namespace TTP {
+namespace ttp {
 
     class TTPSOExhaustiveSolver : public TTPSOSolver {
 
     public:
 
 
-        pair<Tour,Knapsack> solve(SingleObjectiveTravellingThiefProblem &ttp) {
+        pair<Tour,Knapsack> solve(TravellingThiefProblem &ttp) {
 
             MapPtr m = ttp.getMap();
 
@@ -30,64 +30,48 @@ namespace TTP {
                 v.push_back(i);
             }
 
-            double minCosts =  numeric_limits<double>::max();
-            Tour* bestTour;
+            double bestTarget = numeric_limits<double>::min();
+            std::vector<int> bestTour;
 
 
             // for all the possible tsp tours
             do {
 
-                // create a tour
-                Tour t(v);
-
 
                 // create the start solution
-                std::vector<bool> b( ttp.sizeOfItems() , false );
 
-                // for all possible array -> no order
-                for (int i = 0; i < ttp.sizeOfItems(); ++i) {
+                for (int i = 0; i < pow(2, ttp.sizeOfItems()); i++) {
 
-                    // for each permutation
-                    do {
-
-                        // save if it's a new best tour
-                        Knapsack k;
-                        for (int j = 0; j < ttp.sizeOfItems(); ++j) {
-                            if (b[j] == true) {
-                                auto item = ttp.getItems()[j].first;
-                                k.add(item);
-                            }
-                        }
-                        //Knapsack k = ttp.convertKnapsack(b);
+                    std::vector<int> b;
+                    for (int j = 0; j < ttp.sizeOfItems(); j++) {
+                        bool tmp = i & (1 << j);
+                        if (tmp) b.push_back(1);
+                        else b.push_back(0);
+                    }
 
 
-                        auto p = ttp.evaluate(t, k);
+                    // save if it's a new best tour
+                    Tour t(v);
+                    Knapsack k = ttp.convertKnapsack(b);
+                    double targetValue = ttp.evaluateSO(t, k);
 
-                        double costs = p;
-                        if (costs < minCosts) {
-                            bestTour = & t;
-                        }
+                    if (targetValue > bestTarget) {
+                        bestTour = std::vector<int> (v);
+                    }
 
-                        /*
-                        cout << t << " , ";
-                        for (size_t nIndex = 0; nIndex < b.size (); ++ nIndex)
-                            cout << b [nIndex] << ' ';
-                        cout << " -> " << fixed << p <<'\n';
-                         */
+                    /*
+                    cout << t << " , ";
+                    for (int j = 0; j < b.size(); ++j) cout << b[j] << ' ';
+                    cout << targetValue << '\n';
 
-
-                    } while ( next_permutation(b.begin(),b.end()));
-
-                    b[i] = true;
-
+                    */
                 }
 
 
+            } while (next_permutation(v.begin(), v.end()) && v[0] == 0);
 
-            } while ( next_permutation(v.begin(),v.end()) && v[0] == 0);
-
-
-            return make_pair(*bestTour,Knapsack());
+            Tour t(bestTour);
+            return make_pair(t,Knapsack());
 
 
         }

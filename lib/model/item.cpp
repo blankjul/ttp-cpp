@@ -1,7 +1,7 @@
 #include "item.h"
 
 
-namespace TTP {
+namespace ttp {
 
     const double Item::getWeight() const {
         return weight;

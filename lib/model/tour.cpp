@@ -1,6 +1,6 @@
 #include "tour.h"
 
-namespace TTP {
+namespace ttp {
 
     int const& Tour::operator[](int index) const
     {
@@ -29,4 +29,8 @@ namespace TTP {
         return Tour(result);
     }
 
+
+    const vector<int> &Tour::getVector() const {
+        return v;
+    }
 }

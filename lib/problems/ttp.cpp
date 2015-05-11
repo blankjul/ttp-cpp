@@ -1,7 +1,8 @@
 #include "ttp.h"
 #include <cmath>
+#include <iostream>
 
-namespace TTP {
+namespace ttp {
 
 
     TravellingThiefProblem::TravellingThiefProblem(MapPtr map, vector<ItemPtr> items, int maxWeight) : TravellingThiefProblem(map,maxWeight){
@@ -137,5 +138,79 @@ namespace TTP {
 
     vector<pair<ItemPtr, int>> TravellingThiefProblem::getItemList() {
         return getItemList();
+    }
+
+
+    double TravellingThiefProblem::evaluateSO(Tour &t, Knapsack &k, double rentingRate) {
+
+        // calculate the tour
+        double elapsedTime = 0;
+        vector<pair<ItemPtr,double>> pickedItems;
+
+        calcTour(t,k,elapsedTime, pickedItems);
+
+        // calculate the values of the knapsack when arrived
+        double finalValue = 0;
+        if (k.getWeight() <= maxWeight) {
+            for (auto p : pickedItems) finalValue += p.first->getValue();
+        }
+        double result = finalValue - rentingRate * (elapsedTime);
+        return result;
+
+    }
+
+
+    pair<double, double> TravellingThiefProblem::evaluateMO(Tour &t, Knapsack &k, double droppingRate,
+                                                          double droppingConstant) {
+        // calculate the tour
+        double elapsedTime = 0;
+        vector<pair<ItemPtr, double>> pickedItems;
+
+        calcTour(t, k, elapsedTime, pickedItems);
+
+        // calculate the values of the knapsack when arrived
+        double finalValue = 0;
+
+        if (k.getWeight() <= maxWeight) {
+            for (auto p : pickedItems) {
+                double value = p.first->getValue();
+                double pickedTime = elapsedTime - p.second;
+                finalValue += value * pow(droppingRate, pickedTime / DEFAULT_DROPPING_CONSTANT);
+            }
+        }
+
+        return pair<double, double>(elapsedTime, finalValue);
+    }
+
+
+
+
+    double TravellingThiefProblem::getRentingRate() const {
+        return rentingRate;
+    }
+
+    void TravellingThiefProblem::setRentingRate(double rentingRate) {
+        TravellingThiefProblem::rentingRate = rentingRate;
+    }
+
+    double TravellingThiefProblem::getDroppingRate() const {
+        return droppingRate;
+    }
+
+    void TravellingThiefProblem::setDroppingRate(double droppingRate) {
+        TravellingThiefProblem::droppingRate = droppingRate;
+    }
+
+    double TravellingThiefProblem::getDroppingConstant() const {
+        return droppingConstant;
+    }
+
+    void TravellingThiefProblem::setDroppingConstant(double droppingConstant) {
+        TravellingThiefProblem::droppingConstant = droppingConstant;
+    }
+
+
+    void TravellingThiefProblem::setItems(const vector<pair<ItemPtr, int>> &items) {
+        TravellingThiefProblem::items = items;
     }
 }

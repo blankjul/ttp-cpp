@@ -10,14 +10,14 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
     class TTPMOExhaustiveSolver : public TTPMOSolver {
 
     public:
 
 
-        pair<Tour, Knapsack> solve(MultiObjectiveTravellingThiefProblem &ttp) {
+        pair<Tour, Knapsack> solve(TravellingThiefProblem &ttp) {
 
             MapPtr m = ttp.getMap();
 
@@ -52,7 +52,7 @@ namespace TTP {
 
                     // save if it's a new best tour
                     Knapsack k = ttp.convertKnapsack(b);
-                    pair<double, double> p = ttp.evaluate(t, k);
+                    pair<double, double> p = ttp.evaluateMO(t, k);
 
                     double time = p.first;
                     double value = p.second;
@@ -60,11 +60,11 @@ namespace TTP {
                         bestTour = &t;
                     }
 
-
+/*
                     cout << t << " , ";
                     for (int j = 0; j < b.size(); ++j) cout << b[j] << ' ';
                     cout << "[" << k.size() << "]" << " -> " << fixed << time << " , " << value << '\n';
-
+*/
 
                 }
 

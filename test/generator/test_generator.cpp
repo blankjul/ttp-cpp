@@ -13,21 +13,21 @@
  * Test if exeception is thrown when file does not exist
  */
 TEST(GeneratorTest, TSPFileDoesNotExist) {
-    ASSERT_THROW(TTP::ProblemFactory::createTSP("nofile"), std::runtime_error);
+    ASSERT_THROW(ttp::ProblemFactory::createTSP("nofile"), std::runtime_error);
 }
 
 /**
  * Test what happends when the format is wrong
  */
 TEST(GeneratorTest, TSPWrongInputFormat) {
-    ASSERT_THROW(TTP::ProblemFactory::createTSP("README.md"), std::runtime_error);
+    ASSERT_THROW(ttp::ProblemFactory::createTSP("README.md"), std::runtime_error);
 }
 
 /**
  * Test if we itemsCount is negative
  */
 TEST(GeneratorTest, KNPCountItemsNegative) {
-    ASSERT_THROW(TTP::ProblemFactory::createKNP(-1, 1000, TTP::ProblemFactory::KnapsackType::UNCORRELATED,1), std::runtime_error);
+    ASSERT_THROW(ttp::ProblemFactory::createKNP(-1, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED,1), std::runtime_error);
 }
 
 
@@ -35,14 +35,14 @@ TEST(GeneratorTest, KNPCountItemsNegative) {
  * Test if uppper bound is negative
  */
 TEST(GeneratorTest, KNPUperBoundNegative) {
-    ASSERT_THROW(TTP::ProblemFactory::createKNP(1, -1, TTP::ProblemFactory::KnapsackType::UNCORRELATED,1), std::runtime_error);
+    ASSERT_THROW(ttp::ProblemFactory::createKNP(1, -1, ttp::ProblemFactory::KnapsackType::UNCORRELATED,1), std::runtime_error);
 }
 
 /**
  * Test if we create multiple ttps
  */
 TEST(GeneratorTest, KNPMultipleCreating) {
-   auto list = TTP::ProblemFactory::createMultipleKNP(100, 1000, TTP::ProblemFactory::KnapsackType::UNCORRELATED, 10);EXPECT_EQ(10, list.size());
+   auto list = ttp::ProblemFactory::createMultipleKNP(100, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED, 10);EXPECT_EQ(10, list.size());
 }
 
 
@@ -50,7 +50,7 @@ TEST(GeneratorTest, KNPMultipleCreating) {
  * Example test case that compares the pisinger create with this result.
  */
 TEST(GeneratorTest, ExampleCase) {
-    TTP::KnapsackProblem knp = TTP::ProblemFactory::createKNP(10, 1000, TTP::ProblemFactory::KnapsackType::UNCORRELATED, 10, 200);
+    ttp::KnapsackProblem knp = ttp::ProblemFactory::createKNP(10, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED, 10, 200);
 
     // just compare the first three instances
     auto list = knp.getItems();
@@ -91,11 +91,11 @@ TEST(GeneratorTest, ExampleCase) {
  * Test for loading a tsp file
  */
 TEST(GeneratorTest, TSPLIBBerlin) {
-    TTP::TravellingSalesmanProblem tsp = TTP::ProblemFactory::createTSP("test/generator/berlin4.tsp");
+    ttp::TravellingSalesmanProblem tsp = ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
 
-    TTP::MapPtr m = tsp.getMap();
+    ttp::MapPtr m = tsp.getMap();
 
-    TTP::Map expected(4);
+    ttp::Map expected(4);
     expected.set(0,1,666);
     expected.set(0,2,281);
     expected.set(0,3,396);

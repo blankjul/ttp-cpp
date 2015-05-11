@@ -8,7 +8,7 @@
 #include "problems/tsp.h"
 
 
-namespace TTP {
+namespace ttp {
 
 
 
@@ -23,7 +23,7 @@ namespace TTP {
         /**
          * Enumeration for specifing the Knapsack factory.
          */
-        enum KnapsackType{ UNCORRELATED=1, WEAKLY_CORRELATED=2, STRONLY_CORRELATED=3, SUBSET_SUM=4};
+        enum class KnapsackType{ UNCORRELATED=1, WEAKLY_CORRELATED=2, STRONLY_CORRELATED=3, SUBSET_SUM=4};
 
 
         /**

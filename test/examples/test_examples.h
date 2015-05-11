@@ -10,7 +10,7 @@
 
 
 
-using namespace TTP;
+using namespace ttp;
 
 MapPtr exampleMap();
 

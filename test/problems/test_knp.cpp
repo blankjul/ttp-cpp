@@ -4,7 +4,7 @@
 #include <memory>
 
 using namespace std;
-using namespace TTP;
+using namespace ttp;
 
 
 TEST(KNP, ConvertKnapsack) {

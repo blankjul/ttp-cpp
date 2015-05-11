@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
 
     /*!
@@ -52,6 +52,8 @@ namespace TTP {
          */
         Tour getSymmetrical() const;
 
+
+        const vector<int> &getVector() const;
 
         friend std::ostream & operator<<(std::ostream & s, Tour const & t);
 

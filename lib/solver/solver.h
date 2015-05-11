@@ -3,8 +3,6 @@
 #define TRAVELLING_THIEF_PROBLEM_SOLVER_H
 
 #include <problems/ttp.h>
-#include <problems/ttp_so.h>
-#include <problems/ttp_mo.h>
 #include <problems/tsp.h>
 #include <problems/knp.h>
 #include "model/tour.h"
@@ -13,7 +11,7 @@
 using namespace std;
 
 
-namespace TTP {
+namespace ttp {
 
     class TSPSolver {
 
@@ -33,13 +31,13 @@ namespace TTP {
     class TTPSOSolver {
 
     public:
-        virtual pair<Tour,Knapsack> solve(SingleObjectiveTravellingThiefProblem &ttp) = 0;
+        virtual pair<Tour,Knapsack> solve(TravellingThiefProblem &ttp) = 0;
     };
 
     class TTPMOSolver {
 
     public:
-        virtual pair<Tour,Knapsack> solve(MultiObjectiveTravellingThiefProblem &ttp) = 0;
+        virtual pair<Tour,Knapsack> solve(TravellingThiefProblem &ttp) = 0;
     };
 }
 

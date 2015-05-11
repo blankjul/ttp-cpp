@@ -1,7 +1,7 @@
 #include "knp.h"
 
 
-namespace TTP {
+namespace ttp {
 
 
     const int KnapsackProblem::count() const {

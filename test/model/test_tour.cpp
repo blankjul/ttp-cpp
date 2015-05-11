@@ -7,7 +7,7 @@
  */
 TEST(TourTest, Initialize) {
     std::vector<int> v = {0,2,1,3};
-    TTP::Tour t(v);
+    ttp::Tour t(v);
     EXPECT_EQ(0, t[0]);
     EXPECT_EQ(3, t[3]);
 
@@ -19,7 +19,7 @@ TEST(TourTest, Initialize) {
  */
 TEST(TourTest, CallByValue) {
     std::vector<int> v = {0,2,1,3};
-    TTP::Tour t(v);
+    ttp::Tour t(v);
 
     // set the value to 2
     v[0] = 2;
@@ -35,9 +35,9 @@ TEST(TourTest, CallByValue) {
  */
 TEST(TourTest, GetSymmetrical) {
     std::vector<int> v = {0,2,1,3};
-    TTP::Tour t(v);
+    ttp::Tour t(v);
 
-    TTP::Tour sym = t.getSymmetrical();
+    ttp::Tour sym = t.getSymmetrical();
 
     EXPECT_EQ(0, sym[0]);
     EXPECT_EQ(3, sym[1]);

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
 
 
@@ -38,6 +38,16 @@ namespace TTP {
         /*!< The map that contains the cities and distances */
         MapPtr m;
 
+        /*!< Renting rate for the SO */
+        double rentingRate;
+
+        /*!< Dropping rate for the MOP */
+        double droppingRate;
+
+        /*!< Dropping constant for the MOP */
+        double droppingConstant;
+
+
         /*!< The mapping of cities and the item list */
         unordered_map<int, vector<ItemPtr>> itemsMap;
 
@@ -63,14 +73,28 @@ namespace TTP {
         /*!< Default minimal speed or velocity of the thief */
         static constexpr double DEFAULT_MIN_SPEED = 0.1;
 
+        /*!< SOP Default dropping rate per time unit of each item if nothing is specified */
+        static constexpr double DEFAULT_RENTING_RATE = 1;
+
+        /*!< MOP Default dropping rate per time unit of each item if nothing is specified */
+        static constexpr double DEFAULT_DROPPING_RATE = 0.9;
+
+        /*!< MOP Default constant for the exponent for the equation of the dropping rate */
+        static constexpr double DEFAULT_DROPPING_CONSTANT = 10;
+
 
         /**
          * Constructor for the classes that inherit from this one.
          */
         TravellingThiefProblem(MapPtr map, int maxWeight) : minSpeed(TravellingThiefProblem::DEFAULT_MIN_SPEED),
                                                           maxSpeed(TravellingThiefProblem::DEFAULT_MAX_SPEED),
+                                                            droppingRate(TravellingThiefProblem::DEFAULT_DROPPING_RATE),
+                                                            droppingConstant(TravellingThiefProblem::DEFAULT_DROPPING_CONSTANT),
+                                                            rentingRate(TravellingThiefProblem::DEFAULT_RENTING_RATE),
                                                           m(map),
                                                           maxWeight(maxWeight){}
+
+
         /**
          * Constructor for the classes that inherit from this one.
          *
@@ -123,6 +147,31 @@ namespace TTP {
          */
         const MapPtr &getMap() const;
 
+
+
+        /**
+         * Returns the value for the single objective problem.
+         * \param t the tour of the thief.
+         * \param k the items that are picked by the thief
+         * \param rentingRate for the single objective value
+         * \return value - R * time
+         */
+        double evaluateSO(Tour &t, Knapsack &k, double rentingRate = DEFAULT_RENTING_RATE);
+
+
+
+        /**
+         * Returns the value for the multi objective problem.
+         *
+         * \param t the tour of the thief.
+         * \param k the items that are picked by the thief
+         * \param droppingRate of the items
+         * \param droppingConstant constant for calculate the drop
+         * \return <time,value> as a MOP result
+         */
+        pair<double, double> evaluateMO(Tour &t, Knapsack &k, double droppingRate = DEFAULT_DROPPING_RATE, double droppingConstant = DEFAULT_DROPPING_CONSTANT);
+
+
         /*
          * Setter and Getter
          */
@@ -132,6 +181,13 @@ namespace TTP {
         void  setMaxSpeed(double maxSpeed);
         int  getMaxWeight() const;
         void  setMaxWeight(int maxWeight);
+        double getRentingRate() const;
+        void setRentingRate(double rentingRate);
+        double getDroppingRate() const;
+        void setDroppingRate(double droppingRate);
+        double getDroppingConstant() const;
+        void setDroppingConstant(double droppingConstant);
+        void setItems(const vector<pair<ItemPtr, int>> &items);
         vector<pair<ItemPtr, int>> getItemList();
 
 

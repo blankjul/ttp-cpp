@@ -1,5 +1,5 @@
 #include <iostream>
-#include "problems/ttp_so.h"
+#include "problems/ttp.h"
 #include "gtest/gtest.h"
 #include <memory>
 #include <vector>
@@ -7,7 +7,7 @@
 
 
 
-using namespace TTP;
+using namespace ttp;
 
 
 
@@ -16,8 +16,7 @@ TEST(TTPSO, Evaluate1) {
     MapPtr m = exampleMap();
     vector<pair<ItemPtr, int>> items = exampleItemsLarge();
 
-    SingleObjectiveTravellingThiefProblem ttpso(m, 3);
-    ttpso.setRentingRate(1);
+    TravellingThiefProblem ttpso(m, 3);
     ttpso.addItems(items);
 
 
@@ -27,7 +26,7 @@ TEST(TTPSO, Evaluate1) {
     Knapsack k = ttpso.convertKnapsack(std::vector<int> {0,1,0,1,0,0});
 
 
-    double targetValue = ttpso.evaluate(t, k);
+    double targetValue = ttpso.evaluateSO(t, k, 1);
 
 
     EXPECT_NEAR(-73.14, targetValue, 0.01);
@@ -41,8 +40,7 @@ TEST(TTPSO, Evaluate2) {
     MapPtr m = exampleMap();
     vector<pair<ItemPtr, int>> items = exampleItemsLarge();
 
-    SingleObjectiveTravellingThiefProblem ttpso(m, 3);
-    ttpso.setRentingRate(1);
+    TravellingThiefProblem ttpso(m, 3);
     ttpso.addItems(items);
 
 
@@ -53,7 +51,7 @@ TEST(TTPSO, Evaluate2) {
     Knapsack k = ttpso.convertKnapsack(std::vector<int> {0,1,1,0,0,0});
 
 
-    double targetValue = ttpso.evaluate(t, k);
+    double targetValue = ttpso.evaluateSO(t, k, 1);
 
 
     EXPECT_NEAR(50, targetValue, 0.01);

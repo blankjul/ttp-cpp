@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
     class TSPExhaustiveSolver : public TSPSolver {
 

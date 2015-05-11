@@ -8,7 +8,7 @@
 #include "algorithm"
 
 
-using namespace TTP;
+using namespace ttp;
 using namespace std;
 
 int main(int argc, char **argv) {
@@ -63,8 +63,8 @@ int main(int argc, char **argv) {
         long seed = argRandomSeed.getValue();
         if (seed == -1) seed = time(NULL);
 
-        KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity, range, type, c, seed);
         TravellingSalesmanProblem tsp = ProblemFactory::createTSP(filePath);
+        KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity * tsp.count(), range, type, c, seed);
         TravellingThiefProblem ttp = ProblemFactory::createTTP(tsp, knp);
 
 
@@ -75,6 +75,10 @@ int main(int argc, char **argv) {
         if (jsonFile.is_open())
         {
             jsonFile << "{\n\"type\": \"ttp\", \n";
+            jsonFile << "\"maxWeight\": \"" << ttp.getMaxWeight() << "\", \n";
+            jsonFile << "\"droppingRate\": \"" << ttp.getDroppingRate() << "\", \n";
+            jsonFile << "\"droppingConstant\": \"" << ttp.getDroppingConstant() << "\", \n";
+            jsonFile << "\"rentingRate\": \"" << ttp.getRentingRate() << "\", \n";
 
             // print the distance matrix
             jsonFile << "\"matrix\": [\n";
@@ -91,7 +95,7 @@ int main(int argc, char **argv) {
             }
             jsonFile << "]\n";
 
-
+            jsonFile << ", \n \"items\": [\n";
             vector<pair<ItemPtr, int>> l = ttp.getItems();
             for (int i = 0; i < l.size(); ++i) {
                 ItemPtr ptr = l[i].first;

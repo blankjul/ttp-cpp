@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace TTP {
+namespace ttp {
 
 
     /**
@@ -31,7 +31,7 @@ namespace TTP {
 
     protected:
 
-        Matrix costs; /*!< Cost Matrix that saves the cost from one city to the other */
+        double  **costs; /*!< Cost Matrix that saves the cost from one city to the other */
 
         const int n; /*!< Number of cities */
 

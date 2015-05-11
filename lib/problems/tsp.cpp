@@ -1,7 +1,7 @@
 #include "tsp.h"
 #include <cmath>
 
-namespace TTP {
+namespace ttp {
 
 
     double TravellingSalesmanProblem::evaluate(Tour &t) {
