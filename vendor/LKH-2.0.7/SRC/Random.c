@@ -35,6 +35,7 @@ void SRandom(unsigned Seed)
 
 #else
 
+
 #include <limits.h>
 #define PRANDMAX INT_MAX
 

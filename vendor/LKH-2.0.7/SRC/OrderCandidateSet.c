@@ -34,30 +34,30 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
     Candidate *NFrom, *NN;
     int Alpha, Beta;
 
-    if (TraceLevel >= 2)
+    if (lkh.TraceLevel >= 2)
         printff("Ordering candidates ... ");
     if (MaxAlpha < 0 || MaxAlpha > INT_MAX)
         MaxAlpha = INT_MAX;
     /* Add edges from the 1-tree to the candidate set */
     if (MaxCandidates > 0) {
-        From = FirstNode;
+        From = lkh.FirstNode;
         do {
             if ((To = From->Dad)) {
                 AddCandidate(From, To, From->Cost, 0);
                 AddCandidate(To, From, From->Cost, 0);
             }
         }
-        while ((From = From->Suc) != FirstNode);
-        AddCandidate(FirstNode, FirstNode->Next, FirstNode->NextCost, 0);
-        AddCandidate(FirstNode->Next, FirstNode, FirstNode->NextCost, 0);
+        while ((From = From->Suc) != lkh.FirstNode);
+        AddCandidate(lkh.FirstNode, lkh.FirstNode->Next, lkh.FirstNode->NextCost, 0);
+        AddCandidate(lkh.FirstNode->Next, lkh.FirstNode, lkh.FirstNode->NextCost, 0);
     }
 
-    From = FirstNode;
+    From = lkh.FirstNode;
     do {
         From->AlphaComputed = 0;
         From->Sons = 0;
-    } while ((From = From->Suc) != FirstNode);
-    From = FirstNode->Suc;
+    } while ((From = From->Suc) != lkh.FirstNode);
+    From = lkh.FirstNode->Suc;
     From->Level = 0;
     From->Ancestor = From->AncestorSon = From;
     From->Beta = INT_MIN;
@@ -69,9 +69,9 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
         To->Sons++;
         From->AncestorSon = From;
     }
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 
-    From = FirstNode->Suc->Suc;
+    From = lkh.FirstNode->Suc->Suc;
     do {
         To = From->Dad;
         if (To->Sons == 1) {
@@ -80,7 +80,7 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
             From->AncestorSon = To->AncestorSon;
         }
     }
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 
     /* Compute Alpha-values for candidates */
     do {
@@ -96,15 +96,15 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
                 Beta = BetaValue(From, To);
                 NFrom->Alpha =
                     Beta != INT_MIN ? max(NFrom->Cost - Beta, 0) : INT_MAX;
-                if (NFrom->Alpha > MaxAlpha && !DelaunayPure)
+                if (NFrom->Alpha > MaxAlpha && !lkh.DelaunayPure)
                     NFrom->Alpha = INT_MAX;
             }
         }
         From->AlphaComputed = 1;
     }
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 
-    if (MaxCandidates > 0 && !DelaunayPure) {
+    if (MaxCandidates > 0 && !lkh.DelaunayPure) {
         do {
             int Count = 0;
             for (NFrom = From->CandidateSet; NFrom->To; NFrom++)
@@ -113,7 +113,7 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
             From->Mark = 0;
             From->AlphaComputed = 0;
         }
-        while ((From = From->Suc) != FirstNode);
+        while ((From = From->Suc) != lkh.FirstNode);
 
         /* Augment the original candidate set */
         do {
@@ -142,15 +142,15 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
                         Beta = BetaValue(From, To);
                         if (Beta == INT_MIN)
                             continue;
-                        Alpha = max(D(From, To) - Beta, 0);
+                        Alpha = max(lkh.D(From, To) - Beta, 0);
                     }
                     if (Alpha <= MaxAlpha)
-                        AddCandidate(From, To, D(From, To), Alpha);
+                        AddCandidate(From, To, lkh.D(From, To), Alpha);
                 }
             }
             From->AlphaComputed = 1;
         }
-        while ((From = From->Suc) != FirstNode);
+        while ((From = From->Suc) != lkh.FirstNode);
     }
 
     /* Order candidates according to their Alpha-values */
@@ -160,7 +160,7 @@ void OrderCandidateSet(int MaxCandidates, GainType MaxAlpha, int Symmetric)
     AddTourCandidates();
     if (Symmetric)
         SymmetrizeCandidateSet();
-    if (TraceLevel >= 2)
+    if (lkh.TraceLevel >= 2)
         printff("done\n");
 }
 
@@ -178,8 +178,8 @@ static int BetaValue(Node * From, Node * To)
         return From->Cost;
     if (From == To->Dad)
         return To->Cost;
-    if (From == FirstNode || To == FirstNode)
-        return FirstNode->NextCost;
+    if (From == lkh.FirstNode || To == lkh.FirstNode)
+        return lkh.FirstNode->NextCost;
 
     /* Go upwards in the tree until the least common ancestor is met */
     while (N1->Ancestor != N2->Ancestor) {

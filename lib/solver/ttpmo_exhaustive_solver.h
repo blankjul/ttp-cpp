@@ -51,7 +51,7 @@ namespace ttp {
 
 
                     // save if it's a new best tour
-                    Knapsack k = ttp.convertKnapsack(b);
+                    Knapsack k = ttp.convertVectorToKnapsack(b);
                     pair<double, double> p = ttp.evaluateMO(t, k);
 
                     double time = p.first;
@@ -59,6 +59,8 @@ namespace ttp {
                     if (time < minCosts) {
                         bestTour = &t;
                     }
+
+                    //cout << time << "," << value << endl;
 
 /*
                     cout << t << " , ";

@@ -19,7 +19,7 @@ TEST(KNP, ConvertKnapsack) {
 
     KnapsackProblem knp(items, 10);
 
-    auto result = knp.convertKnapsack(vector<bool> {true,false});
+    auto result = knp.convertVectorToKnapsack(vector<int> {1,0});
 
     EXPECT_TRUE(result.contains(i1));
     EXPECT_FALSE(result.contains(i2));

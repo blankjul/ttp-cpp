@@ -16,3 +16,4 @@ int IsCandidate(const Node * ta, const Node * tb)
             return 1;
     return 0;
 }
+

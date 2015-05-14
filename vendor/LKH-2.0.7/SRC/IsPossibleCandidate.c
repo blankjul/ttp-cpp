@@ -18,15 +18,15 @@ int IsPossibleCandidate(Node * From, Node * To)
         return 1;
     if (From->FixedTo2 || To->FixedTo2)
         return 0;
-    if (MergeTourFiles < 2)
+    if (lkh.MergeTourFiles < 2)
         return 1;
     if (!From->Head) {
-        Nb = FirstNode;
+        Nb = lkh.FirstNode;
         do {
             Na = Nb;
             Nb = Na->MergeSuc[0];
-        } while (Nb != FirstNode && FixedOrCommon(Na, Nb));
-        if (Nb != FirstNode) {
+        } while (Nb != lkh.FirstNode && FixedOrCommon(Na, Nb));
+        if (Nb != lkh.FirstNode) {
             N = Nb;
             do {
                 Nc = Nb;
@@ -41,8 +41,8 @@ int IsPossibleCandidate(Node * From, Node * To)
             } while (Nb != N);
         } else {
             do
-                Nb->Head = Nb->Tail = FirstNode;
-            while ((Nb = Nb->Suc) != FirstNode);
+                Nb->Head = Nb->Tail = lkh.FirstNode;
+            while ((Nb = Nb->Suc) != lkh.FirstNode);
         }
     }
     if (From->Head == To->Head ||

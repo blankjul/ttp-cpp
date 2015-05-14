@@ -43,7 +43,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
        as few nodes as possible */
     switch (Case6) {
     case 3:
-        if (2 * SegmentSize(s5, s4) <= Dimension) {
+        if (2 * SegmentSize(s5, s4) <= lkh.Dimension) {
             u2 = s5;
             u3 = s4;
         } else {
@@ -52,7 +52,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
         }
         break;
     case 4:
-        if (2 * SegmentSize(s2, s5) <= Dimension) {
+        if (2 * SegmentSize(s2, s5) <= lkh.Dimension) {
             u2 = s2;
             u3 = s5;
         } else {
@@ -62,7 +62,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
         break;
     case 0:
     case 7:
-        if (2 * SegmentSize(s2, s3) <= Dimension) {
+        if (2 * SegmentSize(s2, s3) <= lkh.Dimension) {
             u2 = s2;
             u3 = s3;
         } else {
@@ -84,7 +84,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
             (t1 == s7 && t2 == s8) ||
             (t1 == s8 && t2 == s7) || FixedOrCommon(t1, t2))
             continue;
-        G0 = G + C(t1, t2);
+        G0 = G + lkh.C(t1, t2);
         /* Choose (t2,t3) as a candidate edge emanating from t2. 
            t3 must not be between u2 and u3 */
         Breadth2 = 0;
@@ -92,7 +92,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
             if (t3 == t2->Pred || t3 == t2->Suc || BETWEEN(u2, t3, u3))
                 continue;
             G1 = G0 - Nt2->Cost;
-            if (++Breadth2 > MaxBreadth)
+            if (++Breadth2 > lkh.MaxBreadth)
                 break;
             /* Choose t4 as one of t3's two neighbors on the tour */
             for (X4 = 1; X4 <= 2; X4++) {
@@ -107,10 +107,10 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
                     (t3 == s7 && t4 == s8) ||
                     (t3 == s8 && t4 == s7) || FixedOrCommon(t3, t4))
                     continue;
-                G2 = G1 + C(t3, t4);
+                G2 = G1 + lkh.C(t3, t4);
                 /* Test if an improvement can be obtained */
-                if (!Forbidden(t4, t1) && (!c || G2 - c(t4, t1) > 0)
-                    && (Gain = G2 - C(t4, t1)) > 0) {
+                if (!Forbidden(t4, t1) && (!lkh.c || G2 - lkh.c(t4, t1) > 0)
+                    && (Gain = G2 - lkh.C(t4, t1)) > 0) {
                     switch (Case6) {
                     case 0:
                         if (X4 == 1)
@@ -170,10 +170,10 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
                         || FixedOrCommon(t5, t6))
                         continue;
                     G3 = G2 - Nt4->Cost;
-                    G4 = G3 + C(t5, t6);
+                    G4 = G3 + lkh.C(t5, t6);
                     if (!Forbidden(t6, t1) &&
-                        (!c || G4 - c(t6, t1) > 0) &&
-                        (Gain = G4 - C(t6, t1)) > 0) {
+                        (!lkh.c || G4 - lkh.c(t6, t1) > 0) &&
+                        (Gain = G4 - lkh.C(t6, t1)) > 0) {
                         if (X4 == 1)
                             Swap4(s1, s2, s4, t3, t4, t1, s1, s3, s2, t5,
                                   t6, t1);
@@ -181,7 +181,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
                             Swap3(t1, t2, t3, s1, s2, s3, t5, t6, t1);
                         return Gain;
                     }
-                    if (++Breadth4 > MaxBreadth)
+                    if (++Breadth4 > lkh.MaxBreadth)
                         break;
                     Breadth6 = 0;
                     /* Choose (t7,t8) as a candidate edge emanating from t7.
@@ -227,10 +227,10 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
                         if (FixedOrCommon(t7, t8) || Forbidden(t8, t1))
                             continue;
                         G5 = G4 - Nt6->Cost;
-                        G6 = G5 + C(t7, t8);
+                        G6 = G5 + lkh.C(t7, t8);
                         /* Test if an improvement can be achieved */
-                        if ((!c || G6 - c(t8, t1) > 0) &&
-                            (Gain = G6 - C(t8, t1)) > 0) {
+                        if ((!lkh.c || G6 - lkh.c(t8, t1) > 0) &&
+                            (Gain = G6 - lkh.C(t8, t1)) > 0) {
                             if (X4 == 1)
                                 Swap4(s1, s2, s4, t3, t4, t1, s1, s3, s2,
                                       t5, t6, t1);
@@ -239,7 +239,7 @@ BridgeGain(Node * s1, Node * s2, Node * s3, Node * s4,
                             Swap1(t7, t8, t1);
                             return Gain;
                         }
-                        if (++Breadth6 > MaxBreadth)
+                        if (++Breadth6 > lkh.MaxBreadth)
                             break;
                     }
                 }

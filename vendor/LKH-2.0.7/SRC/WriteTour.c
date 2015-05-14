@@ -24,23 +24,23 @@ void WriteTour(char *FileName, int *Tour, GainType Cost)
         return;
     FullFileName = FullName(FileName, Cost);
     Now = time(&Now);
-    if (TraceLevel >= 1)
+    if (lkh.TraceLevel >= 1)
         printff("Writing%s: \"%s\" ... ",
-                FileName == TourFileName ? " TOUR_FILE" :
-                FileName == OutputTourFileName ? " OUTPUT_TOUR_FILE" : "",
+                FileName == lkh.TourFileName ? " TOUR_FILE" :
+                FileName == lkh.OutputTourFileName ? " OUTPUT_TOUR_FILE" : "",
                 FullFileName);
     assert(TourFile = fopen(FullFileName, "w"));
-    fprintf(TourFile, "NAME : %s." GainFormat ".tour\n", Name, Cost);
+    fprintf(TourFile, "NAME : %s." GainFormat ".tour\n", lkh.Name, Cost);
     fprintf(TourFile, "COMMENT : Length = " GainFormat "\n", Cost);
     fprintf(TourFile, "COMMENT : Found by LKH [Keld Helsgaun] %s", ctime(&Now));
     fprintf(TourFile, "TYPE : TOUR\n");
-    n = ProblemType != ATSP ? Dimension : Dimension / 2;
+    n = lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2;
     fprintf(TourFile, "DIMENSION : %d\n", n);
     fprintf(TourFile, "TOUR_SECTION\n");
 
     for (i = 1; i < n && Tour[i] != 1; i++);
-    Forwards = ProblemType == ATSP ||
-        Tour[i < n ? i + 1 : 1] < Tour[i > 1 ? i - 1 : Dimension];
+    Forwards = lkh.ProblemType == ATSP ||
+        Tour[i < n ? i + 1 : 1] < Tour[i > 1 ? i - 1 : lkh.Dimension];
     for (j = 1; j <= n; j++) {
         fprintf(TourFile, "%d\n", Tour[i]);
         if (Forwards) {
@@ -51,7 +51,7 @@ void WriteTour(char *FileName, int *Tour, GainType Cost)
     }
     fprintf(TourFile, "-1\nEOF\n");
     fclose(TourFile);
-    if (TraceLevel >= 1)
+    if (lkh.TraceLevel >= 1)
         printff("done\n");
     free(FullFileName);
 }

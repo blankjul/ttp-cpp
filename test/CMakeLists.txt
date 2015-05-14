@@ -1,6 +1,7 @@
 include_directories(${CMAKE_SOURCE_DIR}/test)
 include_directories(${CMAKE_SOURCE_DIR}/vendor/gtest-1.7.0/include)
 include_directories(${CMAKE_SOURCE_DIR}/lib)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/LKH-2.0.7/SRC/INCLUDE)
 
 
 ADD_DEFINITIONS(

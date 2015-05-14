@@ -20,3 +20,4 @@ int Excludable(Node * ta, Node * tb)
         return !tb->OldSucExcluded;
     return 0;
 }
+

@@ -22,34 +22,34 @@ int ReadPenalties()
     Node *Na, *Nb = 0;
     static int PenaltiesRead = 0;
 
-    if (PiFileName == 0)
+    if (lkh.PiFileName == 0)
         return 0;
-    if (PenaltiesRead || strcmp(PiFileName, "0") == 0)
+    if (PenaltiesRead || strcmp(lkh.PiFileName, "0") == 0)
         return PenaltiesRead = 1;
-    if (!(PiFile = fopen(PiFileName, "r")))
+    if (!(lkh.PiFile = fopen(lkh.PiFileName, "r")))
         return 0;
-    if (TraceLevel >= 1)
-        printff("Reading PI_FILE: \"%s\" ... ", PiFileName);
-    fscanint(PiFile, &i);
-    if (i != Dimension)
-        eprintf("PI_FILE \"%s\" does not match problem", PiFileName);
-    fscanint(PiFile, &Id);
-    assert(Id >= 1 && Id <= Dimension);
-    FirstNode = Na = &NodeSet[Id];
-    fscanint(PiFile, &Na->Pi);
-    for (i = 2; i <= Dimension; i++) {
-        fscanint(PiFile, &Id);
-        assert(Id >= 1 && Id <= Dimension);
-        Nb = &NodeSet[Id];
-        fscanint(PiFile, &Nb->Pi);
+    if (lkh.TraceLevel >= 1)
+        printff("Reading PI_FILE: \"%s\" ... ", lkh.PiFileName);
+    fscanint(lkh.PiFile, &i);
+    if (i != lkh.Dimension)
+        eprintf("PI_FILE \"%s\" does not match problem", lkh.PiFileName);
+    fscanint(lkh.PiFile, &Id);
+    assert(Id >= 1 && Id <= lkh.Dimension);
+    lkh.FirstNode = Na = &lkh.NodeSet[Id];
+    fscanint(lkh.PiFile, &Na->Pi);
+    for (i = 2; i <= lkh.Dimension; i++) {
+        fscanint(lkh.PiFile, &Id);
+        assert(Id >= 1 && Id <= lkh.Dimension);
+        Nb = &lkh.NodeSet[Id];
+        fscanint(lkh.PiFile, &Nb->Pi);
         Nb->Pred = Na;
         Na->Suc = Nb;
         Na = Nb;
     }
-    FirstNode->Pred = Nb;
-    Nb->Suc = FirstNode;
-    fclose(PiFile);
-    if (TraceLevel >= 1)
+    lkh.FirstNode->Pred = Nb;
+    Nb->Suc = lkh.FirstNode;
+    fclose(lkh.PiFile);
+    if (lkh.TraceLevel >= 1)
         printff("done\n");
     return PenaltiesRead = 1;
 }

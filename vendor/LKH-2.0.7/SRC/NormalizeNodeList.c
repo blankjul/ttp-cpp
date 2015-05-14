@@ -13,11 +13,11 @@ void NormalizeNodeList()
 {
     Node *t1, *t2;
 
-    t1 = FirstNode;
+    t1 = lkh.FirstNode;
     do {
         t2 = SUC(t1);
         t1->Pred = PRED(t1);
         t1->Suc = t2;
     }
-    while ((t1 = t2) != FirstNode);
+    while ((t1 = t2) != lkh.FirstNode);
 }

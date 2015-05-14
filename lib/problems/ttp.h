@@ -108,9 +108,14 @@ namespace ttp {
         void addItems(vector<pair<ItemPtr,int>>);
 
         /**
-         * Converts a boolean vector to a knapsack.
+         * Converts a int vector to a knapsack.
          */
-        Knapsack convertKnapsack(vector<int>);
+        Knapsack convertVectorToKnapsack(vector<int>);
+
+        /**
+         * Converts a knapsack to an int vector.
+         */
+        vector<int> convertKnapsackToVector(Knapsack &k);
 
 
         /**

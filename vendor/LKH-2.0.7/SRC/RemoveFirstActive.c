@@ -12,11 +12,11 @@
 
 Node *RemoveFirstActive()
 {
-    Node *N = FirstActive;
-    if (FirstActive == LastActive)
-        FirstActive = LastActive = 0;
+    Node *N = lkh.FirstActive;
+    if (lkh.FirstActive == lkh.LastActive)
+        lkh.FirstActive = lkh.LastActive = 0;
     else
-        LastActive->Next = FirstActive = FirstActive->Next;
+        lkh.LastActive->Next = lkh.FirstActive = lkh.FirstActive->Next;
     if (N)
         N->Next = 0;
     return N;

@@ -352,90 +352,100 @@ static char *ReadYesOrNo(int *V);
 #undef max
 static size_t max(size_t a, size_t b);
 
+
+
+void InitParameters() {
+
+
+    lkh.ProblemFileName = lkh.PiFileName = lkh.InputTourFileName =
+    lkh.OutputTourFileName = lkh.TourFileName = 0;
+    lkh.CandidateFiles = lkh.MergeTourFiles = 0;
+    lkh.AscentCandidates = 50;
+    lkh.BackboneTrials = 0;
+    lkh.Backtracking = 0;
+    lkh.CandidateSetSymmetric = 0;
+    lkh.CandidateSetType = ALPHA;
+    lkh.Crossover = ERXT;
+    lkh.DelaunayPartitioning = 0;
+    lkh.DelaunayPure = 0;
+    lkh.Excess = -1;
+    lkh.ExtraCandidates = 0;
+    lkh.ExtraCandidateSetSymmetric = 0;
+    lkh.ExtraCandidateSetType = QUADRANT;
+    lkh.Gain23Used = 1;
+    lkh.GainCriterionUsed = 1;
+    lkh.InitialPeriod = -1;
+    lkh.InitialStepSize = 0;
+    lkh.InitialTourAlgorithm = WALK;
+    lkh.InitialTourFraction = 1.0;
+    lkh.KarpPartitioning = 0;
+    lkh.KCenterPartitioning = 0;
+    lkh.KMeansPartitioning = 0;
+    lkh.Kicks = 1;
+    lkh.KickType = 0;
+    lkh.MaxBreadth = INT_MAX;
+    lkh.MaxCandidates = 5;
+    lkh.MaxPopulationSize = 0;
+    lkh.MaxSwaps = -1;
+    lkh.MaxTrials = -1;
+    lkh.MoorePartitioning = 0;
+    lkh.MoveType = 5;
+    lkh.NonsequentialMoveType = -1;
+    lkh.Optimum = MINUS_INFINITY;
+    lkh.PatchingA = 3;
+    lkh.PatchingC = 2;
+    lkh.PatchingAExtended = 0;
+    lkh.PatchingARestricted = 0;
+    lkh.PatchingCExtended = 0;
+    lkh.PatchingCRestricted = 0;
+    lkh.Precision = 100;
+    lkh.RestrictedSearch = 1;
+    lkh.RohePartitioning = 0;
+    lkh.Runs = 10;
+    lkh.Seed = 1;
+    lkh.SierpinskiPartitioning = 0;
+    lkh.StopAtOptimum = 1;
+    lkh.Subgradient = 1;
+    lkh.SubproblemBorders = 0;
+    lkh.SubproblemsCompressed = 0;
+    lkh.SubproblemSize = 0;
+    lkh.SubsequentMoveType = 0;
+    lkh.SubsequentPatching = 1;
+    lkh.TimeLimit = DBL_MAX;
+    lkh.TraceLevel = 1;
+}
+
+
+
 void ReadParameters()
 {
+    InitParameters();
+
     char *Line, *Keyword, *Token, *Name;
     unsigned int i;
 
-    ProblemFileName = PiFileName = InputTourFileName =
-        OutputTourFileName = TourFileName = 0;
-    CandidateFiles = MergeTourFiles = 0;
-    AscentCandidates = 50;
-    BackboneTrials = 0;
-    Backtracking = 0;
-    CandidateSetSymmetric = 0;
-    CandidateSetType = ALPHA;
-    Crossover = ERXT;
-    DelaunayPartitioning = 0;
-    DelaunayPure = 0;
-    Excess = -1;
-    ExtraCandidates = 0;
-    ExtraCandidateSetSymmetric = 0;
-    ExtraCandidateSetType = QUADRANT;
-    Gain23Used = 1;
-    GainCriterionUsed = 1;
-    InitialPeriod = -1;
-    InitialStepSize = 0;
-    InitialTourAlgorithm = WALK;
-    InitialTourFraction = 1.0;
-    KarpPartitioning = 0;
-    KCenterPartitioning = 0;
-    KMeansPartitioning = 0;
-    Kicks = 1;
-    KickType = 0;
-    MaxBreadth = INT_MAX;
-    MaxCandidates = 5;
-    MaxPopulationSize = 0;
-    MaxSwaps = -1;
-    MaxTrials = -1;
-    MoorePartitioning = 0;
-    MoveType = 5;
-    NonsequentialMoveType = -1;
-    Optimum = MINUS_INFINITY;
-    PatchingA = 1;
-    PatchingC = 0;
-    PatchingAExtended = 0;
-    PatchingARestricted = 0;
-    PatchingCExtended = 0;
-    PatchingCRestricted = 0;
-    Precision = 100;
-    RestrictedSearch = 1;
-    RohePartitioning = 0;
-    Runs = 0;
-    Seed = 1;
-    SierpinskiPartitioning = 0;
-    StopAtOptimum = 1;
-    Subgradient = 1;
-    SubproblemBorders = 0;
-    SubproblemsCompressed = 0;
-    SubproblemSize = 0;
-    SubsequentMoveType = 0;
-    SubsequentPatching = 1;
-    TimeLimit = DBL_MAX;
-    TraceLevel = 1;
-
-    if (ParameterFileName) {
-        if (!(ParameterFile = fopen(ParameterFileName, "r")))
+    if (lkh.ParameterFileName) {
+        if (!(lkh.ParameterFile = fopen(lkh.ParameterFileName, "r")))
             eprintf("Cannot open PARAMETER_FILE: \"%s\"",
-                    ParameterFileName);
-        printff("PARAMETER_FILE = %s\n", ParameterFileName);
+                    lkh.ParameterFileName);
+        printff("PARAMETER_FILE = %s\n", lkh.ParameterFileName);
     } else {
         while (1) {
             printff("PARAMETER_FILE = ");
-            if (!(ParameterFileName = GetFileName(ReadLine(stdin)))) {
+            if (!(lkh.ParameterFileName = GetFileName(ReadLine(stdin)))) {
                 do {
                     printff("PROBLEM_FILE = ");
-                    ProblemFileName = GetFileName(ReadLine(stdin));
-                } while (!ProblemFileName);
+                    lkh.ProblemFileName = GetFileName(ReadLine(stdin));
+                } while (!lkh.ProblemFileName);
                 return;
-            } else if (!(ParameterFile = fopen(ParameterFileName, "r")))
+            } else if (!(lkh.ParameterFile = fopen(lkh.ParameterFileName, "r")))
                 printff("Cannot open \"%s\". Please try again.\n",
-                        ParameterFileName);
+                        lkh.ParameterFileName);
             else
                 break;
         }
     }
-    while ((Line = ReadLine(ParameterFile))) {
+    while ((Line = ReadLine(lkh.ParameterFile))) {
         if (!(Keyword = strtok(Line, Delimiters)))
             continue;
         if (Keyword[0] == '#')
@@ -444,37 +454,37 @@ void ReadParameters()
             Keyword[i] = (char) toupper(Keyword[i]);
         if (!strcmp(Keyword, "ASCENT_CANDIDATES")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &AscentCandidates))
+                !sscanf(Token, "%d", &lkh.AscentCandidates))
                 eprintf("ASCENT_CANDIDATES: integer expected");
-            if (AscentCandidates < 2)
+            if (lkh.AscentCandidates < 2)
                 eprintf("ASCENT_CANDIDATES: >= 2 expected");
         } else if (!strcmp(Keyword, "BACKBONE_TRIALS")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &BackboneTrials))
+                !sscanf(Token, "%d", &lkh.BackboneTrials))
                 eprintf("BACKBONE_TRIALS: integer expected");
-            if (BackboneTrials < 0)
+            if (lkh.BackboneTrials < 0)
                 eprintf("BACKBONE_TRIALS: non-negative integer expected");
         } else if (!strcmp(Keyword, "BACKTRACKING")) {
-            if (!ReadYesOrNo(&Backtracking))
+            if (!ReadYesOrNo(&lkh.Backtracking))
                 eprintf("BACKTRACKING: YES or NO expected");
         } else if (!strcmp(Keyword, "CANDIDATE_FILE")) {
             if (!(Name = GetFileName(0)))
                 eprintf("CANDIDATE_FILE: string expected");
-            if (CandidateFiles == 0) {
-                assert(CandidateFileName =
+            if (lkh.CandidateFiles == 0) {
+                assert(lkh.CandidateFileName =
                        (char **) malloc(sizeof(char *)));
-                CandidateFileName[CandidateFiles++] = Name;
+                lkh.CandidateFileName[lkh.CandidateFiles++] = Name;
             } else {
                 int i;
-                for (i = 0; i < CandidateFiles; i++)
-                    if (!strcmp(Name, CandidateFileName[i]))
+                for (i = 0; i < lkh.CandidateFiles; i++)
+                    if (!strcmp(Name, lkh.CandidateFileName[i]))
                         break;
-                if (i == CandidateFiles) {
-                    assert(CandidateFileName =
-                           (char **) realloc(CandidateFileName,
-                                             (CandidateFiles +
+                if (i == lkh.CandidateFiles) {
+                    assert(lkh.CandidateFileName =
+                           (char **) realloc(lkh.CandidateFileName,
+                                             (lkh.CandidateFiles +
                                               1) * sizeof(char *)));
-                    CandidateFileName[CandidateFiles++] = Name;
+                    lkh.CandidateFileName[lkh.CandidateFiles++] = Name;
                 }
             }
         } else if (!strcmp(Keyword, "CANDIDATE_SET_TYPE")) {
@@ -485,25 +495,25 @@ void ReadParameters()
             for (i = 0; i < strlen(Token); i++)
                 Token[i] = (char) toupper(Token[i]);
             if (!strncmp(Token, "ALPHA", strlen(Token)))
-                CandidateSetType = ALPHA;
+                lkh.CandidateSetType = ALPHA;
             else if (!strncmp(Token, "DELAUNAY", strlen(Token))) {
-                CandidateSetType = DELAUNAY;
+                lkh.CandidateSetType = DELAUNAY;
             } else if (!strncmp(Token, "NEAREST-NEIGHBOR", strlen(Token)))
-                CandidateSetType = NN;
+                lkh.CandidateSetType = NN;
             else if (!strncmp(Token, "QUADRANT", strlen(Token)))
-                CandidateSetType = QUADRANT;
+                lkh.CandidateSetType = QUADRANT;
             else
                 eprintf("%s", "CANDIDATE_SET_TYPE: "
                         "ALPHA, DELAUNAY, NEAREST-NEIGHBOR, "
                         "or QUADRANT expected");
-            if (CandidateSetType == DELAUNAY) {
+            if (lkh.CandidateSetType == DELAUNAY) {
                 if ((Token = strtok(0, Delimiters))) {
                     for (i = 0; i < strlen(Token); i++)
                         Token[i] = (char) toupper(Token[i]);
                     if (strncmp(Token, "PURE", strlen(Token)))
                         eprintf("%s", "CANDIDATE_SET_TYPE (DELAUNAY): "
                                 "PURE or no token expected");
-                    DelaunayPure = 1;
+                    lkh.DelaunayPure = 1;
                 }
             }
         } else if (!strcmp(Keyword, "COMMENT"))
@@ -512,15 +522,15 @@ void ReadParameters()
             break;
         else if (!strcmp(Keyword, "EXCESS")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%lf", &Excess))
+                !sscanf(Token, "%lf", &lkh.Excess))
                 eprintf("EXCESS: real expected");
-            if (Excess < 0)
+            if (lkh.Excess < 0)
                 eprintf("EXCESS: non-negeative real expected");
         } else if (!strcmp(Keyword, "EXTRA_CANDIDATES")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &ExtraCandidates))
+                !sscanf(Token, "%d", &lkh.ExtraCandidates))
                 eprintf("EXTRA_CANDIDATES: integer expected");
-            if (ExtraCandidates < 0)
+            if (lkh.ExtraCandidates < 0)
                 eprintf("EXTRA_CANDIDATES: non-negative integer expected");
             if ((Token = strtok(0, Delimiters))) {
                 for (i = 0; i < strlen(Token); i++)
@@ -528,7 +538,7 @@ void ReadParameters()
                 if (strncmp(Token, "SYMMETRIC", strlen(Token)))
                     eprintf
                         ("(EXTRA_CANDIDATES) Illegal SYMMETRIC specification");
-                ExtraCandidateSetSymmetric = 1;
+                lkh.ExtraCandidateSetSymmetric = 1;
             }
         } else if (!strcmp(Keyword, "EXTRA_CANDIDATE_SET_TYPE")) {
             if (!(Token = strtok(0, Delimiters)))
@@ -537,29 +547,29 @@ void ReadParameters()
             for (i = 0; i < strlen(Token); i++)
                 Token[i] = (char) toupper(Token[i]);
             if (!strncmp(Token, "NEAREST-NEIGHBOR", strlen(Token)))
-                ExtraCandidateSetType = NN;
+                lkh.ExtraCandidateSetType = NN;
             else if (!strncmp(Token, "QUADRANT", strlen(Token)))
-                ExtraCandidateSetType = QUADRANT;
+                lkh.ExtraCandidateSetType = QUADRANT;
             else
                 eprintf("%s", "EXTRA_CANDIDATE_SET_TYPE: "
                         "NEAREST-NEIGHBOR or QUADRANT expected");
         } else if (!strcmp(Keyword, "GAIN23")) {
-            if (!ReadYesOrNo(&Gain23Used))
+            if (!ReadYesOrNo(&lkh.Gain23Used))
                 eprintf("GAIN23: YES or NO expected");
         } else if (!strcmp(Keyword, "GAIN_CRITERION")) {
-            if (!ReadYesOrNo(&GainCriterionUsed))
+            if (!ReadYesOrNo(&lkh.GainCriterionUsed))
                 eprintf("GAIN_CRITERION: YES or NO expected");
         } else if (!strcmp(Keyword, "INITIAL_PERIOD")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &InitialPeriod))
+                !sscanf(Token, "%d", &lkh.InitialPeriod))
                 eprintf("INITIAL_PERIOD: integer expected");
-            if (InitialPeriod < 0)
+            if (lkh.InitialPeriod < 0)
                 eprintf("INITIAL_PERIOD: non-negative integer expected");
         } else if (!strcmp(Keyword, "INITIAL_STEP_SIZE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &InitialStepSize))
+                !sscanf(Token, "%d", &lkh.InitialStepSize))
                 eprintf("INITIAL_STEP_SIZE: integer expected");
-            if (InitialStepSize <= 0)
+            if (lkh.InitialStepSize <= 0)
                 eprintf("INITIAL_STEP_SIZE: positive integer expected");
         } else if (!strcmp(Keyword, "INITIAL_TOUR_ALGORITHM")) {
             if (!(Token = strtok(0, Delimiters)))
@@ -569,216 +579,216 @@ void ReadParameters()
             for (i = 0; i < strlen(Token); i++)
                 Token[i] = (char) toupper(Token[i]);
             if (!strncmp(Token, "BORUVKA", strlen(Token)))
-                InitialTourAlgorithm = BORUVKA;
+                lkh.InitialTourAlgorithm = BORUVKA;
             else if (!strncmp(Token, "GREEDY", strlen(Token)))
-                InitialTourAlgorithm = GREEDY;
+                lkh.InitialTourAlgorithm = GREEDY;
             else if (!strncmp(Token, "MOORE", strlen(Token)))
-                InitialTourAlgorithm = MOORE;
+                lkh.InitialTourAlgorithm = MOORE;
             else if (!strncmp(Token, "NEAREST-NEIGHBOR", strlen(Token)))
-                InitialTourAlgorithm = NEAREST_NEIGHBOR;
+                lkh.InitialTourAlgorithm = NEAREST_NEIGHBOR;
             else if (!strncmp(Token, "QUICK-BORUVKA", strlen(Token)))
-                InitialTourAlgorithm = QUICK_BORUVKA;
+                lkh.InitialTourAlgorithm = QUICK_BORUVKA;
             else if (!strncmp(Token, "SIERPINSKI", strlen(Token)))
-                InitialTourAlgorithm = SIERPINSKI;
+                lkh.InitialTourAlgorithm = SIERPINSKI;
             else if (!strncmp(Token, "WALK", strlen(Token)))
-                InitialTourAlgorithm = WALK;
+                lkh.InitialTourAlgorithm = WALK;
             else
                 eprintf("INITIAL_TOUR_ALGORITHM: "
                         "BORUVKA, GREEDY, MOORE, NEAREST-NEIGHBOR,\n"
                         "QUICK-BORUVKA, SIERPINSKI or WALK expected");
         } else if (!strcmp(Keyword, "INITIAL_TOUR_FILE")) {
-            if (!(InitialTourFileName = GetFileName(0)))
+            if (!(lkh.InitialTourFileName = GetFileName(0)))
                 eprintf("INITIAL_TOUR_FILE: string expected");
         } else if (!strcmp(Keyword, "INITIAL_TOUR_FRACTION")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%lf", &InitialTourFraction))
+                !sscanf(Token, "%lf", &lkh.InitialTourFraction))
                 eprintf("INITIAL_TOUR_FRACTION: real expected");
-            if (InitialTourFraction < 0 || InitialTourFraction > 1)
+            if (lkh.InitialTourFraction < 0 || lkh.InitialTourFraction > 1)
                 eprintf("INITIAL_TOUR_FRACTION: >= 0 or <= 1 expected");
         } else if (!strcmp(Keyword, "INPUT_TOUR_FILE")) {
-            if (!(InputTourFileName = GetFileName(0)))
+            if (!(lkh.InputTourFileName = GetFileName(0)))
                 eprintf("INPUT_TOUR_FILE: string expected");
         } else if (!strcmp(Keyword, "KICK_TYPE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &KickType))
+                !sscanf(Token, "%d", &lkh.KickType))
                 eprintf("KICK_TYPE: integer expected");
-            if (KickType != 0 && KickType < 4)
+            if (lkh.KickType != 0 && lkh.KickType < 4)
                 eprintf("KICK_TYPE: integer >= 4 expected");
         } else if (!strcmp(Keyword, "KICKS")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &Kicks))
+                !sscanf(Token, "%d", &lkh.Kicks))
                 eprintf("KICKS: integer expected");
-            if (Kicks < 0)
+            if (lkh.Kicks < 0)
                 eprintf("KICKS: non-negative integer expected");
         } else if (!strcmp(Keyword, "MAX_BREADTH")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &MaxBreadth))
+                !sscanf(Token, "%d", &lkh.MaxBreadth))
                 eprintf("MAX_BREADTH: integer expected");
-            if (MaxBreadth < 0)
+            if (lkh.MaxBreadth < 0)
                 eprintf("MAX_BREADTH: non-negative integer expected");
         } else if (!strcmp(Keyword, "MAX_CANDIDATES")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &MaxCandidates))
+                !sscanf(Token, "%d", &lkh.MaxCandidates))
                 eprintf("MAX_CANDIDATES: integer expected");
-            if (MaxCandidates < 0)
+            if (lkh.MaxCandidates < 0)
                 eprintf("MAX_CANDIDATES: non-negative integer expected");
             if ((Token = strtok(0, Delimiters))) {
                 for (i = 0; i < strlen(Token); i++)
                     Token[i] = (char) toupper(Token[i]);
                 if (!strncmp(Token, "SYMMETRIC", strlen(Token)))
-                    CandidateSetSymmetric = 1;
+                    lkh.CandidateSetSymmetric = 1;
                 else
                     eprintf
                         ("(MAX_CANDIDATES) Illegal SYMMETRIC specification");
             }
         } else if (!strcmp(Keyword, "MAX_SWAPS")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &MaxSwaps))
+                !sscanf(Token, "%d", &lkh.MaxSwaps))
                 eprintf("MAX_SWAPS: integer expected");
-            if (MaxSwaps < 0)
+            if (lkh.MaxSwaps < 0)
                 eprintf("MAX_SWAPS: non-negative integer expected");
         } else if (!strcmp(Keyword, "MAX_TRIALS")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &MaxTrials))
+                !sscanf(Token, "%d", &lkh.MaxTrials))
                 eprintf("MAX_TRIALS: integer expected");
-            if (MaxTrials < 0)
+            if (lkh.MaxTrials < 0)
                 eprintf("MAX_TRIALS: non-negative integer expected");
         } else if (!strcmp(Keyword, "MERGE_TOUR_FILE")) {
             if (!(Name = GetFileName(0)))
                 eprintf("MERGE_TOUR_FILE: string expected");
-            if (MergeTourFiles == 0) {
-                assert(MergeTourFileName =
+            if (lkh.MergeTourFiles == 0) {
+                assert(lkh.MergeTourFileName =
                        (char **) malloc(sizeof(char *)));
-                MergeTourFileName[MergeTourFiles++] = Name;
+                lkh.MergeTourFileName[lkh.MergeTourFiles++] = Name;
             } else {
                 int i;
-                for (i = 0; i < MergeTourFiles; i++)
-                    if (!strcmp(Name, MergeTourFileName[i]))
+                for (i = 0; i < lkh.MergeTourFiles; i++)
+                    if (!strcmp(Name, lkh.MergeTourFileName[i]))
                         break;
-                if (i == MergeTourFiles) {
-                    assert(MergeTourFileName =
-                           (char **) realloc(MergeTourFileName,
-                                             (MergeTourFiles +
+                if (i == lkh.MergeTourFiles) {
+                    assert(lkh.MergeTourFileName =
+                           (char **) realloc(lkh.MergeTourFileName,
+                                             (lkh.MergeTourFiles +
                                               1) * sizeof(char *)));
-                    MergeTourFileName[MergeTourFiles++] = Name;
+                    lkh.MergeTourFileName[lkh.MergeTourFiles++] = Name;
                 }
             }
         } else if (!strcmp(Keyword, "MOVE_TYPE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &MoveType))
+                !sscanf(Token, "%d", &lkh.MoveType))
                 eprintf("MOVE_TYPE: integer expected");
-            if (MoveType < 2)
+            if (lkh.MoveType < 2)
                 eprintf("MOVE_TYPE: >= 2 expected");
         } else if (!strcmp(Keyword, "NONSEQUENTIAL_MOVE_TYPE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &NonsequentialMoveType))
+                !sscanf(Token, "%d", &lkh.NonsequentialMoveType))
                 eprintf("NONSEQUENTIAL_MOVE_TYPE: integer expected");
-            if (NonsequentialMoveType < 4)
+            if (lkh.NonsequentialMoveType < 4)
                 eprintf("NONSEQUENTIAL_MOVE_TYPE: >= 4 expected");
         } else if (!strcmp(Keyword, "OPTIMUM")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, GainInputFormat, &Optimum))
+                !sscanf(Token, GainInputFormat, &lkh.Optimum))
                 eprintf("OPTIMUM: integer expected");
         } else if (!strcmp(Keyword, "OUTPUT_TOUR_FILE")) {
-            if (!(OutputTourFileName = GetFileName(0)))
+            if (!(lkh.OutputTourFileName = GetFileName(0)))
                 eprintf("OUTPUT_TOUR_FILE: string expected");
         } else if (!strcmp(Keyword, "PATCHING_A")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &PatchingA))
+                !sscanf(Token, "%d", &lkh.PatchingA))
                 eprintf("PATCHING_A: integer expected");
-            if (PatchingA < 0)
+            if (lkh.PatchingA < 0)
                 eprintf("PATCHING_A: non-negative integer expected");
             if ((Token = strtok(0, Delimiters))) {
                 for (i = 0; i < strlen(Token); i++)
                     Token[i] = (char) toupper(Token[i]);
                 if (!strncmp(Token, "RESTRICTED", strlen(Token)))
-                    PatchingARestricted = 1;
+                    lkh.PatchingARestricted = 1;
                 else if (!strncmp(Token, "EXTENDED", strlen(Token)))
-                    PatchingAExtended = 1;
+                    lkh.PatchingAExtended = 1;
                 else
                     eprintf("%s", "(PATCHING_A) "
                             "Illegal RESTRICTED or EXTENDED specification");
             }
         } else if (!strcmp(Keyword, "PATCHING_C")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &PatchingC))
+                !sscanf(Token, "%d", &lkh.PatchingC))
                 eprintf("PATCHING_C: integer expected");
-            if (PatchingC < 0)
+            if (lkh.PatchingC < 0)
                 eprintf("PATCHING_C: non-negative integer expected");
             if ((Token = strtok(0, Delimiters))) {
                 for (i = 0; i < strlen(Token); i++)
                     Token[i] = (char) toupper(Token[i]);
                 if (!strncmp(Token, "RESTRICTED", strlen(Token)))
-                    PatchingCRestricted = 1;
+                    lkh.PatchingCRestricted = 1;
                 else if (!strncmp(Token, "EXTENDED", strlen(Token)))
-                    PatchingCExtended = 1;
+                    lkh.PatchingCExtended = 1;
                 else
                     eprintf("%s", "(PATCHING_C) ",
                             "Illegal RESTRICTED or EXTENDED specification");
             }
         } else if (!strcmp(Keyword, "PI_FILE")) {
-            if (!(PiFileName = GetFileName(0)))
+            if (!(lkh.PiFileName = GetFileName(0)))
                 eprintf("PI_FILE: string expected");
         } else if (!strcmp(Keyword, "POPULATION_SIZE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &MaxPopulationSize))
+                !sscanf(Token, "%d", &lkh.MaxPopulationSize))
                 eprintf("POPULATION_SIZE: integer expected");
         } else if (!strcmp(Keyword, "PRECISION")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &Precision))
+                !sscanf(Token, "%d", &lkh.Precision))
                 eprintf("PRECISION: integer expected");
         } else if (!strcmp(Keyword, "PROBLEM_FILE")) {
-            if (!(ProblemFileName = GetFileName(0)))
+            if (!(lkh.ProblemFileName = GetFileName(0)))
                 eprintf("PROBLEM_FILE: string expected");
         } else if (!strcmp(Keyword, "RESTRICTED_SEARCH")) {
-            if (!ReadYesOrNo(&RestrictedSearch))
+            if (!ReadYesOrNo(&lkh.RestrictedSearch))
                 eprintf("RESTRICTED_SEARCH: YES or NO expected");
         } else if (!strcmp(Keyword, "RUNS")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &Runs))
+                !sscanf(Token, "%d", &lkh.Runs))
                 eprintf("RUNS: integer expected");
-            if (Runs <= 0)
+            if (lkh.Runs <= 0)
                 eprintf("RUNS: positive integer expected");
         } else if (!strcmp(Keyword, "SEED")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%u", &Seed))
+                !sscanf(Token, "%u", &lkh.Seed))
                 eprintf("SEED: integer expected");
         } else if (!strcmp(Keyword, "STOP_AT_OPTIMUM")) {
-            if (!ReadYesOrNo(&StopAtOptimum))
+            if (!ReadYesOrNo(&lkh.StopAtOptimum))
                 eprintf("STOP_AT_OPTIMUM: YES or NO expected");
         } else if (!strcmp(Keyword, "SUBGRADIENT")) {
-            if (!ReadYesOrNo(&Subgradient))
+            if (!ReadYesOrNo(&lkh.Subgradient))
                 eprintf("SUBGRADIENT: YES or NO expected");
         } else if (!strcmp(Keyword, "SUBPROBLEM_TOUR_FILE")) {
-            if (!(SubproblemTourFileName = GetFileName(0)))
+            if (!(lkh.SubproblemTourFileName = GetFileName(0)))
                 eprintf("SUBPROBLEM_TOUR_FILE: string expected");
         } else if (!strcmp(Keyword, "SUBPROBLEM_SIZE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &SubproblemSize))
+                !sscanf(Token, "%d", &lkh.SubproblemSize))
                 eprintf("SUBPROBLEM_SIZE: integer expected");
-            if (SubproblemSize < 3)
+            if (lkh.SubproblemSize < 3)
                 eprintf("SUBPROBLEM_SIZE: >= 3 expected");
             if ((Token = strtok(0, Delimiters))) {
                 for (i = 0; i < strlen(Token); i++)
                     Token[i] = (char) toupper(Token[i]);
                 if (!strncmp(Token, "DELAUNAY", strlen(Token)))
-                    DelaunayPartitioning = 1;
+                    lkh.DelaunayPartitioning = 1;
                 else if (!strncmp(Token, "KARP", max(strlen(Token), 2)))
-                    KarpPartitioning = 1;
+                    lkh.KarpPartitioning = 1;
                 else if (!strncmp(Token, "K-CENTER", max(strlen(Token), 3)))
-                    KCenterPartitioning = 1;
+                    lkh.KCenterPartitioning = 1;
                 else if (!strncmp(Token, "K-MEANS", max(strlen(Token), 3)))
-                    KMeansPartitioning = 1;
+                    lkh.KMeansPartitioning = 1;
                 else if (!strncmp(Token, "MOORE", strlen(Token)))
-                    MoorePartitioning = 1;
+                    lkh.MoorePartitioning = 1;
                 else if (!strncmp(Token, "ROHE", strlen(Token)))
-                    RohePartitioning = 1;
+                    lkh.RohePartitioning = 1;
                 else if (!strncmp(Token, "SIERPINSKI", strlen(Token)))
-                    SierpinskiPartitioning = 1;
+                    lkh.SierpinskiPartitioning = 1;
                 else if (!strncmp(Token, "BORDERS", strlen(Token)))
-                    SubproblemBorders = 1;
+                    lkh.SubproblemBorders = 1;
                 else if (!strncmp(Token, "COMPRESSED", strlen(Token)))
-                    SubproblemsCompressed = 1;
+                    lkh.SubproblemsCompressed = 1;
                 else
                     eprintf
                         ("(SUBPROBLEM_SIZE) Illegal DELAUNAY, KARP, K-CENTER, "
@@ -788,9 +798,9 @@ void ReadParameters()
                     for (i = 0; i < strlen(Token); i++)
                         Token[i] = (char) toupper(Token[i]);
                     if (!strncmp(Token, "BORDERS", strlen(Token)))
-                        SubproblemBorders = 1;
+                        lkh.SubproblemBorders = 1;
                     else if (!strncmp(Token, "COMPRESSED", strlen(Token)))
-                        SubproblemsCompressed = 1;
+                        lkh.SubproblemsCompressed = 1;
                     else
                         eprintf
                             ("(SUBPROBLEM_SIZE) Illegal BORDERS or "
@@ -799,40 +809,40 @@ void ReadParameters()
             }
         } else if (!strcmp(Keyword, "SUBSEQUENT_MOVE_TYPE")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &SubsequentMoveType))
+                !sscanf(Token, "%d", &lkh.SubsequentMoveType))
                 eprintf("SUBSEQUENT_MOVE_TYPE: integer expected");
-            if (SubsequentMoveType != 0 && SubsequentMoveType < 2)
+            if (lkh.SubsequentMoveType != 0 && lkh.SubsequentMoveType < 2)
                 eprintf("SUBSEQUENT_MOVE_TYPE: 0 or >= 2 expected");
         } else if (!strcmp(Keyword, "SUBSEQUENT_PATCHING")) {
-            if (!ReadYesOrNo(&SubsequentPatching))
+            if (!ReadYesOrNo(&lkh.SubsequentPatching))
                 eprintf("SUBSEQUENT_PATCHING: YES or NO expected");
         } else if (!strcmp(Keyword, "TIME_LIMIT")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%lf", &TimeLimit))
+                !sscanf(Token, "%lf", &lkh.TimeLimit))
                 eprintf("TIME_LIMIT: real expected");
-            if (TimeLimit < 0)
+            if (lkh.TimeLimit < 0)
                 eprintf("TIME_LIMIT: >= 0 expected");
         } else if (!strcmp(Keyword, "TOUR_FILE")) {
-            if (!(TourFileName = GetFileName(0)))
+            if (!(lkh.TourFileName = GetFileName(0)))
                 eprintf("TOUR_FILE: string expected");
         } else if (!strcmp(Keyword, "TRACE_LEVEL")) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, "%d", &TraceLevel))
+                !sscanf(Token, "%d", &lkh.TraceLevel))
                 eprintf("TRACE_LEVEL: integer expected");
         } else
             eprintf("Unknown keyword: %s", Keyword);
         if ((Token = strtok(0, Delimiters)) && Token[0] != '#')
             eprintf("Junk at end of line: %s", Token);
     }
-    if (!ProblemFileName)
+    if (!lkh.ProblemFileName)
         eprintf("Problem file name is missing");
-    if (SubproblemSize == 0 && SubproblemTourFileName != 0)
+    if (lkh.SubproblemSize == 0 && lkh.SubproblemTourFileName != 0)
         eprintf("SUBPROBLEM_SIZE specification is missing");
-    if (SubproblemSize > 0 && SubproblemTourFileName == 0)
+    if (lkh.SubproblemSize > 0 && lkh.SubproblemTourFileName == 0)
         eprintf("SUBPROBLEM_TOUR_FILE specification is missing");
-    fclose(ParameterFile);
-    free(LastLine);
-    LastLine = 0;
+    fclose(lkh.ParameterFile);
+    free(lkh.LastLine);
+    lkh.LastLine = 0;
 }
 
 static char *GetFileName(char *Line)

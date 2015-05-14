@@ -51,7 +51,7 @@ void Flip_SL(Node * t1, Node * t2, Node * t3)
     assert(t1->Pred == t2 || t1->Suc == t2);
     if (t3 == t2->Pred || t3 == t2->Suc)
         return;
-    if (Groups == 1) {
+    if (lkh.Groups == 1) {
         Flip(t1, t2, t3);
         return;
     }
@@ -74,9 +74,9 @@ void Flip_SL(Node * t1, Node * t2, Node * t3)
         }
     } else
         if ((P1 == P3
-             && abs(t3->Rank - t1->Rank) > SPLIT_CUTOFF * GroupSize)
+             && abs(t3->Rank - t1->Rank) > SPLIT_CUTOFF * lkh.GroupSize)
             || (P2 == P4
-                && abs(t4->Rank - t2->Rank) > SPLIT_CUTOFF * GroupSize)) {
+                && abs(t4->Rank - t2->Rank) > SPLIT_CUTOFF * lkh.GroupSize)) {
         if (P1 == P2) {
             SplitSegment(t1, t2);
             P1 = t1->Parent;
@@ -137,7 +137,7 @@ void Flip_SL(Node * t1, Node * t2, Node * t3)
         }
     }
     if (b) {
-        int Cbc = C(b, c), Cda = C(d, a);
+        int Cbc = lkh.C(b, c), Cda = lkh.C(d, a);
         /* Flip locally (b --> d) within a segment */
         i = d->Rank;
         d->Suc = 0;
@@ -196,8 +196,8 @@ void Flip_SL(Node * t1, Node * t2, Node * t3)
         }
         /* Find the sequence with the smallest number of segments */
         if ((i = P2->Rank - P3->Rank) < 0)
-            i += Groups;
-        if (2 * i > Groups) {
+            i += lkh.Groups;
+        if (2 * i > lkh.Groups) {
             a = t3;
             t3 = t2;
             t2 = a;
@@ -211,8 +211,8 @@ void Flip_SL(Node * t1, Node * t2, Node * t3)
             P1 = P4;
             P4 = Q1;
         }
-        Ct2t3 = C(t2, t3);
-        Ct4t1 = C(t4, t1);
+        Ct2t3 = lkh.C(t2, t3);
+        Ct4t1 = lkh.C(t4, t1);
         /* Reverse the sequence of segments (P3 --> P1). 
            Mirrors the corresponding code in the Flip function */
         i = P1->Rank;
@@ -258,14 +258,14 @@ void Flip_SL(Node * t1, Node * t2, Node * t3)
             t4->SucCost = Ct4t1;
         }
     }
-    SwapStack[Swaps].t1 = t1;
-    SwapStack[Swaps].t2 = t2;
-    SwapStack[Swaps].t3 = t3;
-    SwapStack[Swaps].t4 = t4;
-    Swaps++;
-    Hash ^= (Rand[t1->Id] * Rand[t2->Id]) ^
-        (Rand[t3->Id] * Rand[t4->Id]) ^
-        (Rand[t2->Id] * Rand[t3->Id]) ^ (Rand[t4->Id] * Rand[t1->Id]);
+    lkh.SwapStack[lkh.Swaps].t1 = t1;
+    lkh.SwapStack[lkh.Swaps].t2 = t2;
+    lkh.SwapStack[lkh.Swaps].t3 = t3;
+    lkh.SwapStack[lkh.Swaps].t4 = t4;
+    lkh.Swaps++;
+    lkh.Hash ^= (lkh.Rand[t1->Id] * lkh.Rand[t2->Id]) ^
+        (lkh.Rand[t3->Id] * lkh.Rand[t4->Id]) ^
+        (lkh.Rand[t2->Id] * lkh.Rand[t3->Id]) ^ (lkh.Rand[t4->Id] * lkh.Rand[t1->Id]);
 }
 
 /*

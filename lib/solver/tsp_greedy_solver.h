@@ -14,7 +14,6 @@ namespace ttp {
 
     public:
 
-
         Tour solve(TravellingSalesmanProblem & tsp) {
 
             auto map = tsp.getMap();

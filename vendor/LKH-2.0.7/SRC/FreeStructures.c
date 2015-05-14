@@ -12,31 +12,31 @@ void FreeStructures()
 {
     FreeCandidateSets();
     FreeSegments();
-    if (NodeSet) {
+    if (lkh.NodeSet) {
         int i;
-        for (i = 1; i <= Dimension; i++) {
-            Node *N = &NodeSet[i];
+        for (i = 1; i <= lkh.Dimension; i++) {
+            Node *N = &lkh.NodeSet[i];
             Free(N->MergeSuc);
             N->C = 0;
         }
-        Free(NodeSet);
+        Free(lkh.NodeSet);
     }
-    Free(CostMatrix);
-    Free(BestTour);
-    Free(BetterTour);
-    Free(SwapStack);
-    Free(HTable);
-    Free(Rand);
-    Free(CacheSig);
-    Free(CacheVal);
-    Free(Name);
-    Free(Type);
-    Free(EdgeWeightType);
-    Free(EdgeWeightFormat);
-    Free(EdgeDataFormat);
-    Free(NodeCoordType);
-    Free(DisplayDataType);
-    Free(Heap);
+    Free(lkh.CostMatrix);
+    Free(lkh.BestTour);
+    Free(lkh.BetterTour);
+    Free(lkh.SwapStack);
+    Free(lkh.HTable);
+    Free(lkh.Rand);
+    Free(lkh.CacheSig);
+    Free(lkh.CacheVal);
+    Free(lkh.Name);
+    Free(lkh.Type);
+    Free(lkh.EdgeWeightType);
+    Free(lkh.EdgeWeightFormat);
+    Free(lkh.EdgeDataFormat);
+    Free(lkh.NodeCoordType);
+    Free(lkh.DisplayDataType);
+    Free(lkh.Heap);
     Free(t);
     Free(T);
     Free(tSaved);
@@ -54,23 +54,23 @@ void FreeStructures()
 
 void FreeSegments()
 {
-    if (FirstSegment) {
-        Segment *S = FirstSegment, *SPrev;
+    if (lkh.FirstSegment) {
+        Segment *S = lkh.FirstSegment, *SPrev;
         do {
             SPrev = S->Pred;
             Free(S);
         }
-        while ((S = SPrev) != FirstSegment);
-        FirstSegment = 0;
+        while ((S = SPrev) != lkh.FirstSegment);
+        lkh.FirstSegment = 0;
     }
-    if (FirstSSegment) {
-        SSegment *SS = FirstSSegment, *SSPrev;
+    if (lkh.FirstSSegment) {
+        SSegment *SS = lkh.FirstSSegment, *SSPrev;
         do {
             SSPrev = SS->Pred;
             Free(SS);
         }
-        while ((SS = SSPrev) != FirstSSegment);
-        FirstSSegment = 0;
+        while ((SS = SSPrev) != lkh.FirstSSegment);
+        lkh.FirstSSegment = 0;
     }
 }
 
@@ -80,12 +80,12 @@ void FreeSegments()
 
 void FreeCandidateSets()
 {
-    Node *N = FirstNode;
+    Node *N = lkh.FirstNode;
     if (!N)
         return;
     do {
         Free(N->CandidateSet);
         Free(N->BackboneCandidateSet);
     }
-    while ((N = N->Suc) != FirstNode);
+    while ((N = N->Suc) != lkh.FirstNode);
 }

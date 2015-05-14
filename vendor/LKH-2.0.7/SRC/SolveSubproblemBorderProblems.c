@@ -35,9 +35,9 @@ void SolveSubproblemBorderProblems(int Subproblems,
     double EntryTime = GetTime();
 
     assert(SubproblemSaved =
-           (int *) malloc((DimensionSaved + 1) * sizeof(int)));
+           (int *) malloc((lkh.DimensionSaved + 1) * sizeof(int)));
     /* Compute upper bound for the original problem */
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
         N->Suc = N->SubproblemSuc;
         N->Suc->Pred = N;
@@ -47,8 +47,8 @@ void SolveSubproblemBorderProblems(int Subproblems,
         N->FixedTo1Saved = N->FixedTo2Saved = 0;
         N->SubBestPred = N->SubBestSuc = 0;
     }
-    while ((N = N->SubproblemSuc) != FirstNode);
-    if (TraceLevel >= 1)
+    while ((N = N->SubproblemSuc) != lkh.FirstNode);
+    if (lkh.TraceLevel >= 1)
         printff("\n*** Solve subproblem border problems *** [" GainFormat
                 "]\n", *GlobalBestCost);
     for (CurrentSubproblem = 1;
@@ -56,22 +56,22 @@ void SolveSubproblemBorderProblems(int Subproblems,
         MarkBorderPoints(CurrentSubproblem);
         OldGlobalBestCost = *GlobalBestCost;
         SolveSubproblem(CurrentSubproblem, Subproblems, GlobalBestCost);
-        if (SubproblemsCompressed && *GlobalBestCost == OldGlobalBestCost)
+        if (lkh.SubproblemsCompressed && *GlobalBestCost == OldGlobalBestCost)
             SolveCompressedSubproblem(CurrentSubproblem, Subproblems,
                                       GlobalBestCost);
-        N = FirstNode;
+        N = lkh.FirstNode;
         do
             N->Subproblem = SubproblemSaved[N->Id];
-        while ((N = N->SubproblemSuc) != FirstNode);
+        while ((N = N->SubproblemSuc) != lkh.FirstNode);
     }
     free(SubproblemSaved);
     printff("\nCost = " GainFormat, *GlobalBestCost);
-    if (Optimum != MINUS_INFINITY && Optimum != 0)
+    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
         printff(", Gap = %0.4f%%",
-                100.0 * (*GlobalBestCost - Optimum) / Optimum);
+                100.0 * (*GlobalBestCost - lkh.Optimum) / lkh.Optimum);
     printff(", Time = %0.2f sec. %s\n", fabs(GetTime() - EntryTime),
-            *GlobalBestCost < Optimum ? "<" : *GlobalBestCost ==
-            Optimum ? "=" : "");
+            *GlobalBestCost < lkh.Optimum ? "<" : *GlobalBestCost ==
+                                                      lkh.Optimum ? "=" : "");
 }
 
 #define Coord(N, axis) (axis == 0 ? (N)->X : axis == 1 ? (N)->Y : (N)->Z)
@@ -88,27 +88,27 @@ static void MarkBorderPoints(int CurrentSubproblem)
     int dMin, dMax, d, i, axis, ActualSubproblemSize = 0, Size = 0;
     Node **A, *N;
 
-    assert(A = (Node **) malloc(DimensionSaved * sizeof(Node *)));
+    assert(A = (Node **) malloc(lkh.DimensionSaved * sizeof(Node *)));
     Min[0] = Min[1] = Min[2] = DBL_MAX;
     Max[0] = Max[1] = Max[2] = -DBL_MAX;
-    if (WeightType == GEO || WeightType == GEOM ||
-        WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS) {
-        N = FirstNode;
+    if (lkh.WeightType == GEO || lkh.WeightType == GEOM ||
+            lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS) {
+        N = lkh.FirstNode;
         do {
             N->Xc = N->X;
             N->Yc = N->Y;
             N->Zc = N->Z;
-            if (WeightType == GEO || WeightType == GEO_MEEUS)
+            if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
                 GEO2XYZ(N->Xc, N->Yc, &N->X, &N->Y, &N->Z);
             else
                 GEOM2XYZ(N->Xc, N->Yc, &N->X, &N->Y, &N->Z);
-        } while ((N = N->SubproblemSuc) != FirstNode);
-        CoordType = THREED_COORDS;
+        } while ((N = N->SubproblemSuc) != lkh.FirstNode);
+        lkh.CoordType = THREED_COORDS;
     }
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
         if (N->Subproblem == CurrentSubproblem) {
-            for (i = CoordType == THREED_COORDS ? 2 : 1; i >= 0; i--) {
+            for (i = lkh.CoordType == THREED_COORDS ? 2 : 1; i >= 0; i--) {
                 if (Coord(N, i) < Min[i])
                     Min[i] = Coord(N, i);
                 if (Coord(N, i) > Max[i])
@@ -116,15 +116,15 @@ static void MarkBorderPoints(int CurrentSubproblem)
             }
             ActualSubproblemSize++;
         }
-    } while ((N = N->SubproblemSuc) != FirstNode);
+    } while ((N = N->SubproblemSuc) != lkh.FirstNode);
     do {
         if (N->Subproblem == CurrentSubproblem ||
             (N->X >= Min[0] && N->X <= Max[0] &&
              N->Y >= Min[1] && N->Y <= Max[1] &&
-             (CoordType == TWOD_COORDS ||
+             (lkh.CoordType == TWOD_COORDS ||
               (N->Z >= Min[2] && N->Z <= Max[2])))) {
             N->Rank = INT_MAX;
-            for (i = CoordType == THREED_COORDS ? 2 : 1; i >= 0; i--) {
+            for (i = lkh.CoordType == THREED_COORDS ? 2 : 1; i >= 0; i--) {
                 dMin = (int) (fabs(Coord(N, i) - Min[i]) + 0.5);
                 dMax = (int) (fabs(Coord(N, i) - Max[i]) + 0.5);
                 d = dMin < dMax ? dMin : dMax;
@@ -133,7 +133,7 @@ static void MarkBorderPoints(int CurrentSubproblem)
             }
         } else {
             axis = -1;
-            if (CoordType == TWOD_COORDS) {
+            if (lkh.CoordType == TWOD_COORDS) {
                 if (N->X >= Min[0] && N->X <= Max[0])
                     axis = 1;
                 else if (N->Y >= Min[1] && N->Y <= Max[1])
@@ -152,7 +152,7 @@ static void MarkBorderPoints(int CurrentSubproblem)
                 N->Rank = dMin < dMax ? dMin : dMax;
             } else {
                 N->Rank = 0;
-                for (i = CoordType == THREED_COORDS ? 2 : 1; i >= 0; i--) {
+                for (i = lkh.CoordType == THREED_COORDS ? 2 : 1; i >= 0; i--) {
                     dMin = (int) (fabs(Coord(N, i) - Min[i]) + 0.5);
                     dMax = (int) (fabs(Coord(N, i) - Max[i]) + 0.5);
                     d = dMin < dMax ? dMin : dMax;
@@ -162,13 +162,13 @@ static void MarkBorderPoints(int CurrentSubproblem)
             }
         }
         N->Subproblem = 0;
-        if (!SubproblemsCompressed ||
+        if (!lkh.SubproblemsCompressed ||
             ((N->SubproblemPred != N->SubBestPred ||
               N->SubproblemSuc != N->SubBestSuc) &&
              (N->SubproblemPred != N->SubBestSuc ||
               N->SubproblemSuc != N->SubBestPred)))
             A[Size++] = N;
-    } while ((N = N->SubproblemSuc) != FirstNode);
+    } while ((N = N->SubproblemSuc) != lkh.FirstNode);
     if (ActualSubproblemSize > Size)
         ActualSubproblemSize = Size;
     else
@@ -176,15 +176,15 @@ static void MarkBorderPoints(int CurrentSubproblem)
     for (Size = 0; Size < ActualSubproblemSize; Size++)
         A[Size]->Subproblem = CurrentSubproblem;
     free(A);
-    if (WeightType == GEO || WeightType == GEOM ||
-        WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS) {
-        N = FirstNode;
+    if (lkh.WeightType == GEO || lkh.WeightType == GEOM ||
+            lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS) {
+        N = lkh.FirstNode;
         do {
             N->X = N->Xc;
             N->Y = N->Yc;
             N->Z = N->Zc;
-        } while ((N = N->SubproblemSuc) != FirstNode);
-        CoordType = TWOD_COORDS;
+        } while ((N = N->SubproblemSuc) != lkh.FirstNode);
+        lkh.CoordType = TWOD_COORDS;
     }
 }
 

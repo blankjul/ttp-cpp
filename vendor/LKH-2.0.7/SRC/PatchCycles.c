@@ -22,7 +22,7 @@ static int ShortestCycle(int M, int k);
 static int Cycle(Node * N, int k);
 
 static int CurrentCycle, Patchwork = 0, RecLevel = 0;
-#define MaxPatchwork Dimension
+#define MaxPatchwork lkh.Dimension
 
 /*
  * The PatchCycles function tries to find a gainful move by patch the cycles 
@@ -43,7 +43,7 @@ GainType PatchCycles(int k, GainType Gain)
         MakeKOptMove(k);
         return Gain;
     }
-    if (M == 1 || M > PatchingC || k + M > NonsequentialMoveType)
+    if (M == 1 || M > lkh.PatchingC || k + M > lkh.NonsequentialMoveType)
         return 0;
     if (RecLevel == 0)
         Patchwork = 0;
@@ -63,7 +63,7 @@ GainType PatchCycles(int k, GainType Gain)
             t[2 * k + 2] = s2;
             MarkDeleted(s1, s2);
             /* Find a set of gainful alternating cycles */
-            NewGain = PatchCyclesRec(k, 2, M, Gain + C(s1, s2));
+            NewGain = PatchCyclesRec(k, 2, M, Gain + lkh.C(s1, s2));
             UnmarkDeleted(s1, s2);
             if (NewGain > 0)
                 return NewGain;
@@ -77,7 +77,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
     Node *s1, *s2, *s3, *s4, *s5, *s6, *S3 = 0, *S4 = 0;
     Candidate *Ns2, *Ns4;
     GainType G1, G2, G3, G4, Gain, CloseUpGain,
-        BestCloseUpGain = PatchingAExtended ? MINUS_INFINITY : 0;
+        BestCloseUpGain = lkh.PatchingAExtended ? MINUS_INFINITY : 0;
     int X4, X6;
     int i, NewCycle, *cycleSaved = 0, *pSaved = 0;
     int Breadth2 = 0, Breadth4;
@@ -91,7 +91,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
         if (s3 == s2->Pred || s3 == s2->Suc || Added(s2, s3) ||
             (NewCycle = Cycle(s3, k)) == CurrentCycle)
             continue;
-        if (++Breadth2 > MaxBreadth)
+        if (++Breadth2 > lkh.MaxBreadth)
             break;
         MarkAdded(s2, s3);
         t[2 * (k + m) - 1] = s3;
@@ -103,7 +103,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
                 continue;
             MarkDeleted(s3, s4);
             t[2 * (k + m)] = s4;
-            G2 = G1 + C(s3, s4);
+            G2 = G1 + lkh.C(s3, s4);
             if (M > 2) {
                 if (!cycleSaved) {
                     assert(cycleSaved =
@@ -120,21 +120,21 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
                     goto End_PatchCyclesRec;
                 }
                 memcpy(cycle + 1, cycleSaved, 2 * k * sizeof(int));
-                if (PatchingA >= 2 && Patchwork < MaxPatchwork &&
-                    k + M < NonsequentialMoveType &&
+                if (lkh.PatchingA >= 2 && Patchwork < MaxPatchwork &&
+                    k + M < lkh.NonsequentialMoveType &&
                     !Forbidden(s4, s1) &&
-                    (!PatchingARestricted || IsCandidate(s4, s1))) {
+                    (!lkh.PatchingARestricted || IsCandidate(s4, s1))) {
                     GainType Bound = BestCloseUpGain >= 0 ||
                         IsCandidate(s4, s1) ? BestCloseUpGain : 0;
-                    if ((!c || G2 - c(s4, s1) > Bound) &&
-                        (CloseUpGain = G2 - C(s4, s1)) > Bound) {
+                    if ((!lkh.c || G2 - lkh.c(s4, s1) > Bound) &&
+                        (CloseUpGain = G2 - lkh.C(s4, s1)) > Bound) {
                         S3 = s3;
                         S4 = s4;
                         BestCloseUpGain = CloseUpGain;
                     }
                 }
-            } else if (!Forbidden(s4, s1) && (!c || G2 - c(s4, s1) > 0)
-                       && (Gain = G2 - C(s4, s1)) > 0) {
+            } else if (!Forbidden(s4, s1) && (!lkh.c || G2 - lkh.c(s4, s1) > 0)
+                       && (Gain = G2 - lkh.C(s4, s1)) > 0) {
                 incl[incl[2 * k + 1] = 2 * (k + m)] = 2 * k + 1;
                 MakeKOptMove(k + m);
                 UnmarkAdded(s2, s3);
@@ -145,7 +145,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
         }
         UnmarkAdded(s2, s3);
     }
-    if (M == 2 && !PatchingCRestricted) {
+    if (M == 2 && !lkh.PatchingCRestricted) {
         /* Try to patch the two cycles by a sequential 3-opt move */
         incl[incl[2 * (k + m)] = 2 * (k + m) + 1] = 2 * (k + m);
         incl[incl[2 * k + 1] = 2 * (k + m) + 2] = 2 * k + 1;
@@ -154,7 +154,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
         for (Ns2 = s2->CandidateSet; (s3 = Ns2->To); Ns2++) {
             if (s3 == s2->Pred || s3 == s2->Suc || Added(s2, s3))
                 continue;
-            if (++Breadth2 > MaxBreadth)
+            if (++Breadth2 > lkh.MaxBreadth)
                 break;
             t[2 * (k + m) - 1] = s3;
             G1 = G0 - Ns2->Cost;
@@ -165,7 +165,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
                 if (FixedOrCommon(s3, s4) || Deleted(s3, s4))
                     continue;
                 t[2 * (k + m)] = s4;
-                G2 = G1 + C(s3, s4);
+                G2 = G1 + lkh.C(s3, s4);
                 Breadth4 = 0;
                 /* Choose (s4,s5) as a candidate edge emanating from s4 */
                 for (Ns4 = s4->CandidateSet; (s5 = Ns4->To); Ns4++) {
@@ -174,7 +174,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
                         (NewCycle == CurrentCycle &&
                          Cycle(s5, k) == CurrentCycle))
                         continue;
-                    if (++Breadth4 > MaxBreadth)
+                    if (++Breadth4 > lkh.MaxBreadth)
                         break;
                     G3 = G2 - Ns4->Cost;
                     /* Choose s6 as one of s5's two neighbors on the tour */
@@ -185,9 +185,9 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
                             || Deleted(s5, s6)
                             || Added(s6, s1))
                             continue;
-                        G4 = G3 + C(s5, s6);
-                        if ((!c || G4 - c(s6, s1) > 0) &&
-                            (Gain = G4 - C(s6, s1)) > 0) {
+                        G4 = G3 + lkh.C(s5, s6);
+                        if ((!lkh.c || G4 - lkh.c(s6, s1) > 0) &&
+                            (Gain = G4 - lkh.C(s6, s1)) > 0) {
                             if (!pSaved) {
                                 assert(pSaved =
                                        (int *) malloc(2 * k *
@@ -220,7 +220,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
         t[2 * (k + m)] = S4;
         incl[incl[2 * k + 1] = 2 * (k + m)] = 2 * k + 1;
         /* Find a new alternating cycle */
-        PatchingA--;
+        lkh.PatchingA--;
         RecLevel++;
         MarkAdded(s2, S3);
         MarkDeleted(S3, S4);
@@ -230,7 +230,7 @@ static GainType PatchCyclesRec(int k, int m, int M, GainType G0)
         UnmarkDeleted(S3, S4);
         UnmarkAdded(S4, s1);
         RecLevel--;
-        PatchingA++;
+        lkh.PatchingA++;
         if (Gain <= 0) {
             memcpy(cycle + 1, cycleSaved, 2 * k * sizeof(int));
             memcpy(p + 1, pSaved, 2 * k * sizeof(int));

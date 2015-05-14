@@ -18,20 +18,20 @@ void RecordBetterTour()
     Node *N;
     int i = 0;
 
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
-        if (ProblemType != ATSP)
-            BetterTour[++i] = N->Id;
-        else if (N->Id <= Dimension / 2) {
+        if (lkh.ProblemType != ATSP)
+            lkh.BetterTour[++i] = N->Id;
+        else if (N->Id <= lkh.Dimension / 2) {
             i++;
-            if (N->Suc->Id != N->Id + Dimension / 2)
-                BetterTour[i] = N->Id;
+            if (N->Suc->Id != N->Id + lkh.Dimension / 2)
+                lkh.BetterTour[i] = N->Id;
             else
-                BetterTour[Dimension / 2 - i + 1] = N->Id;
+                lkh.BetterTour[lkh.Dimension / 2 - i + 1] = N->Id;
         }
         N->NextBestSuc = N->BestSuc;
         N->BestSuc = N->Suc;
     }
-    while ((N = N->Suc) != FirstNode);
-    BetterTour[0] = BetterTour[ProblemType != ATSP ? Dimension : Dimension / 2];
+    while ((N = N->Suc) != lkh.FirstNode);
+    lkh.BetterTour[0] = lkh.BetterTour[lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2];
 }

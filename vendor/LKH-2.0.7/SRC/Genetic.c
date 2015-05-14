@@ -12,30 +12,30 @@ void AddToPopulation(GainType Cost)
     int i, *P;
     Node *N;
 
-    if (!Population) {
-        assert(Population =
-               (int **) malloc(MaxPopulationSize * sizeof(int *)));
-        for (i = 0; i < MaxPopulationSize; i++)
-            assert(Population[i] =
-                   (int *) malloc((1 + Dimension) * sizeof(int)));
-        assert(Fitness =
-               (GainType *) malloc(MaxPopulationSize * sizeof(GainType)));
+    if (!lkh.Population) {
+        assert(lkh.Population =
+               (int **) malloc(lkh.MaxPopulationSize * sizeof(int *)));
+        for (i = 0; i < lkh.MaxPopulationSize; i++)
+            assert(lkh.Population[i] =
+                   (int *) malloc((1 + lkh.Dimension) * sizeof(int)));
+        assert(lkh.Fitness =
+               (GainType *) malloc(lkh.MaxPopulationSize * sizeof(GainType)));
     }
-    for (i = PopulationSize; i >= 1 && Cost < Fitness[i - 1]; i--) {
-        Fitness[i] = Fitness[i - 1];
-        P = Population[i];
-        Population[i] = Population[i - 1];
-        Population[i - 1] = P;
+    for (i = lkh.PopulationSize; i >= 1 && Cost < lkh.Fitness[i - 1]; i--) {
+        lkh.Fitness[i] = lkh.Fitness[i - 1];
+        P = lkh.Population[i];
+        lkh.Population[i] = lkh.Population[i - 1];
+        lkh.Population[i - 1] = P;
     }
-    Fitness[i] = Cost;
-    P = Population[i];
-    N = FirstNode;
+    lkh.Fitness[i] = Cost;
+    P = lkh.Population[i];
+    N = lkh.FirstNode;
     i = 1;
     do
         P[i++] = N->Id;
-    while ((N = N->Suc) != FirstNode);
-    P[0] = P[Dimension];
-    PopulationSize++;
+    while ((N = N->Suc) != lkh.FirstNode);
+    P[0] = P[lkh.Dimension];
+    lkh.PopulationSize++;
 }
 
 /*
@@ -47,16 +47,16 @@ void ApplyCrossover(int i, int j)
 {
     int *Pi, *Pj, k;
 
-    Pi = Population[i];
-    Pj = Population[j];
-    for (k = 1; k <= Dimension; k++) {
-        NodeSet[Pi[k - 1]].Suc = &NodeSet[Pi[k]];
-        NodeSet[Pj[k - 1]].Next = &NodeSet[Pj[k]];
+    Pi = lkh.Population[i];
+    Pj = lkh.Population[j];
+    for (k = 1; k <= lkh.Dimension; k++) {
+        lkh.NodeSet[Pi[k - 1]].Suc = &lkh.NodeSet[Pi[k]];
+        lkh.NodeSet[Pj[k - 1]].Next = &lkh.NodeSet[Pj[k]];
     }
-    if (TraceLevel >= 1)
+    if (lkh.TraceLevel >= 1)
         printff("Crossover(%d,%d)\n", i + 1, j + 1);
     /* Apply the crossover operator */
-    Crossover();
+    lkh.Crossover();
 }
 
 #define Free(s) { free(s); s = 0; }
@@ -68,14 +68,14 @@ void ApplyCrossover(int i, int j)
 
 void FreePopulation()
 {
-    if (Population) {
+    if (lkh.Population) {
         int i;
-        for (i = 0; i < MaxPopulationSize; i++)
-            Free(Population[i]);
-        Free(Population);
-        Free(Fitness);
+        for (i = 0; i < lkh.MaxPopulationSize; i++)
+            Free(lkh.Population[i]);
+        Free(lkh.Population);
+        Free(lkh.Fitness);
     }
-    PopulationSize = 0;
+    lkh.PopulationSize = 0;
 }
 
 /*
@@ -88,15 +88,15 @@ void FreePopulation()
 
 int HasFitness(GainType Cost)
 {
-    int Low = 0, High = PopulationSize - 1;
+    int Low = 0, High = lkh.PopulationSize - 1;
     while (Low < High) {
         int Mid = (Low + High) / 2;
-        if (Fitness[Mid] < Cost)
+        if (lkh.Fitness[Mid] < Cost)
             Low = Mid + 1;
         else
             High = Mid;
     }
-    return High >= 0 && Fitness[High] == Cost;
+    return High >= 0 && lkh.Fitness[High] == Cost;
 }
 
 /*
@@ -141,10 +141,10 @@ GainType MergeTourWithIndividual(int i)
 {
     int *Pi, k;
 
-    assert(i >= 0 && i < PopulationSize);
-    Pi = Population[i];
-    for (k = 1; k <= Dimension; k++)
-        NodeSet[Pi[k - 1]].Next = &NodeSet[Pi[k]];
+    assert(i >= 0 && i < lkh.PopulationSize);
+    Pi = lkh.Population[i];
+    for (k = 1; k <= lkh.Dimension; k++)
+        lkh.NodeSet[Pi[k - 1]].Next = &lkh.NodeSet[Pi[k]];
     return MergeWithTour();
 }
 
@@ -157,11 +157,11 @@ void PrintPopulation()
 {
     int i;
     printff("Population:\n");
-    for (i = 0; i < PopulationSize; i++) {
-        printff("%3d: " GainFormat, i + 1, Fitness[i]);
-        if (Optimum != MINUS_INFINITY && Optimum != 0)
+    for (i = 0; i < lkh.PopulationSize; i++) {
+        printff("%3d: " GainFormat, i + 1, lkh.Fitness[i]);
+        if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
             printff(", Gap = %0.4f%%",
-                    100.0 * (Fitness[i] - Optimum) / Optimum);
+                    100.0 * (lkh.Fitness[i] - lkh.Optimum) / lkh.Optimum);
         printff("\n");
     }
 }
@@ -177,29 +177,29 @@ void ReplaceIndividualWithTour(int i, GainType Cost)
     int j, *P;
     Node *N;
 
-    assert(i >= 0 && i < PopulationSize);
-    Fitness[i] = Cost;
-    P = Population[i];
-    N = FirstNode;
-    for (j = 1; j <= Dimension; j++) {
+    assert(i >= 0 && i < lkh.PopulationSize);
+    lkh.Fitness[i] = Cost;
+    P = lkh.Population[i];
+    N = lkh.FirstNode;
+    for (j = 1; j <= lkh.Dimension; j++) {
         P[j] = N->Id;
         N = N->Suc;
     }
-    P[0] = P[Dimension];
-    while (i >= 1 && Cost < Fitness[i - 1]) {
-        Fitness[i] = Fitness[i - 1];
-        Population[i] = Population[i - 1];
+    P[0] = P[lkh.Dimension];
+    while (i >= 1 && Cost < lkh.Fitness[i - 1]) {
+        lkh.Fitness[i] = lkh.Fitness[i - 1];
+        lkh.Population[i] = lkh.Population[i - 1];
         i--;
     }
-    Fitness[i] = Cost;
-    Population[i] = P;
-    while (i < PopulationSize - 1 && Cost > Fitness[i + 1]) {
-        Fitness[i] = Fitness[i + 1];
-        Population[i] = Population[i + 1];
+    lkh.Fitness[i] = Cost;
+    lkh.Population[i] = P;
+    while (i < lkh.PopulationSize - 1 && Cost > lkh.Fitness[i + 1]) {
+        lkh.Fitness[i] = lkh.Fitness[i + 1];
+        lkh.Population[i] = lkh.Population[i + 1];
         i++;
     }
-    Fitness[i] = Cost;
-    Population[i] = P;
+    lkh.Fitness[i] = Cost;
+    lkh.Population[i] = P;
 }
 
 /* 
@@ -208,18 +208,18 @@ void ReplaceIndividualWithTour(int i, GainType Cost)
  */
 
 static int DistanceToIndividual(int i) { 
-    int Count = 0, j, *P = Population[i];
+    int Count = 0, j, *P = lkh.Population[i];
     Node *N;
     
-    for (j = 0; j < Dimension; j++) {
-        N = &NodeSet[P[j]];
-        (N->Next = &NodeSet[P[j + 1]])->Prev = N;
+    for (j = 0; j < lkh.Dimension; j++) {
+        N = &lkh.NodeSet[P[j]];
+        (N->Next = &lkh.NodeSet[P[j + 1]])->Prev = N;
     }
-    N = FirstNode;
+    N = lkh.FirstNode;
     do
         if (N->OldSuc != N->Next && N->OldSuc != N->Prev)
             Count++;
-    while ((N = N->OldSuc) != FirstNode);
+    while ((N = N->OldSuc) != lkh.FirstNode);
     return Count;
 }
 
@@ -236,22 +236,22 @@ static int DistanceToIndividual(int i) {
 
 int ReplacementIndividual(GainType Cost) {
     int i, j, d, *P;
-    int MinDist = INT_MAX, CMin = PopulationSize - 1;
-    Node *N = FirstNode;
-    while ((N = N->OldSuc = N->Suc) != FirstNode);
-    for (i = PopulationSize - 1; i >= 0 && Fitness[i] > Cost; i--) {
+    int MinDist = INT_MAX, CMin = lkh.PopulationSize - 1;
+    Node *N = lkh.FirstNode;
+    while ((N = N->OldSuc = N->Suc) != lkh.FirstNode);
+    for (i = lkh.PopulationSize - 1; i >= 0 && lkh.Fitness[i] > Cost; i--) {
         if ((d = DistanceToIndividual(i)) < MinDist) {
             CMin = i;
             MinDist = d;
         }
     }
-    if (CMin == PopulationSize - 1)
+    if (CMin == lkh.PopulationSize - 1)
         return CMin;
-    P = Population[CMin];
-    for (j = 0; j < Dimension; j++)
-        NodeSet[P[j]].OldSuc = &NodeSet[P[j + 1]];
-    for (i = 0; i < PopulationSize; i++)
+    P = lkh.Population[CMin];
+    for (j = 0; j < lkh.Dimension; j++)
+        lkh.NodeSet[P[j]].OldSuc = &lkh.NodeSet[P[j + 1]];
+    for (i = 0; i < lkh.PopulationSize; i++)
         if (i != CMin && (d = DistanceToIndividual(i)) < MinDist)
-            return PopulationSize - 1;
+            return lkh.PopulationSize - 1;
     return CMin;
 }

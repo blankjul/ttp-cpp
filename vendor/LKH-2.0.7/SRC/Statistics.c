@@ -19,12 +19,12 @@ void InitializeStatistics()
 
 void UpdateStatistics(GainType Cost, double Time)
 {
-    if (Trial < TrialsMin)
-        TrialsMin = Trial;
-    if (Trial > TrialsMax)
-        TrialsMax = Trial;
-    TrialSum += Trial;
-    if (Cost <= Optimum)
+    if (lkh.Trial < TrialsMin)
+        TrialsMin = lkh.Trial;
+    if (lkh.Trial > TrialsMax)
+        TrialsMax = lkh.Trial;
+    TrialSum += lkh.Trial;
+    if (Cost <= lkh.Optimum)
         Successes++;
     if (Cost < CostMin)
         CostMin = Cost;
@@ -40,11 +40,11 @@ void UpdateStatistics(GainType Cost, double Time)
 
 void PrintStatistics()
 {
-    int _Runs = Runs, _TrialsMin = TrialsMin;
+    int _Runs = lkh.Runs, _TrialsMin = TrialsMin;
     double _TimeMin = TimeMin;
-    GainType _Optimum = Optimum;
+    GainType _Optimum = lkh.Optimum;
 
-    printff("Successes/Runs = %d/%d \n", Successes, Runs);
+    printff("Successes/Runs = %d/%d \n", Successes, lkh.Runs);
     if (_Runs == 0)
         _Runs = 1;
     if (_TrialsMin > TrialsMax)
@@ -56,7 +56,7 @@ void PrintStatistics()
             ("Cost.min = " GainFormat ", Cost.avg = %0.2f, Cost.max = "
              GainFormat "\n", CostMin, (double) CostSum / _Runs, CostMax);
         if (_Optimum == MINUS_INFINITY)
-            _Optimum = BestCost;
+            _Optimum = lkh.BestCost;
         if (_Optimum != 0)
             printff
                 ("Gap.min = %0.4f%%, Gap.avg = %0.4f%%, Gap.max = %0.4f%%\n",

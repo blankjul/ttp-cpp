@@ -18,17 +18,17 @@ void WritePenalties()
 {
     Node *N;
 
-    if (PiFileName == 0 || !(PiFile = fopen(PiFileName, "w")))
+    if (lkh.PiFileName == 0 || !(lkh.PiFile = fopen(lkh.PiFileName, "w")))
         return;
-    if (TraceLevel >= 1)
-        printff("Writing PI_FILE: \"%s\" ... ", PiFileName);
-    fprintf(PiFile, "%d\n", Dimension);
-    N = FirstNode;
+    if (lkh.TraceLevel >= 1)
+        printff("Writing PI_FILE: \"%s\" ... ", lkh.PiFileName);
+    fprintf(lkh.PiFile, "%d\n", lkh.Dimension);
+    N = lkh.FirstNode;
     do
-        fprintf(PiFile, "%d %d\n", N->Id, N->Pi);
-    while ((N = N->Suc) != FirstNode);
-    fprintf(PiFile, "-1\nEOF\n");
-    fclose(PiFile);
-    if (TraceLevel >= 1)
-        printff("done\n", PiFileName);
+        fprintf(lkh.PiFile, "%d %d\n", N->Id, N->Pi);
+    while ((N = N->Suc) != lkh.FirstNode);
+    fprintf(lkh.PiFile, "-1\nEOF\n");
+    fclose(lkh.PiFile);
+    if (lkh.TraceLevel >= 1)
+        printff("done\n", lkh.PiFileName);
 }

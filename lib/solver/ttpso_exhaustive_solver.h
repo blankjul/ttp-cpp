@@ -32,6 +32,8 @@ namespace ttp {
 
             double bestTarget = numeric_limits<double>::min();
             std::vector<int> bestTour;
+            std::vector<int> bestPickingPlan;
+
 
 
             // for all the possible tsp tours
@@ -52,18 +54,20 @@ namespace ttp {
 
                     // save if it's a new best tour
                     Tour t(v);
-                    Knapsack k = ttp.convertKnapsack(b);
+                    Knapsack k = ttp.convertVectorToKnapsack(b);
                     double targetValue = ttp.evaluateSO(t, k);
 
                     if (targetValue > bestTarget) {
                         bestTour = std::vector<int> (v);
+                        bestPickingPlan = b;
+                        bestTarget = targetValue;
                     }
+
 
                     /*
                     cout << t << " , ";
                     for (int j = 0; j < b.size(); ++j) cout << b[j] << ' ';
                     cout << targetValue << '\n';
-
                     */
                 }
 
@@ -71,7 +75,8 @@ namespace ttp {
             } while (next_permutation(v.begin(), v.end()) && v[0] == 0);
 
             Tour t(bestTour);
-            return make_pair(t,Knapsack());
+            Knapsack k = ttp.convertVectorToKnapsack(bestPickingPlan);
+            return make_pair(t,k);
 
 
         }

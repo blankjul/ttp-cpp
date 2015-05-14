@@ -14,7 +14,7 @@ void ResetCandidateSet()
     Node *From;
     Candidate *NFrom, *NN, Temp;
 
-    From = FirstNode;
+    From = lkh.FirstNode;
     /* Loop for all nodes */
     do {
         if (!From->CandidateSet)
@@ -36,5 +36,5 @@ void ResetCandidateSet()
         NFrom++;
         NFrom->To = 0;
     }
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 }

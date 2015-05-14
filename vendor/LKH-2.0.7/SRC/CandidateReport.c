@@ -12,7 +12,7 @@ void CandidateReport()
     Node *N;
     Candidate *NN;
 
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
         Count = 0;
         if (N->CandidateSet)
@@ -25,25 +25,25 @@ void CandidateReport()
         Sum += Count;
         if (N->FixedTo1 && N->Id < N->FixedTo1->Id) {
             Fixed++;
-            Cost += Distance != Distance_1 ? Distance(N, N->FixedTo1) : 0;
+            Cost += lkh.Distance != Distance_1 ? lkh.Distance(N, N->FixedTo1) : 0;
         }
         if (N->FixedTo2 && N->Id < N->FixedTo2->Id) {
             Fixed++;
-            Cost += Distance != Distance_1 ? Distance(N, N->FixedTo2) : 0;
+            Cost += lkh.Distance != Distance_1 ? lkh.Distance(N, N->FixedTo2) : 0;
         }
     }
-    while ((N = N->Suc) != FirstNode);
+    while ((N = N->Suc) != lkh.FirstNode);
     printff("Cand.min = %d, Cand.avg = %0.1f, Cand.max = %d\n",
-            Min, (double) Sum / Dimension, Max);
+            Min, (double) Sum / lkh.Dimension, Max);
     if (Fixed > 0)
         printff("Edges.fixed = %d [Cost = " GainFormat "]\n", Fixed, Cost);
-    if (MergeTourFiles >= 1) {
+    if (lkh.MergeTourFiles >= 1) {
         Count = 0;
-        N = FirstNode;
+        N = lkh.FirstNode;
         do
             if (IsCommonEdge(N, N->MergeSuc[0]))
                 Count++;
-        while ((N = N->Suc) != FirstNode);
+        while ((N = N->Suc) != lkh.FirstNode);
         printff("Edges.common = %d\n", Count);
     }
 }

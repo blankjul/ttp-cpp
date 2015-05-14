@@ -28,13 +28,13 @@ void MinimumSpanningTree(int Sparse)
     Candidate *NBlue;
     int d;
 
-    Blue = N = FirstNode;
+    Blue = N = lkh.FirstNode;
     Blue->Dad = 0;              /* The root of the tree has no father */
     if (Sparse && Blue->CandidateSet) {
         /* The graph is sparse */
         /* Insert all nodes in the heap */
         Blue->Loc = 0;          /* A blue node is not in the heap */
-        while ((N = N->Suc) != FirstNode) {
+        while ((N = N->Suc) != lkh.FirstNode) {
             N->Dad = Blue;
             N->Cost = N->Rank = INT_MAX;
             HeapLazyInsert(N);
@@ -76,23 +76,23 @@ void MinimumSpanningTree(int Sparse)
         }
     } else {
         /* The graph is dense */
-        while ((N = N->Suc) != FirstNode)
+        while ((N = N->Suc) != lkh.FirstNode)
             N->Cost = INT_MAX;
         /* Loop as long as there a more nodes to include in the tree */
-        while ((N = Blue->Suc) != FirstNode) {
+        while ((N = Blue->Suc) != lkh.FirstNode) {
             int Min = INT_MAX;
             /* Update all non-blue nodes (the successors of Blue in the list) */
             do {
                 if (FixedOrCommon(Blue, N)) {
                     N->Dad = Blue;
-                    N->Cost = D(Blue, N);
+                    N->Cost = lkh.D(Blue, N);
                     NextBlue = N;
                     Min = INT_MIN;
                 } else {
                     if (!Blue->FixedTo2 && !N->FixedTo2 &&
                         !Forbidden(Blue, N) &&
-                        (!c || c(Blue, N) < N->Cost) &&
-                        (d = D(Blue, N)) < N->Cost) {
+                        (!lkh.c || lkh.c(Blue, N) < N->Cost) &&
+                        (d = lkh.D(Blue, N)) < N->Cost) {
                         N->Cost = d;
                         N->Dad = Blue;
                     }
@@ -102,7 +102,7 @@ void MinimumSpanningTree(int Sparse)
                     }
                 }
             }
-            while ((N = N->Suc) != FirstNode);
+            while ((N = N->Suc) != lkh.FirstNode);
             Follow(NextBlue, Blue);
             Blue = NextBlue;
         }

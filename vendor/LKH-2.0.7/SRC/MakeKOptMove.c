@@ -106,3 +106,4 @@ static int Score(int Left, int Right, int K)
     Reverse(Left, Right);
     return Count;
 }
+

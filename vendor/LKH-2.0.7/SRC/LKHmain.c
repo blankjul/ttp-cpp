@@ -5,30 +5,45 @@
  * This file contains the executables function of the program.
  */
 
+
+
 int main(int argc, char *argv[])
 {
-    GainType Cost, OldOptimum;
-    double Time, LastTime = GetTime();
+
+
 
     /* Read the specification of the problem */
     if (argc >= 2)
-        ParameterFileName = argv[1];
+        lkh.ParameterFileName = argv[1];
     ReadParameters();
-    MaxMatrixDimension = 10000;
+    lkh.MaxMatrixDimension = 10000;
     ReadProblem();
 
-    if (SubproblemSize > 0) {
-        if (DelaunayPartitioning)
+    return calc();
+
+
+}
+
+
+
+
+int calc() {
+
+    GainType Cost, OldOptimum;
+    double Time, LastTime = GetTime();
+
+    if (lkh.SubproblemSize > 0) {
+        if (lkh.DelaunayPartitioning)
             SolveDelaunaySubproblems();
-        else if (KarpPartitioning)
+        else if (lkh.KarpPartitioning)
             SolveKarpSubproblems();
-        else if (KCenterPartitioning)
+        else if (lkh.KCenterPartitioning)
             SolveKCenterSubproblems();
-        else if (KMeansPartitioning)
+        else if (lkh.KMeansPartitioning)
             SolveKMeansSubproblems();
-        else if (RohePartitioning)
+        else if (lkh.RohePartitioning)
             SolveRoheSubproblems();
-        else if (MoorePartitioning || SierpinskiPartitioning)
+        else if (lkh.MoorePartitioning || lkh.SierpinskiPartitioning)
             SolveSFCSubproblems();
         else
             SolveTourSegmentSubproblems();
@@ -38,103 +53,104 @@ int main(int argc, char *argv[])
     CreateCandidateSet();
     InitializeStatistics();
 
-    if (Norm != 0)
-        BestCost = PLUS_INFINITY;
+    if (lkh.Norm != 0)
+        lkh.BestCost = PLUS_INFINITY;
     else {
         /* The ascent has solved the problem! */
-        Optimum = BestCost = (GainType) LowerBound;
-        UpdateStatistics(Optimum, GetTime() - LastTime);
+        lkh.Optimum = lkh.BestCost = (GainType) lkh.LowerBound;
+        UpdateStatistics(lkh.Optimum, GetTime() - LastTime);
         RecordBetterTour();
         RecordBestTour();
-        WriteTour(OutputTourFileName, BestTour, BestCost);
-        WriteTour(TourFileName, BestTour, BestCost);
-        Runs = 0;
+        WriteTour(lkh.OutputTourFileName, lkh.BestTour, lkh.BestCost);
+        WriteTour(lkh.TourFileName, lkh.BestTour, lkh.BestCost);
+        lkh.Runs = 0;
     }
 
     /* Find a specified number (Runs) of local optima */
-    for (Run = 1; Run <= Runs; Run++) {
+    for (lkh.Run = 1; lkh.Run <= lkh.Runs; lkh.Run++) {
         LastTime = GetTime();
         Cost = FindTour();      /* using the Lin-Kernighan heuristic */
-        if (MaxPopulationSize > 1) {
+        if (lkh.MaxPopulationSize > 1) {
             /* Genetic algorithm */
             int i;
-            for (i = 0; i < PopulationSize; i++) {
+            for (i = 0; i < lkh.PopulationSize; i++) {
                 GainType OldCost = Cost;
                 Cost = MergeTourWithIndividual(i);
-                if (TraceLevel >= 1 && Cost < OldCost) {
+                if (lkh.TraceLevel >= 1 && Cost < OldCost) {
                     printff("  Merged with %d: Cost = " GainFormat, i + 1,
                             Cost);
-                    if (Optimum != MINUS_INFINITY && Optimum != 0)
+                    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
                         printff(", Gap = %0.4f%%",
-                                100.0 * (Cost - Optimum) / Optimum);
+                                100.0 * (Cost - lkh.Optimum) / lkh.Optimum);
                     printff("\n");
                 }
             }
             if (!HasFitness(Cost)) {
-                if (PopulationSize < MaxPopulationSize) {
+                if (lkh.PopulationSize < lkh.MaxPopulationSize) {
                     AddToPopulation(Cost);
-                    if (TraceLevel >= 1)
+                    if (lkh.TraceLevel >= 1)
                         PrintPopulation();
-                } else if (Cost < Fitness[PopulationSize - 1]) {
+                } else if (Cost < lkh.Fitness[lkh.PopulationSize - 1]) {
                     i = ReplacementIndividual(Cost);
                     ReplaceIndividualWithTour(i, Cost);
-                    if (TraceLevel >= 1)
+                    if (lkh.TraceLevel >= 1)
                         PrintPopulation();
                 }
             }
-        } else if (Run > 1)
+        } else if (lkh.Run > 1)
             Cost = MergeBetterTourWithBestTour();
-        if (Cost < BestCost) {
-            BestCost = Cost;
+        if (Cost < lkh.BestCost) {
+            lkh.BestCost = Cost;
             RecordBetterTour();
             RecordBestTour();
-            WriteTour(OutputTourFileName, BestTour, BestCost);
-            WriteTour(TourFileName, BestTour, BestCost);
+            WriteTour(lkh.OutputTourFileName, lkh.BestTour, lkh.BestCost);
+            WriteTour(lkh.TourFileName, lkh.BestTour, lkh.BestCost);
         }
-        OldOptimum = Optimum;
-        if (Cost < Optimum) {
-            if (FirstNode->InputSuc) {
-                Node *N = FirstNode;
-                while ((N = N->InputSuc = N->Suc) != FirstNode);
+        OldOptimum = lkh.Optimum;
+        if (Cost < lkh.Optimum) {
+            if (lkh.FirstNode->InputSuc) {
+                Node *N = lkh.FirstNode;
+                while ((N = N->InputSuc = N->Suc) != lkh.FirstNode);
             }
-            Optimum = Cost;
-            printff("*** New optimum = " GainFormat " ***\n\n", Optimum);
+            lkh.Optimum = Cost;
+            printff("*** New optimum = " GainFormat " ***\n\n", lkh.Optimum);
         }
         Time = fabs(GetTime() - LastTime);
         UpdateStatistics(Cost, Time);
-        if (TraceLevel >= 1 && Cost != PLUS_INFINITY) {
-            printff("Run %d: Cost = " GainFormat, Run, Cost);
-            if (Optimum != MINUS_INFINITY && Optimum != 0)
+        if (lkh.TraceLevel >= 1 && Cost != PLUS_INFINITY) {
+            printff("Run %d: Cost = " GainFormat, lkh.Run, Cost);
+            if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
                 printff(", Gap = %0.4f%%",
-                        100.0 * (Cost - Optimum) / Optimum);
+                        100.0 * (Cost - lkh.Optimum) / lkh.Optimum);
             printff(", Time = %0.2f sec. %s\n\n", Time,
-                    Cost < Optimum ? "<" : Cost == Optimum ? "=" : "");
+                    Cost < lkh.Optimum ? "<" : Cost == lkh.Optimum ? "=" : "");
         }
-        if (StopAtOptimum && Cost == OldOptimum && MaxPopulationSize >= 1) {
-            Runs = Run;
+        if (lkh.StopAtOptimum && Cost == OldOptimum && lkh.MaxPopulationSize >= 1) {
+            lkh.Runs = lkh.Run;
             break;
         }
-        if (PopulationSize >= 2 &&
-            (PopulationSize == MaxPopulationSize ||
-             Run >= 2 * MaxPopulationSize) && Run < Runs) {
+        if (lkh.PopulationSize >= 2 &&
+            (lkh.PopulationSize == lkh.MaxPopulationSize ||
+                    lkh.Run >= 2 * lkh.MaxPopulationSize) && lkh.Run < lkh.Runs) {
             Node *N;
             int Parent1, Parent2;
-            Parent1 = LinearSelection(PopulationSize, 1.25);
+            Parent1 = LinearSelection(lkh.PopulationSize, 1.25);
             do
-                Parent2 = LinearSelection(PopulationSize, 1.25);
+                Parent2 = LinearSelection(lkh.PopulationSize, 1.25);
             while (Parent2 == Parent1);
             ApplyCrossover(Parent1, Parent2);
-            N = FirstNode;
+            N = lkh.FirstNode;
             do {
-                int d = C(N, N->Suc);
+                int d = lkh.C(N, N->Suc);
                 AddCandidate(N, N->Suc, d, INT_MAX);
                 AddCandidate(N->Suc, N, d, INT_MAX);
                 N = N->InitialSuc = N->Suc;
             }
-            while (N != FirstNode);
+            while (N != lkh.FirstNode);
         }
-        SRandom(++Seed);
+        SRandom(++lkh.Seed);
     }
     PrintStatistics();
     return EXIT_SUCCESS;
 }
+

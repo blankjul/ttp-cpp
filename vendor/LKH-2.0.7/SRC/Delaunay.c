@@ -62,7 +62,7 @@ void delaunay(int n)
 {
     edge *l_cw, *r_ccw;
     point **p_sorted;
-    Node *N = FirstNode;
+    Node *N = lkh.FirstNode;
     int i, j;
 
     alloc_memory(n);

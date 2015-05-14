@@ -22,15 +22,15 @@ void WriteCandidates()
     Candidate *NN;
     Node *N;
 
-    if (CandidateFiles == 0 ||
-        !(CandidateFile = fopen(CandidateFileName[0], "w")))
+    if (lkh.CandidateFiles == 0 ||
+        !(CandidateFile = fopen(lkh.CandidateFileName[0], "w")))
         return;
-    if (TraceLevel >= 1)
+    if (lkh.TraceLevel >= 1)
         printff("Writing CANDIDATE_FILE: \"%s\" ... ",
-                CandidateFileName[0]);
-    fprintf(CandidateFile, "%d\n", Dimension);
-    for (i = 1; i <= Dimension; i++) {
-        N = &NodeSet[i];
+                lkh.CandidateFileName[0]);
+    fprintf(CandidateFile, "%d\n", lkh.Dimension);
+    for (i = 1; i <= lkh.Dimension; i++) {
+        N = &lkh.NodeSet[i];
         fprintf(CandidateFile, "%d %d", N->Id, N->Dad ? N->Dad->Id : 0);
         Count = 0;
         for (NN = N->CandidateSet; NN && NN->To; NN++)
@@ -42,6 +42,6 @@ void WriteCandidates()
     }
     fprintf(CandidateFile, "-1\nEOF\n");
     fclose(CandidateFile);
-    if (TraceLevel >= 1)
+    if (lkh.TraceLevel >= 1)
         printff("done\n");
 }

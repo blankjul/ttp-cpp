@@ -37,23 +37,23 @@
 
 #ifdef THREE_LEVEL_TREE
 #define PRED(a)\
-    (Reversed == ((a)->Parent->Reversed != (a)->Parent->Parent->Reversed) ?\
+    (lkh.Reversed == ((a)->Parent->lkh.Reversed != (a)->Parent->Parent->lkh.Reversed) ?\
     (a)->Pred : (a)->Suc)
 #define SUC(a)\
-    (Reversed == ((a)->Parent->Reversed != (a)->Parent->Parent->Reversed) ?\
+    (lkh.Reversed == ((a)->Parent->lkh.Reversed != (a)->Parent->Parent->lkh.Reversed) ?\
     (a)->Suc : (a)->Pred)
 #define BETWEEN(a, b, c) Between_SSL(a, b, c)
 #define FLIP(a, b, c, d) Flip_SSL(a, b, c)
 #endif
 #ifdef TWO_LEVEL_TREE
-#define PRED(a) (Reversed == (a)->Parent->Reversed ? (a)->Pred : (a)->Suc)
-#define SUC(a) (Reversed == (a)->Parent->Reversed ? (a)->Suc : (a)->Pred)
+#define PRED(a) (lkh.Reversed == (a)->Parent->Reversed ? (a)->Pred : (a)->Suc)
+#define SUC(a) (lkh.Reversed == (a)->Parent->Reversed ? (a)->Suc : (a)->Pred)
 #define BETWEEN(a, b, c) Between_SL(a, b, c)
 #define FLIP(a, b, c, d) Flip_SL(a, b, c)
 #endif
 #ifdef ONE_LEVEL_TREE
-#define PRED(a) (Reversed ? (a)->Suc : (a)->Pred)
-#define SUC(a) (Reversed ? (a)->Pred : (a)->Suc)
+#define PRED(a) (lkh.Reversed ? (a)->Suc : (a)->Pred)
+#define SUC(a) (lkh.Reversed ? (a)->Pred : (a)->Suc)
 #define BETWEEN(a, b, c) Between(a, b, c)
 #define FLIP(a, b, c, d) Flip(a, b, c)
 #endif

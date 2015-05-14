@@ -18,19 +18,19 @@ int
 SolveSubproblem(int CurrentSubproblem, int Subproblems,
                 GainType * GlobalBestCost)
 {
-    Node *FirstNodeSaved = FirstNode, *N, *Next, *Last = 0;
-    GainType OptimumSaved = Optimum, Cost, Improvement, GlobalCost;
-    double LastTime, Time, ExcessSaved = Excess;
+    Node *FirstNodeSaved = lkh.FirstNode, *N, *Next, *Last = 0;
+    GainType OptimumSaved = lkh.Optimum, Cost, Improvement, GlobalCost;
+    double LastTime, Time, ExcessSaved = lkh.Excess;
     int NewDimension = 0, OldDimension = 0, Number, i, InitialTourEdges = 0,
-        AscentCandidatesSaved = AscentCandidates,
-        InitialPeriodSaved = InitialPeriod, MaxTrialsSaved = MaxTrials;
+        AscentCandidatesSaved = lkh.AscentCandidates,
+        InitialPeriodSaved = lkh.InitialPeriod, MaxTrialsSaved = lkh.MaxTrials;
 
-    BestCost = PLUS_INFINITY;
-    FirstNode = 0;
+    lkh.BestCost = PLUS_INFINITY;
+    lkh.FirstNode = 0;
     N = FirstNodeSaved;
     do {
         if (N->Subproblem == CurrentSubproblem) {
-            if (SubproblemsCompressed &&
+            if (lkh.SubproblemsCompressed &&
                 (((N->SubproblemPred == N->SubBestPred ||
                    FixedOrCommon(N, N->SubproblemPred) ||
                    (N->SubBestPred &&
@@ -53,8 +53,8 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
                      N->FixedTo2Saved == N->SubBestPred))))))
                 N->Subproblem = -CurrentSubproblem;
             else {
-                if (!FirstNode)
-                    FirstNode = N;
+                if (!lkh.FirstNode)
+                    lkh.FirstNode = N;
                 NewDimension++;
             }
             N->Head = N->Tail = 0;
@@ -68,30 +68,30 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
     if ((Number = CurrentSubproblem % Subproblems) == 0)
         Number = Subproblems;
     if (NewDimension <= 3 || NewDimension == OldDimension) {
-        if (TraceLevel >= 1 && NewDimension <= 3)
+        if (lkh.TraceLevel >= 1 && NewDimension <= 3)
             printff
                 ("\nSubproblem %d of %d: Dimension = %d (too small)\n",
                  Number, Subproblems, NewDimension);
-        FirstNode = FirstNodeSaved;
+        lkh.FirstNode = FirstNodeSaved;
         return 0;
     }
-    if (AscentCandidates > NewDimension - 1)
-        AscentCandidates = NewDimension - 1;
-    if (InitialPeriod < 0) {
-        InitialPeriod = NewDimension / 2;
-        if (InitialPeriod < 100)
-            InitialPeriod = 100;
+    if (lkh.AscentCandidates > NewDimension - 1)
+        lkh.AscentCandidates = NewDimension - 1;
+    if (lkh.InitialPeriod < 0) {
+        lkh.InitialPeriod = NewDimension / 2;
+        if (lkh.InitialPeriod < 100)
+            lkh.InitialPeriod = 100;
     }
-    if (Excess < 0)
-        Excess = 1.0 / NewDimension;
-    if (MaxTrials == -1)
-        MaxTrials = NewDimension;
-    N = FirstNode;
+    if (lkh.Excess < 0)
+        lkh.Excess = 1.0 / NewDimension;
+    if (lkh.MaxTrials == -1)
+        lkh.MaxTrials = NewDimension;
+    N = lkh.FirstNode;
     do {
         Next = N->SubproblemSuc;
         if (N->Subproblem == CurrentSubproblem) {
             N->Pred = N->Suc = N;
-            if (N != FirstNode)
+            if (N != lkh.FirstNode)
                 Follow(N, Last);
             Last = N;
         } else if (Next->Subproblem == CurrentSubproblem
@@ -106,7 +106,7 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
                 Next->FixedTo1 = Last;
             else
                 Next->FixedTo2 = Last;
-            if (C == C_EXPLICIT) {
+            if (lkh.C == C_EXPLICIT) {
                 if (Last->Id > Next->Id)
                     Last->C[Next->Id] = 0;
                 else
@@ -114,42 +114,42 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
             }
         }
     }
-    while ((N = Next) != FirstNode);
+    while ((N = Next) != lkh.FirstNode);
 
-    Dimension = NewDimension;
+    lkh.Dimension = NewDimension;
     AllocateSegments();
     InitializeStatistics();
-    if (CacheSig)
-        for (i = 0; i <= CacheMask; i++)
-            CacheSig[i] = 0;
-    OptimumSaved = Optimum;
-    Optimum = 0;
-    N = FirstNode;
+    if (lkh.CacheSig)
+        for (i = 0; i <= lkh.CacheMask; i++)
+            lkh.CacheSig[i] = 0;
+    OptimumSaved = lkh.Optimum;
+    lkh.Optimum = 0;
+    N = lkh.FirstNode;
     do {
         if (N->SubproblemSuc == N->InitialSuc ||
             N->SubproblemPred == N->InitialSuc)
             InitialTourEdges++;
         if (!Fixed(N, N->Suc))
-            Optimum += Distance(N, N->Suc);
+            lkh.Optimum += lkh.Distance(N, N->Suc);
         if (N->FixedTo1 && N->Subproblem != N->FixedTo1->Subproblem)
             eprintf("Illegal fixed edge (%d,%d)", N->Id, N->FixedTo1->Id);
         if (N->FixedTo2 && N->Subproblem != N->FixedTo2->Subproblem)
             eprintf("Illegal fixed edge (%d,%d)", N->Id, N->FixedTo2->Id);
     }
-    while ((N = N->Suc) != FirstNode);
-    if (TraceLevel >= 1)
+    while ((N = N->Suc) != lkh.FirstNode);
+    if (lkh.TraceLevel >= 1)
         printff
             ("\nSubproblem %d of %d: Dimension = %d, Upper bound = "
-             GainFormat "\n", Number, Subproblems, Dimension, Optimum);
+             GainFormat "\n", Number, Subproblems, lkh.Dimension, lkh.Optimum);
     FreeCandidateSets();
     CreateCandidateSet();
 
-    for (Run = 1; Run <= Runs; Run++) {
+    for (lkh.Run = 1; lkh.Run <= lkh.Runs; lkh.Run++) {
         LastTime = GetTime();
-        Cost = Norm != 0 ? FindTour() : Optimum;
+        Cost = lkh.Norm != 0 ? FindTour() : lkh.Optimum;
         /* Merge with subproblem tour */
         Last = 0;
-        N = FirstNode;
+        N = lkh.FirstNode;
         do {
             if (N->Subproblem == CurrentSubproblem) {
                 if (Last)
@@ -157,44 +157,44 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
                 Last = N;
             }
         }
-        while ((N = N->SubproblemSuc) != FirstNode);
-        Last->Next = FirstNode;
+        while ((N = N->SubproblemSuc) != lkh.FirstNode);
+        Last->Next = lkh.FirstNode;
         Cost = MergeWithTour();
-        if (MaxPopulationSize > 1) {
+        if (lkh.MaxPopulationSize > 1) {
             /* Genetic algorithm */
-            for (i = 0; i < PopulationSize; i++)
+            for (i = 0; i < lkh.PopulationSize; i++)
                 Cost = MergeTourWithIndividual(i);
             if (!HasFitness(Cost)) {
-                if (PopulationSize < MaxPopulationSize) {
+                if (lkh.PopulationSize < lkh.MaxPopulationSize) {
                     AddToPopulation(Cost);
-                    if (TraceLevel >= 1)
+                    if (lkh.TraceLevel >= 1)
                         PrintPopulation();
-                } else if (Cost < Fitness[PopulationSize - 1]) {
-                    ReplaceIndividualWithTour(PopulationSize - 1, Cost);
-                    if (TraceLevel >= 1)
+                } else if (Cost < lkh.Fitness[lkh.PopulationSize - 1]) {
+                    ReplaceIndividualWithTour(lkh.PopulationSize - 1, Cost);
+                    if (lkh.TraceLevel >= 1)
                         PrintPopulation();
                 }
             }
         }
-        if (Cost < BestCost) {
-            N = FirstNode;
+        if (Cost < lkh.BestCost) {
+            N = lkh.FirstNode;
             do {
                 N->SubBestPred = N->Pred;
                 N->SubBestSuc = N->Suc;
-            } while ((N = N->Suc) != FirstNode);
-            BestCost = Cost;
+            } while ((N = N->Suc) != lkh.FirstNode);
+            lkh.BestCost = Cost;
         }
-        if (Cost < Optimum || (Cost != Optimum && OutputTourFileName)) {
-            Improvement = Optimum - Cost;
+        if (Cost < lkh.Optimum || (Cost != lkh.Optimum && lkh.OutputTourFileName)) {
+            Improvement = lkh.Optimum - Cost;
             if (Improvement > 0) {
-                BestCost = GlobalCost = *GlobalBestCost -= Improvement;
-                Optimum = Cost;
+                lkh.BestCost = GlobalCost = *GlobalBestCost -= Improvement;
+                lkh.Optimum = Cost;
             } else
                 GlobalCost = *GlobalBestCost - Improvement;
-            N = FirstNode;
+            N = lkh.FirstNode;
             do
                 N->Mark = 0;
-            while ((N = N->SubproblemSuc) != FirstNode);
+            while ((N = N->SubproblemSuc) != lkh.FirstNode);
             do {
                 N->Mark = N;
                 if (!N->SubproblemSuc->Mark &&
@@ -211,52 +211,52 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
                 else if (!N->Pred->Mark)
                     N->BestSuc = N->Pred;
                 else
-                    N->BestSuc = FirstNode;
+                    N->BestSuc = lkh.FirstNode;
             }
-            while ((N = N->BestSuc) != FirstNode);
-            Dimension = ProblemType != ATSP ? DimensionSaved : 
-                2 * DimensionSaved;
+            while ((N = N->BestSuc) != lkh.FirstNode);
+            lkh.Dimension = lkh.ProblemType != ATSP ? lkh.DimensionSaved :
+                2 * lkh.DimensionSaved;
             i = 0;
             do {
-                if (ProblemType != ATSP)
-                    BetterTour[++i] = N->Id;
-                else if (N->Id <= Dimension / 2) {
+                if (lkh.ProblemType != ATSP)
+                    lkh.BetterTour[++i] = N->Id;
+                else if (N->Id <= lkh.Dimension / 2) {
                     i++;
-                    if (N->BestSuc->Id != N->Id + Dimension / 2)
-                        BetterTour[i] = N->Id;
+                    if (N->BestSuc->Id != N->Id + lkh.Dimension / 2)
+                        lkh.BetterTour[i] = N->Id;
                     else
-                        BetterTour[Dimension / 2 - i + 1] = N->Id;
+                        lkh.BetterTour[lkh.Dimension / 2 - i + 1] = N->Id;
                 }
             }
-            while ((N = N->BestSuc) != FirstNode);
-            BetterTour[0] =
-                BetterTour[ProblemType !=
-                           ATSP ? Dimension : Dimension / 2];
-            WriteTour(OutputTourFileName, BetterTour, GlobalCost);
+            while ((N = N->BestSuc) != lkh.FirstNode);
+            lkh.BetterTour[0] =
+                    lkh.BetterTour[lkh.ProblemType !=
+                           ATSP ? lkh.Dimension : lkh.Dimension / 2];
+            WriteTour(lkh.OutputTourFileName, lkh.BetterTour, GlobalCost);
             if (Improvement > 0) {
                 do
                     if (N->Subproblem != CurrentSubproblem)
                         break;
-                while ((N = N->SubproblemPred) != FirstNode);
+                while ((N = N->SubproblemPred) != lkh.FirstNode);
                 if (N->SubproblemSuc == N->BestSuc) {
-                    N = FirstNode;
+                    N = lkh.FirstNode;
                     do {
                         N->BestSuc->SubproblemPred = N;
                         N = N->SubproblemSuc = N->BestSuc;
                     }
-                    while (N != FirstNode);
+                    while (N != lkh.FirstNode);
                 } else {
-                    N = FirstNode;
+                    N = lkh.FirstNode;
                     do
                         (N->SubproblemPred = N->BestSuc)->SubproblemSuc =
                             N;
-                    while ((N = N->BestSuc) != FirstNode);
+                    while ((N = N->BestSuc) != lkh.FirstNode);
                 }
                 RecordBestTour();
-                WriteTour(TourFileName, BestTour, GlobalCost);
+                WriteTour(lkh.TourFileName, lkh.BestTour, GlobalCost);
             }
-            Dimension = NewDimension;
-            if (TraceLevel >= 1) {
+            lkh.Dimension = NewDimension;
+            if (lkh.TraceLevel >= 1) {
                 printff("*** %d: Cost = " GainFormat, Number, GlobalCost);
                 if (OptimumSaved != MINUS_INFINITY && OptimumSaved != 0)
                     printff(", Gap = %0.4f%%",
@@ -271,73 +271,73 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
 
         Time = fabs(GetTime() - LastTime);
         UpdateStatistics(Cost, Time);
-        if (TraceLevel >= 1 && Cost != PLUS_INFINITY)
+        if (lkh.TraceLevel >= 1 && Cost != PLUS_INFINITY)
             printff("Run %d: Cost = " GainFormat ", Time = %0.2f sec.\n\n",
-                    Run, Cost, Time);
-        if (PopulationSize >= 2 &&
-            (PopulationSize == MaxPopulationSize
-             || Run >= 2 * MaxPopulationSize) && Run < Runs) {
+                    lkh.Run, Cost, Time);
+        if (lkh.PopulationSize >= 2 &&
+            (lkh.PopulationSize == lkh.MaxPopulationSize
+             || lkh.Run >= 2 * lkh.MaxPopulationSize) && lkh.Run < lkh.Runs) {
             Node *N;
             int Parent1, Parent2;
-            Parent1 = LinearSelection(PopulationSize, 1.25);
+            Parent1 = LinearSelection(lkh.PopulationSize, 1.25);
             do
-                Parent2 = LinearSelection(PopulationSize, 1.25);
+                Parent2 = LinearSelection(lkh.PopulationSize, 1.25);
             while (Parent1 == Parent2);
             ApplyCrossover(Parent1, Parent2);
-            N = FirstNode;
+            N = lkh.FirstNode;
             do {
-                int d = C(N, N->Suc);
+                int d = lkh.C(N, N->Suc);
                 AddCandidate(N, N->Suc, d, INT_MAX);
                 AddCandidate(N->Suc, N, d, INT_MAX);
                 N = N->InitialSuc = N->Suc;
             }
-            while (N != FirstNode);
+            while (N != lkh.FirstNode);
         }
-        SRandom(++Seed);
-        if (Norm == 0)
+        SRandom(++lkh.Seed);
+        if (lkh.Norm == 0)
             break;
     }
 
-    if (TraceLevel >= 1)
+    if (lkh.TraceLevel >= 1)
         PrintStatistics();
 
-    if (C == C_EXPLICIT) {
-        N = FirstNode;
+    if (lkh.C == C_EXPLICIT) {
+        N = lkh.FirstNode;
         do {
             for (i = 1; i < N->Id; i++) {
-                N->C[i] -= N->Pi + NodeSet[i].Pi;
-                N->C[i] /= Precision;
+                N->C[i] -= N->Pi + lkh.NodeSet[i].Pi;
+                N->C[i] /= lkh.Precision;
             }
             if (N->FixedTo1 && N->FixedTo1 != N->FixedTo1Saved) {
                 if (N->Id > N->FixedTo1->Id)
-                    N->C[N->FixedTo1->Id] = Distance(N, N->FixedTo1);
+                    N->C[N->FixedTo1->Id] = lkh.Distance(N, N->FixedTo1);
                 else
-                    N->FixedTo1->C[N->Id] = Distance(N, N->FixedTo1);
+                    N->FixedTo1->C[N->Id] = lkh.Distance(N, N->FixedTo1);
             }
             if (N->FixedTo2 && N->FixedTo2 != N->FixedTo2Saved) {
                 if (N->Id > N->FixedTo2->Id)
-                    N->C[N->FixedTo2->Id] = Distance(N, N->FixedTo2);
+                    N->C[N->FixedTo2->Id] = lkh.Distance(N, N->FixedTo2);
                 else
-                    N->FixedTo2->C[N->Id] = Distance(N, N->FixedTo2);
+                    N->FixedTo2->C[N->Id] = lkh.Distance(N, N->FixedTo2);
             }
         }
-        while ((N = N->Suc) != FirstNode);
+        while ((N = N->Suc) != lkh.FirstNode);
     }
 
     FreeSegments();
     FreeCandidateSets();
     FreePopulation();
-    if (InitialTourEdges == Dimension) {
+    if (InitialTourEdges == lkh.Dimension) {
         do
             N->InitialSuc = N->SubproblemSuc;
-        while ((N = N->SubproblemSuc) != FirstNode);
+        while ((N = N->SubproblemSuc) != lkh.FirstNode);
     } else {
         do
             N->InitialSuc = 0;
-        while ((N = N->SubproblemSuc) != FirstNode);
+        while ((N = N->SubproblemSuc) != lkh.FirstNode);
     }
-    Dimension = ProblemType != ATSP ? DimensionSaved : 2 * DimensionSaved;
-    N = FirstNode = FirstNodeSaved;
+    lkh.Dimension = lkh.ProblemType != ATSP ? lkh.DimensionSaved : 2 * lkh.DimensionSaved;
+    N = lkh.FirstNode = FirstNodeSaved;
     do {
         N->Suc = N->BestSuc = N->SubproblemSuc;
         N->Suc->Pred = N;
@@ -348,11 +348,11 @@ SolveSubproblem(int CurrentSubproblem, int Subproblems,
         N->FixedTo2 = N->FixedTo2Saved;
         N->FixedTo2Saved = Next;
     }
-    while ((N = N->Suc) != FirstNode);
-    Optimum = OptimumSaved;
-    Excess = ExcessSaved;
-    AscentCandidates = AscentCandidatesSaved;
-    InitialPeriod = InitialPeriodSaved;
-    MaxTrials = MaxTrialsSaved;
+    while ((N = N->Suc) != lkh.FirstNode);
+    lkh.Optimum = OptimumSaved;
+    lkh.Excess = ExcessSaved;
+    lkh.AscentCandidates = AscentCandidatesSaved;
+    lkh.InitialPeriod = InitialPeriodSaved;
+    lkh.MaxTrials = MaxTrialsSaved;
     return 1;
 }

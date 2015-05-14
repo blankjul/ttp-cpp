@@ -46,7 +46,7 @@ namespace ttp {
         TravellingThiefProblem::maxWeight = maxWeight;
     }
 
-    Knapsack TravellingThiefProblem::convertKnapsack(vector<int> b) {
+    Knapsack TravellingThiefProblem::convertVectorToKnapsack(vector<int> b) {
         Knapsack k;
         if (b.size() != items.size()) return k;
         for (int i = 0; i < b.size(); ++i) {
@@ -56,6 +56,15 @@ namespace ttp {
             }
         }
         return k;
+    }
+
+
+    vector<int> TravellingThiefProblem::convertKnapsackToVector(Knapsack &k) {
+        vector<int> b(sizeOfItems());
+        for (int i = 0; i < b.size(); ++i) {
+            if (k.contains(items[i].first)) b[i] = 1;
+        }
+        return b;
     }
 
     const vector<pair<ItemPtr, int>> & TravellingThiefProblem::getItems() const {
@@ -181,8 +190,6 @@ namespace ttp {
 
         return pair<double, double>(elapsedTime, finalValue);
     }
-
-
 
 
     double TravellingThiefProblem::getRentingRate() const {

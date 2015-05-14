@@ -35,7 +35,7 @@ void ERXT()
     int i;
 
     Tabu = 0;
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
         N->OldSuc = N->Suc;
         N->OldSuc->OldPred = N;
@@ -43,18 +43,18 @@ void ERXT()
         N->Suc->Pred = N;
         N->V = 0;
     }
-    while ((N = N->Suc) != FirstNode);
-    if (Dimension == DimensionSaved)
-        FirstNode = &NodeSet[1 + Random() % Dimension];
+    while ((N = N->Suc) != lkh.FirstNode);
+    if (lkh.Dimension == lkh.DimensionSaved)
+        lkh.FirstNode = &lkh.NodeSet[1 + Random() % lkh.Dimension];
     else
-        for (i = Random() % Dimension; i > 0; i--)
-            FirstNode = FirstNode->Suc;
-    N = FirstNode;
+        for (i = Random() % lkh.Dimension; i > 0; i--)
+            lkh.FirstNode = lkh.FirstNode->Suc;
+    N = lkh.FirstNode;
     N->V = 1;
     FirstFree = N->Suc;
     N->Pred->Suc = N->Suc;
     N->Suc->Pred = N->Pred;
-    for (i = 1; i < Dimension; i++) {
+    for (i = 1; i < lkh.Dimension; i++) {
         Next = SelectNext(N);
         if (Next == FirstFree)
             FirstFree = Next->Suc;
@@ -64,7 +64,7 @@ void ERXT()
         N = Next;
         N->V = 1;
     }
-    Link(N, FirstNode);
+    Link(N, lkh.FirstNode);
 }
 
 /*

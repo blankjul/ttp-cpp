@@ -16,24 +16,24 @@ void
 SolveCompressedSubproblem(int CurrentSubproblem, int Subproblems,
                           GainType * GlobalBestCost)
 {
-    int Level, Number, RestrictedSearchSaved = RestrictedSearch;
+    int Level, Number, RestrictedSearchSaved = lkh.RestrictedSearch;
     GainType OldGlobalBestCost = *GlobalBestCost;
     Node *N;
 
     if ((Number = CurrentSubproblem % Subproblems) == 0)
         Number = Subproblems;
-    RestrictedSearch = 0;
+    lkh.RestrictedSearch = 0;
     for (Level = 1;
          Level <= MaxLevel && *GlobalBestCost == OldGlobalBestCost;
          Level++) {
-        if (TraceLevel >= 1)
+        if (lkh.TraceLevel >= 1)
             printff("\nCompress subproblem %d (Level %d):", Number, Level);
         if (!SolveSubproblem(CurrentSubproblem, Subproblems, GlobalBestCost))
             break;
     }
-    RestrictedSearch = RestrictedSearchSaved;
-    N = FirstNode;
+    lkh.RestrictedSearch = RestrictedSearchSaved;
+    N = lkh.FirstNode;
     do
         N->Subproblem = abs(N->Subproblem);
-    while ((N = N->Suc) != FirstNode);
+    while ((N = N->Suc) != lkh.FirstNode);
 }

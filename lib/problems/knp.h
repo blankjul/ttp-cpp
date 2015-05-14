@@ -44,12 +44,6 @@ namespace ttp {
         double evaluate(Knapsack & k);
 
 
-        /**
-         * Converts the Knapsack from a boolean vector to an object.
-         */
-        Knapsack convertKnapsack(vector<bool>);
-
-
 
         /**
          * Returns all available items.
@@ -68,6 +62,19 @@ namespace ttp {
          * Returns the maximal weight
          */
         double getMaxWeight() const;
+
+        /**
+         * Converts a int vector to a knapsack.
+         */
+        Knapsack convertVectorToKnapsack(vector<int>);
+
+        /**
+         * Converts a knapsack to an int vector.
+         */
+        vector<int> convertKnapsackToVector(Knapsack &k);
+
+
+
 
     };
 

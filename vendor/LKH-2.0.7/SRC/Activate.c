@@ -21,9 +21,9 @@ void Activate(Node * N)
 {
     if (N->Next != 0)
         return;
-    if (FirstActive == 0)
-        FirstActive = LastActive = N;
+    if (lkh.FirstActive == 0)
+        lkh.FirstActive = lkh.LastActive = N;
     else
-        LastActive = LastActive->Next = N;
-    LastActive->Next = FirstActive;
+        lkh.LastActive = lkh.LastActive->Next = N;
+    lkh.LastActive->Next = lkh.FirstActive;
 }

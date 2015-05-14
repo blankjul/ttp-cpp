@@ -8,8 +8,11 @@ file(GLOB_RECURSE HEADERS SRC/INCLUDE/*.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/SRC/INCLUDE)
 
+set(LIB_SOURCES ${SOURCES})
+list(REMOVE_ITEM LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/SRC/LKHmain.c)
+
 add_library(lkh
-    ${SOURCES}
+    ${LIB_SOURCES}
 )
 target_link_libraries(lkh m)
 

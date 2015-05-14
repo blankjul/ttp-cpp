@@ -7,7 +7,7 @@
 #include "model/item.h"
 #include "model/map.h"
 #include <vector>
-
+#include <problems/tsp.h>
 
 
 using namespace ttp;
@@ -17,6 +17,8 @@ MapPtr exampleMap();
 vector<pair<ItemPtr,int>> exampleItemsLarge();
 
 vector<pair<ItemPtr,int>> exampleItemsSmall();
+
+TravellingSalesmanProblem berlin52();
 
 
 

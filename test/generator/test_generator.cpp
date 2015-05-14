@@ -9,6 +9,7 @@
 #include <model/knapsack.h>
 
 
+
 /**
  * Test if exeception is thrown when file does not exist
  */
@@ -22,6 +23,15 @@ TEST(GeneratorTest, TSPFileDoesNotExist) {
 TEST(GeneratorTest, TSPWrongInputFormat) {
     ASSERT_THROW(ttp::ProblemFactory::createTSP("README.md"), std::runtime_error);
 }
+
+/**
+ * Read twice
+ */
+TEST(GeneratorTest, TSPReadTwice) {
+    ttp::ProblemFactory::createTSP("../data/tsplib/bier127.tsp");
+    ttp::ProblemFactory::createTSP("../data/tsplib/berlin52.tsp");
+}
+
 
 /**
  * Test if we itemsCount is negative
@@ -90,8 +100,11 @@ TEST(GeneratorTest, ExampleCase) {
 /**
  * Test for loading a tsp file
  */
+/*
 TEST(GeneratorTest, TSPLIBBerlin) {
-    ttp::TravellingSalesmanProblem tsp = ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
+    //ttp::TravellingSalesmanProblem tsp = ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
+
+    ttp::TravellingSalesmanProblem tsp =  ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
 
     ttp::MapPtr m = tsp.getMap();
 
@@ -114,6 +127,6 @@ TEST(GeneratorTest, TSPLIBBerlin) {
 
 
 }
-
+*/
 
 

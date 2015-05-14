@@ -42,6 +42,7 @@ namespace ttp {
     public:
 
 
+
         /**
          * Creates a map that is symmetrical by default and provides n * n distances.
          *

@@ -3,6 +3,7 @@
    Software---Practice and Experience, 23(11):1249-1265.
 */
 
+
 #define SWAPINIT(a, es) swaptype =                            \
     (a - (char*) 0) % sizeof(long) || es % sizeof(long) ? 2 : \
     es == sizeof(long) ? 0 : 1;

@@ -19,12 +19,12 @@ int AddCandidate(Node * From, Node * To, int Cost, int Alpha)
     int Count;
     Candidate *NFrom;
 
-    if (From->Subproblem != FirstNode->Subproblem)
+    if (From->Subproblem != lkh.FirstNode->Subproblem)
         return 0;
     if (From->CandidateSet == 0)
         assert(From->CandidateSet =
                (Candidate *) calloc(3, sizeof(Candidate)));
-    if (From == To || To->Subproblem != FirstNode->Subproblem ||
+    if (From == To || To->Subproblem != lkh.FirstNode->Subproblem ||
         !IsPossibleCandidate(From, To))
         return 0;
     Count = 0;

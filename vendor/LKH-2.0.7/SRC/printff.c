@@ -16,3 +16,4 @@ void printff(char *fmt, ...)
     va_end(args);
     fflush(stdout);
 }
+

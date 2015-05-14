@@ -14,7 +14,7 @@ void NormalizeSegmentList()
 {
     Segment *s1, *s2;
 
-    s1 = FirstSegment;
+    s1 = lkh.FirstSegment;
     do {
         if (!s1->Parent->Reversed)
             s2 = s1->Suc;
@@ -24,5 +24,5 @@ void NormalizeSegmentList()
             s1->Suc = s2;
         }
     }
-    while ((s1 = s2) != FirstSegment);
+    while ((s1 = s2) != lkh.FirstSegment);
 }

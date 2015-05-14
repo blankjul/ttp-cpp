@@ -1,4 +1,5 @@
 #include "test_examples.h"
+#include "generator/generator.h"
 
 
 using namespace ttp;
@@ -46,3 +47,7 @@ vector<pair<ItemPtr,int>> exampleItemsSmall() {
 
 }
 
+
+TravellingSalesmanProblem berlin52() {
+    return ProblemFactory::createTSP("../data/tsplib/berlin52.tsp");
+}

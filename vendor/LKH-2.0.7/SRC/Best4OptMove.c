@@ -43,7 +43,7 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
 
     *Gain = 0;
     if (SUC(t1) != t2)
-        Reversed ^= 1;
+        lkh.Reversed ^= 1;
 
     /* 
      * Determine (T3,T4,T5,T6,T7,T8) = (t3,t4,t5,t6,t7,t8)
@@ -61,34 +61,34 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
     /* Choose (t2,t3) as a candidate edge emanating from t2 */
     for (Nt2 = t2->CandidateSet; (t3 = Nt2->To); Nt2++) {
         if (t3 == t2->Pred || t3 == t2->Suc ||
-            ((G1 = *G0 - Nt2->Cost) <= 0 && GainCriterionUsed &&
-             ProblemType != HCP && ProblemType != HPP))
+            ((G1 = *G0 - Nt2->Cost) <= 0 && lkh.GainCriterionUsed &&
+                    lkh.ProblemType != HCP && lkh.ProblemType != HPP))
             continue;
-        if (++Breadth2 > MaxBreadth)
+        if (++Breadth2 > lkh.MaxBreadth)
             break;
         /* Choose t4 as one of t3's two neighbors on the tour */
         for (X4 = 1; X4 <= 2; X4++) {
             t4 = X4 == 1 ? PRED(t3) : SUC(t3);
             if (FixedOrCommon(t3, t4))
                 continue;
-            G2 = G1 + C(t3, t4);
+            G2 = G1 + lkh.C(t3, t4);
             if (X4 == 1 &&
                 !Forbidden(t4, t1) &&
-                (!c || G2 - c(t4, t1) > 0) && (*Gain = G2 - C(t4, t1)) > 0)
+                (!lkh.c || G2 - lkh.c(t4, t1) > 0) && (*Gain = G2 - lkh.C(t4, t1)) > 0)
             {
                 Swap1(t1, t2, t3);
                 return 0;
             }
-            if (Backtracking && !Excludable(t3, t4))
+            if (lkh.Backtracking && !Excludable(t3, t4))
                 continue;
             Breadth4 = 0;
             /* Choose (t4,t5) as a candidate edge emanating from t4 */
             for (Nt4 = t4->CandidateSet; (t5 = Nt4->To); Nt4++) {
                 if (t5 == t4->Pred || t5 == t4->Suc ||
-                    ((G3 = G2 - Nt4->Cost) <= 0 && GainCriterionUsed &&
-                     ProblemType != HCP && ProblemType != HPP))
+                    ((G3 = G2 - Nt4->Cost) <= 0 && lkh.GainCriterionUsed &&
+                            lkh.ProblemType != HCP && lkh.ProblemType != HPP))
                     continue;
-                if (++Breadth4 > MaxBreadth)
+                if (++Breadth4 > lkh.MaxBreadth)
                     break;
                 /* Choose t6 as one of t5's two neighbors on the tour */
                 for (X6 = 1; X6 <= 2; X6++) {
@@ -118,15 +118,15 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
                     }
                     if (FixedOrCommon(t5, t6))
                         continue;
-                    G4 = G3 + C(t5, t6);
+                    G4 = G3 + lkh.C(t5, t6);
                     if ((Case6 <= 2 || Case6 == 5 || Case6 == 6) &&
                         !Forbidden(t6, t1) &&
-                        (!c || G4 - c(t6, t1) > 0) &&
-                        (*Gain = G4 - C(t6, t1)) > 0) {
+                        (!lkh.c || G4 - lkh.c(t6, t1) > 0) &&
+                        (*Gain = G4 - lkh.C(t6, t1)) > 0) {
                         Make3OptMove(t1, t2, t3, t4, t5, t6, Case6);
                         return 0;
                     }
-                    if (Backtracking && !Excludable(t5, t6))
+                    if (lkh.Backtracking && !Excludable(t5, t6))
                         continue;
                     Breadth6 = 0;
                     /* Choose (t6,t7) as a candidate edge emanating from t6 */
@@ -135,10 +135,10 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
                             (t6 == t2 && t7 == t3) ||
                             (t6 == t3 && t7 == t2) ||
                             ((G5 = G4 - Nt6->Cost) <= 0 &&
-                             GainCriterionUsed &&
-                             ProblemType != HCP && ProblemType != HPP))
+                                    lkh.GainCriterionUsed &&
+                                    lkh.ProblemType != HCP && lkh.ProblemType != HPP))
                             continue;
-                        if (++Breadth6 > MaxBreadth)
+                        if (++Breadth6 > lkh.MaxBreadth)
                             break;
                         /* Choose t8 as one of t7's two neighbors on the tour */
                         for (X8 = 1; X8 <= 2; X8++) {
@@ -190,30 +190,30 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
                                 continue;
                             if (FixedOrCommon(t7, t8))
                                 continue;
-                            G6 = G5 + C(t7, t8);
+                            G6 = G5 + lkh.C(t7, t8);
                             if (t8 != t1 &&
                                 !Forbidden(t8, t1) &&
-                                (!c || G6 - c(t8, t1) > 0) &&
-                                (*Gain = G6 - C(t8, t1)) > 0) {
+                                (!lkh.c || G6 - lkh.c(t8, t1) > 0) &&
+                                (*Gain = G6 - lkh.C(t8, t1)) > 0) {
                                 Make4OptMove(t1, t2, t3, t4, t5, t6, t7,
                                              t8, Case8);
                                 return 0;
                             }
-                            if (GainCriterionUsed &&
-                                G6 - Precision < t8->Cost)
+                            if (lkh.GainCriterionUsed &&
+                                G6 - lkh.Precision < t8->Cost)
                                 continue;
-                            if (!Backtracking || Swaps > 0) {
+                            if (!lkh.Backtracking || lkh.Swaps > 0) {
                                 if ((G6 > BestG6 ||
                                      (G6 == BestG6 && !Near(t7, t8) &&
                                       Near(T7, T8))) &&
-                                    Swaps < MaxSwaps &&
+                                        lkh.Swaps < lkh.MaxSwaps &&
                                     Excludable(t7, t8) &&
                                     !InInputTour(t7, t8)) {
                                     /* Ignore the move if the gain does 
                                        not vary */
-                                    if (RestrictedSearch &&
-                                        ProblemType != HCP &&
-                                        ProblemType != HPP &&
+                                    if (lkh.RestrictedSearch &&
+                                            lkh.ProblemType != HCP &&
+                                            lkh.ProblemType != HPP &&
                                         G2 - t4->Pi == G4 - t6->Pi &&
                                         G4 - t6->Pi == G6 - t8->Pi &&
                                         G3 + t5->Pi == G1 + t3->Pi &&
@@ -228,7 +228,7 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
                                     BestCase8 = Case8;
                                     BestG6 = G6;
                                 }
-                            } else if (MaxSwaps > 0) {
+                            } else if (lkh.MaxSwaps > 0) {
                                 GainType G = G6;
                                 Node *t = t8;
                                 Make4OptMove(t1, t2, t3, t4, t5, t6, t7,
@@ -238,13 +238,13 @@ Node *Best4OptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
                                 Exclude(t5, t6);
                                 Exclude(t7, t8);
                                 while ((t =
-                                        BestSubsequentMove(t1, t, &G,
+                                                lkh.BestSubsequentMove(t1, t, &G,
                                                            Gain)));
                                 if (*Gain > 0)
                                     return 0;
                                 RestoreTour();
                                 if (t2 != SUC(t1))
-                                    Reversed ^= 1;
+                                    lkh.Reversed ^= 1;
                             }
                         }
                     }

@@ -23,16 +23,25 @@ namespace ttp {
 
 
 
-    Knapsack KnapsackProblem::convertKnapsack(vector<bool> b) {
+    Knapsack KnapsackProblem::convertVectorToKnapsack(vector<int> b) {
         Knapsack k;
         if (b.size() != items.size()) return k;
         for (int i = 0; i < b.size(); ++i) {
             auto item = items[i];
-            if (b[i]) {
+            if (b[i] != 0) {
                 k.add(item);
             }
         }
         return k;
+    }
+
+
+    vector<int> KnapsackProblem::convertKnapsackToVector(Knapsack &k) {
+        vector<int> b(count());
+        for (int i = 0; i < b.size(); ++i) {
+            if (k.contains(items[i])) b[i] = 1;
+        }
+        return b;
     }
 
     double KnapsackProblem::getMaxWeight() const {

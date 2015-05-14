@@ -34,19 +34,19 @@ GainType SFCTour(int CurveType)
     double EntryTime = GetTime();
 
     if (CurveType == SIERPINSKI) {
-        if (TraceLevel >= 1)
+        if (lkh.TraceLevel >= 1)
             printff("Sierpinski = ");
         Index = SierpinskiIndex;
     } else {
-        if (TraceLevel >= 1)
+        if (lkh.TraceLevel >= 1)
             printff("Moore = ");
         Index = MooreIndex;
     }
-    N = FirstNode;
+    N = lkh.FirstNode;
     XMin = XMax = N->X;
     YMin = YMax = N->Y;
     N->V = 0;
-    while ((N = N->Suc) != FirstNode) {
+    while ((N = N->Suc) != lkh.FirstNode) {
         if (N->X < XMin)
             XMin = N->X;
         else if (N->X > XMax)
@@ -61,18 +61,18 @@ GainType SFCTour(int CurveType)
     if (YMax == YMin)
         YMax = YMin + 1;
 
-    assert(Perm = (Node **) malloc(Dimension * sizeof(Node *)));
-    for (i = 0, N = FirstNode; i < Dimension; i++, N = N->Suc)
+    assert(Perm = (Node **) malloc(lkh.Dimension * sizeof(Node *)));
+    for (i = 0, N = lkh.FirstNode; i < lkh.Dimension; i++, N = N->Suc)
         (Perm[i] = N)->V =
             Index((N->X - XMin) / (XMax - XMin),
                   (N->Y - YMin) / (YMax - YMin));
-    qsort(Perm, Dimension, sizeof(Node *), compare);
-    for (i = 1; i < Dimension; i++)
+    qsort(Perm, lkh.Dimension, sizeof(Node *), compare);
+    for (i = 1; i < lkh.Dimension; i++)
         Follow(Perm[i], Perm[i - 1]);
     free(Perm);
 
     /* Assure that all fixed or common edges belong to the tour */
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
         N->LastV = 1;
         if (!FixedOrCommon(N, N->Suc) && N->CandidateSet) {
@@ -84,18 +84,18 @@ GainType SFCTour(int CurveType)
                 }
             }
         }
-    } while ((N = N->Suc) != FirstNode);
+    } while ((N = N->Suc) != lkh.FirstNode);
 
     Cost = 0;
-    N = FirstNode;
+    N = lkh.FirstNode;
     do
         if (!Fixed(N, N->Suc))
-            Cost += Distance(N, N->Suc);
-    while ((N = N->Suc) != FirstNode);
-    if (TraceLevel >= 1) {
+            Cost += lkh.Distance(N, N->Suc);
+    while ((N = N->Suc) != lkh.FirstNode);
+    if (lkh.TraceLevel >= 1) {
         printff(GainFormat, Cost);
-        if (Optimum != MINUS_INFINITY && Optimum != 0)
-            printff(", Gap = %0.1f%%", 100.0 * (Cost - Optimum) / Optimum);
+        if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
+            printff(", Gap = %0.1f%%", 100.0 * (Cost - lkh.Optimum) / lkh.Optimum);
         printff(", Time = %0.2f sec.\n", fabs(GetTime() - EntryTime));
     }
     return Cost;

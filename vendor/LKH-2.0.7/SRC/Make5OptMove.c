@@ -12,7 +12,7 @@ Make5OptMove(Node * t1, Node * t2, Node * t3, Node * t4,
              Node * t9, Node * t10, int Case)
 {
     if (SUC(t1) != t2)
-        Reversed ^= 1;
+        lkh.Reversed ^= 1;
     switch (Case) {
     case 1:
         Swap4(t1, t2, t3, t8, t7, t6, t10, t9, t8, t10, t5, t4);

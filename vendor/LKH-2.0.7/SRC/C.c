@@ -34,7 +34,7 @@ int C_FUNCTION(Node * Na, Node * Nb)
     Candidate *Cand;
     int Index, i, j;
 
-    if (PredSucCostAvailable) {
+    if (lkh.PredSucCostAvailable) {
         if (Na->Suc == Nb)
             return Na->SucCost;
         if (Na->Pred == Nb)
@@ -48,8 +48,8 @@ int C_FUNCTION(Node * Na, Node * Nb)
         for (; (Nc = Cand->To); Cand++)
             if (Nc == Nb)
                 return Cand->Cost;
-    if (CacheSig == 0)
-        return D(Na, Nb);
+    if (lkh.CacheSig == 0)
+        return lkh.D(Na, Nb);
     i = Na->Id;
     j = Nb->Id;
     if (i > j) {
@@ -57,11 +57,11 @@ int C_FUNCTION(Node * Na, Node * Nb)
         i = j;
         j = k;
     }
-    Index = ((i << 8) + i + j) & CacheMask;
-    if (CacheSig[Index] == i)
-        return CacheVal[Index];
-    CacheSig[Index] = i;
-    return (CacheVal[Index] = D(Na, Nb));
+    Index = ((i << 8) + i + j) & lkh.CacheMask;
+    if (lkh.CacheSig[Index] == i)
+        return lkh.CacheVal[Index];
+    lkh.CacheSig[Index] = i;
+    return (lkh.CacheVal[Index] = lkh.D(Na, Nb));
 }
 
 int D_EXPLICIT(Node * Na, Node * Nb)
@@ -72,7 +72,7 @@ int D_EXPLICIT(Node * Na, Node * Nb)
 
 int D_FUNCTION(Node * Na, Node * Nb)
 {
-    return (Fixed(Na, Nb) ? 0 : Distance(Na, Nb) * Precision) + Na->Pi +
+    return (Fixed(Na, Nb) ? 0 : lkh.Distance(Na, Nb) * lkh.Precision) + Na->Pi +
         Nb->Pi;
 }
 
@@ -82,14 +82,14 @@ int c_ATT(Node * Na, Node * Nb)
 {
     int dx = (int) (ceil(0.31622 * fabs(Na->X - Nb->X))),
         dy = (int) (ceil(0.31622 * fabs(Na->Y - Nb->Y)));
-    return (dx > dy ? dx : dy) * Precision + Na->Pi + Nb->Pi;
+    return (dx > dy ? dx : dy) * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 int c_CEIL_2D(Node * Na, Node * Nb)
 {
     int dx = (int) ceil(fabs(Na->X - Nb->X)),
         dy = (int) ceil(fabs(Na->Y - Nb->Y));
-    return (dx > dy ? dx : dy) * Precision + Na->Pi + Nb->Pi;
+    return (dx > dy ? dx : dy) * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 int c_CEIL_3D(Node * Na, Node * Nb)
@@ -101,14 +101,14 @@ int c_CEIL_3D(Node * Na, Node * Nb)
         dx = dy;
     if (dz > dx)
         dx = dz;
-    return dx * Precision + Na->Pi + Nb->Pi;
+    return dx * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 int c_EUC_2D(Node * Na, Node * Nb)
 {
     int dx = (int) (fabs(Na->X - Nb->X) + 0.5),
         dy = (int) (fabs(Na->Y - Nb->Y) + 0.5);
-    return (dx > dy ? dx : dy) * Precision + Na->Pi + Nb->Pi;
+    return (dx > dy ? dx : dy) * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 int c_EUC_3D(Node * Na, Node * Nb)
@@ -120,7 +120,7 @@ int c_EUC_3D(Node * Na, Node * Nb)
         dx = dy;
     if (dz > dx)
         dx = dz;
-    return dx * Precision + Na->Pi + Nb->Pi;
+    return dx * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 #define PI 3.141592
@@ -133,7 +133,7 @@ int c_GEO(Node * Na, Node * Nb)
     int dx =
         (int) (RRR * PI / 180.0 * fabs(da - db + 5.0 * (ma - mb) / 3.0) +
                1.0);
-    return dx * Precision + Na->Pi + Nb->Pi;
+    return dx * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 #undef M_PI
@@ -143,7 +143,7 @@ int c_GEO(Node * Na, Node * Nb)
 int c_GEOM(Node * Na, Node * Nb)
 {
     int dx = (int) (M_RRR * M_PI / 180.0 * fabs(Na->X - Nb->X) + 1.0);
-    return dx * Precision + Na->Pi + Nb->Pi;
+    return dx * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 #define f (1 - 1 / 298.257)
@@ -155,11 +155,11 @@ int c_GEO_MEEUS(Node * Na, Node * Nb)
     int dx =
         (int) (RRR * M_PI / 180.0 * fabs(da - db + 5.0 * (ma - mb) / 3.0) *
                f + 0.5);
-    return dx * Precision + Na->Pi + Nb->Pi;
+    return dx * lkh.Precision + Na->Pi + Nb->Pi;
 }
 
 int c_GEOM_MEEUS(Node * Na, Node * Nb)
 {
     int dx = (int) (M_RRR * M_PI / 180.0 * fabs(Na->X - Nb->X) * f + 0.5);
-    return dx * Precision + Na->Pi + Nb->Pi;
+    return dx * lkh.Precision + Na->Pi + Nb->Pi;
 }

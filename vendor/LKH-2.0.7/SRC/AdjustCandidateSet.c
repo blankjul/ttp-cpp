@@ -20,7 +20,7 @@
 void AdjustCandidateSet()
 {
     Candidate *NFrom, *NN, Temp;
-    Node *From = FirstNode, *To;
+    Node *From = lkh.FirstNode, *To;
 
     /* Extend and reorder candidate sets */
     do {
@@ -35,7 +35,7 @@ void AdjustCandidateSet()
                 Count++;
             if (!NFrom->To) {
                 /* Add new candidate edge */
-                NFrom->Cost = C(From, To);
+                NFrom->Cost = lkh.C(From, To);
                 NFrom->To = To;
                 NFrom->Alpha = INT_MAX;
                 assert(From->CandidateSet =
@@ -56,5 +56,5 @@ void AdjustCandidateSet()
                 *(NN + 1) = Temp;
             }
     }
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 }

@@ -41,16 +41,16 @@ void GenerateCandidates(int MaxCandidates, GainType MaxAlpha,
     Candidate *NFrom, *NN;
     int a, d, Count;
 
-    if (TraceLevel >= 2)
+    if (lkh.TraceLevel >= 2)
         printff("Generating candidates ... ");
     if (MaxAlpha < 0 || MaxAlpha > INT_MAX)
         MaxAlpha = INT_MAX;
     /* Initialize CandidateSet for each node */
     FreeCandidateSets();
-    From = FirstNode;
+    From = lkh.FirstNode;
     do
         From->Mark = 0;
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 
     if (MaxCandidates > 0) {
         do {
@@ -59,20 +59,20 @@ void GenerateCandidates(int MaxCandidates, GainType MaxAlpha,
                                         sizeof(Candidate)));
             From->CandidateSet[0].To = 0;
         }
-        while ((From = From->Suc) != FirstNode);
+        while ((From = From->Suc) != lkh.FirstNode);
     } else {
         AddTourCandidates();
         do {
             if (!From->CandidateSet)
                 eprintf("MAX_CANDIDATES = 0: No candidates");
-        } while ((From = From->Suc) != FirstNode);
+        } while ((From = From->Suc) != lkh.FirstNode);
         return;
     }
 
     /* Loop for each node, From */
     do {
         NFrom = From->CandidateSet;
-        if (From != FirstNode) {
+        if (From != lkh.FirstNode) {
             From->Beta = INT_MIN;
             for (To = From; To->Dad != 0; To = To->Dad) {
                 To->Dad->Beta =
@@ -83,14 +83,14 @@ void GenerateCandidates(int MaxCandidates, GainType MaxAlpha,
         }
         Count = 0;
         /* Loop for each node, To */
-        To = FirstNode;
+        To = lkh.FirstNode;
         do {
             if (To == From)
                 continue;
-            d = c && !FixedOrCommon(From, To) ? c(From, To) : D(From, To);
-            if (From == FirstNode)
+            d = lkh.c && !FixedOrCommon(From, To) ? lkh.c(From, To) : lkh.D(From, To);
+            if (From == lkh.FirstNode)
                 a = To == From->Dad ? 0 : d - From->NextCost;
-            else if (To == FirstNode)
+            else if (To == lkh.FirstNode)
                 a = From == To->Dad ? 0 : d - To->NextCost;
             else {
                 if (To->Mark != From)
@@ -106,9 +106,9 @@ void GenerateCandidates(int MaxCandidates, GainType MaxAlpha,
                     continue;
                 if (InInputTour(From, To)) {
                     a = 0;
-                    if (c)
-                        d = D(From, To);
-                } else if (c) {
+                    if (lkh.c)
+                        d = lkh.D(From, To);
+                } else if (lkh.c) {
                     if (a > MaxAlpha ||
                         (Count == MaxCandidates &&
                          (a > (NFrom - 1)->Alpha ||
@@ -123,7 +123,7 @@ void GenerateCandidates(int MaxCandidates, GainType MaxAlpha,
                         a = 0;
                     } else {
                         a -= d;
-                        a += (d = D(From, To));
+                        a += (d = lkh.D(From, To));
                     }
                 }
             }
@@ -146,13 +146,13 @@ void GenerateCandidates(int MaxCandidates, GainType MaxAlpha,
                 NFrom->To = 0;
             }
         }
-        while ((To = To->Suc) != FirstNode);
+        while ((To = To->Suc) != lkh.FirstNode);
     }
-    while ((From = From->Suc) != FirstNode);
+    while ((From = From->Suc) != lkh.FirstNode);
 
     AddTourCandidates();
     if (Symmetric)
         SymmetrizeCandidateSet();
-    if (TraceLevel >= 2)
+    if (lkh.TraceLevel >= 2)
         printff("done\n");
 }

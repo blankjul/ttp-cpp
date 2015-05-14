@@ -20,3 +20,4 @@ void Exclude(Node * ta, Node * tb)
     else if (tb == ta->OldSuc)
         ta->OldSucExcluded = 1;
 }
+

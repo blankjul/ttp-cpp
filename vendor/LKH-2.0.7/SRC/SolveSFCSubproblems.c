@@ -25,45 +25,45 @@ void SolveSFCSubproblems()
     Node **Suc;
     double EntryTime = GetTime();
 
-    SFCTour(SierpinskiPartitioning ? SIERPINSKI : MOORE);
-    assert(Suc = (Node **) malloc((1 + Dimension) * sizeof(Node *)));
-    N = FirstNode;
+    SFCTour(lkh.SierpinskiPartitioning ? SIERPINSKI : MOORE);
+    assert(Suc = (Node **) malloc((1 + lkh.Dimension) * sizeof(Node *)));
+    N = lkh.FirstNode;
     do
         Suc[N->Id] = N->Suc;
-    while ((N = N->Suc) != FirstNode);
+    while ((N = N->Suc) != lkh.FirstNode);
     AllocateStructures();
-    Subproblems = (int) ceil((double) Dimension / SubproblemSize);
+    Subproblems = (int) ceil((double) lkh.Dimension / lkh.SubproblemSize);
     ReadPenalties();
-    FirstNode = &NodeSet[Random() % Dimension + 1];
+    lkh.FirstNode = &lkh.NodeSet[Random() % lkh.Dimension + 1];
 
     /* Compute upper bound for the original problem */
     GlobalBestCost = 0;
-    N = FirstNodeSaved = FirstNode;
+    N = FirstNodeSaved = lkh.FirstNode;
     do {
         if (!Fixed(N, N->SubproblemSuc))
-            GlobalBestCost += Distance(N, N->SubproblemSuc);
+            GlobalBestCost += lkh.Distance(N, N->SubproblemSuc);
         N->Subproblem = 0;
     }
-    while ((N = N->SubproblemSuc) != FirstNode);
+    while ((N = N->SubproblemSuc) != lkh.FirstNode);
     for (Round = 1; Round <= 2; Round++) {
         if (Round == 2 && Subproblems == 1)
             break;
-        if (TraceLevel >= 1) {
-            if (Round == 2 || TraceLevel >= 2)
+        if (lkh.TraceLevel >= 1) {
+            if (Round == 2 || lkh.TraceLevel >= 2)
                 printff("\n");
             printff
                 ("*** %s partitioning *** [Round %d of %d, Cost = "
                  GainFormat "]\n",
-                 SierpinskiPartitioning ? "Sierpinski" : "Moore",
+                 lkh.SierpinskiPartitioning ? "Sierpinski" : "Moore",
                  Round, Subproblems > 1 ? 2 : 1, GlobalBestCost);
         }
-        FirstNode = FirstNodeSaved;
+        lkh.FirstNode = FirstNodeSaved;
         if (Round == 2)
-            for (i = SubproblemSize / 2; i > 0; i--)
-                FirstNode = Suc[FirstNode->Id];
+            for (i = lkh.SubproblemSize / 2; i > 0; i--)
+                lkh.FirstNode = Suc[lkh.FirstNode->Id];
         for (CurrentSubproblem = 1;
              CurrentSubproblem <= Subproblems; CurrentSubproblem++) {
-            for (i = 0, N = FirstNode; i < SubproblemSize;
+            for (i = 0, N = lkh.FirstNode; i < lkh.SubproblemSize;
                  i++, N = Suc[N->Id]) {
                 N->Subproblem =
                     (Round - 1) * Subproblems + CurrentSubproblem;
@@ -73,22 +73,22 @@ void SolveSFCSubproblems()
             OldGlobalBestCost = GlobalBestCost;
             SolveSubproblem((Round - 1) * Subproblems + CurrentSubproblem,
                             Subproblems, &GlobalBestCost);
-            if (SubproblemsCompressed
+            if (lkh.SubproblemsCompressed
                 && GlobalBestCost == OldGlobalBestCost)
                 SolveCompressedSubproblem((Round - 1) * Subproblems +
                                           CurrentSubproblem, Subproblems,
                                           &GlobalBestCost);
-            FirstNode = N;
+            lkh.FirstNode = N;
         }
     }
     free(Suc);
     printff("\nCost = " GainFormat, GlobalBestCost);
-    if (Optimum != MINUS_INFINITY && Optimum != 0)
+    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
         printff(", Gap = %0.4f%%",
-                100.0 * (GlobalBestCost - Optimum) / Optimum);
+                100.0 * (GlobalBestCost - lkh.Optimum) / lkh.Optimum);
     printff(", Time = %0.2f sec. %s\n", fabs(GetTime() - EntryTime),
-            GlobalBestCost < Optimum ? "<" : GlobalBestCost ==
-            Optimum ? "=" : "");
-    if (SubproblemBorders && Subproblems > 1)
+            GlobalBestCost < lkh.Optimum ? "<" : GlobalBestCost ==
+                                                         lkh.Optimum ? "=" : "");
+    if (lkh.SubproblemBorders && Subproblems > 1)
         SolveSubproblemBorderProblems(Subproblems, &GlobalBestCost);
 }

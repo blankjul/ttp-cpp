@@ -8,11 +8,7 @@
 #include <limits>
 #include <fstream>
 #include <algorithm>
-
-extern "C"
-{
-#include "LKH.h"
-}
+#include "wrapper/lkh.h"
 
 
 
@@ -20,58 +16,11 @@ namespace ttp {
 
 
 
-
-
     TravellingSalesmanProblem ProblemFactory::createTSP(std::string pathToFile) {
-
-        MaxMatrixDimension =  numeric_limits<int>::max();
-
-
-        ifstream file(pathToFile);
-        if(!file) throw std::runtime_error("File " + pathToFile + " does not exist");
-
-        // set the filePtr
-        char filePtr[1024];
-        strncpy(filePtr, pathToFile.c_str(), sizeof(filePtr));
-        filePtr[sizeof(filePtr) - 1] = 0;
-        ProblemFileName = filePtr;
-
-        TraceLevel = 0;
-
-        ReadProblem();
-
-        if (CostMatrix == 0) throw std::runtime_error("Could not parse " + pathToFile + ". Wrong Format.");
-
-        /*
-         * Parse the file and write the Map.
-         */
-        MapPtr map = make_shared<Map>(Dimension);
-
-        Node *Ni, *Nj;
-        Ni = FirstNode;
-
-        int column = 0;
-
-        do {
-            int row = 0;
-            if (Ni->C != 0) {
-                for (Nj = FirstNode; Nj != Ni; Nj = Nj->Suc) {
-
-                    int value = Fixed(Ni, Nj) ? 0 : Distance(Ni, Nj);
-
-                    map->set(row,column,value);
-                    ++row;
-                }
-            }
-
-            Ni = Ni->Suc;
-            ++column;
-        }
-        while (Ni != FirstNode);
-
+        LKHWrapper lkh;
+        MapPtr map = lkh.createMap(pathToFile);
         TravellingSalesmanProblem tsp(map);
         return tsp;
-
     }
 
 
@@ -81,7 +30,8 @@ namespace ttp {
 
         auto result = createRandomItems(numberOfItems, upperBound, type, randomSeed);
 
-        long c = (randomSeed * (double) result.second) / (capacityFactor + 1);
+        float rndm = rand()/(float)RAND_MAX;
+        long c = (rndm * result.second) / (capacityFactor + 1);
         if (c <= upperBound) c = upperBound + 1;
 
         KnapsackProblem knp(result.first, c);
@@ -96,8 +46,11 @@ namespace ttp {
 
         auto result = createRandomItems(numberOfItems, upperBound, type, randomSeed);
 
+
+
         for (int j = 1; j <= capacityFactorRange; ++j) {
-            long c = (randomSeed * (double) result.second) / (j + 1);
+            float rndm = rand()/(float)RAND_MAX;
+            long c = (rndm * (double) result.second) / (j + 1);
             if (c <= upperBound) c = upperBound + 1;
             KnapsackProblem knp(result.first, c);
             knps.push_back(knp);

@@ -27,18 +27,18 @@ GainType Ascent()
 
   Start:
     /* Initialize Pi and BestPi */
-    t = FirstNode;
+    t = lkh.FirstNode;
     do
         t->Pi = t->BestPi = 0;
-    while ((t = t->Suc) != FirstNode);
-    if (CandidateSetType == DELAUNAY)
+    while ((t = t->Suc) != lkh.FirstNode);
+    if (lkh.CandidateSetType == DELAUNAY)
         CreateDelaunayCandidateSet();
     else
         AddTourCandidates();
 
     /* Compute the cost of a minimum 1-tree */
-    W = Minimum1TreeCost(CandidateSetType == DELAUNAY
-                         || MaxCandidates == 0);
+    W = Minimum1TreeCost(lkh.CandidateSetType == DELAUNAY
+                         || lkh.MaxCandidates == 0);
 
     /* Return this cost 
        if either
@@ -46,51 +46,51 @@ GainType Ascent()
        (2) the norm of the tree (its deviation from a tour) is zero
            (in that case the true optimum has been found).
      */
-    if (!Subgradient || !Norm)
+    if (!lkh.Subgradient || !lkh.Norm)
         return W;
 
-    if (Optimum != MINUS_INFINITY && (Alpha = Optimum * Precision - W) > 0)
+    if (lkh.Optimum != MINUS_INFINITY && (Alpha = lkh.Optimum * lkh.Precision - W) > 0)
         MaxAlpha = Alpha;
-    if (MaxCandidates > 0) {
+    if (lkh.MaxCandidates > 0) {
         /* Generate symmetric candididate sets for all nodes */
-        if (CandidateSetType != DELAUNAY)
-            GenerateCandidates(AscentCandidates, MaxAlpha, 1);
+        if (lkh.CandidateSetType != DELAUNAY)
+            GenerateCandidates(lkh.AscentCandidates, MaxAlpha, 1);
         else {
-            OrderCandidateSet(AscentCandidates, MaxAlpha, 1);
+            OrderCandidateSet(lkh.AscentCandidates, MaxAlpha, 1);
             W = Minimum1TreeCost(1);
-            if (!Norm || W / Precision == Optimum)
+            if (!lkh.Norm || W / lkh.Precision == lkh.Optimum)
                 return W;
         }
     }
-    if (ExtraCandidates > 0)
-        AddExtraCandidates(ExtraCandidates, ExtraCandidateSetType,
-                           ExtraCandidateSetSymmetric);
-    if (TraceLevel >= 2) {
+    if (lkh.ExtraCandidates > 0)
+        AddExtraCandidates(lkh.ExtraCandidates, lkh.ExtraCandidateSetType,
+                           lkh.ExtraCandidateSetSymmetric);
+    if (lkh.TraceLevel >= 2) {
         CandidateReport();
         printff("Subgradient optimization ...\n");
     }
 
     /* Set LastV of every node to V (the node's degree in the 1-tree) */
-    t = FirstNode;
+    t = lkh.FirstNode;
     do
         t->LastV = t->V;
-    while ((t = t->Suc) != FirstNode);
+    while ((t = t->Suc) != lkh.FirstNode);
 
     BestW = W0 = W;
-    BestNorm = Norm;
+    BestNorm = lkh.Norm;
     InitialPhase = 1;
     /* Perform subradient optimization with decreasing period length 
        and decreasing step size */
-    for (Period = InitialPeriod, T = InitialStepSize * Precision;
-         Period > 0 && T > 0 && Norm != 0; Period /= 2, T /= 2) {
+    for (Period = lkh.InitialPeriod, T = lkh.InitialStepSize * lkh.Precision;
+         Period > 0 && T > 0 && lkh.Norm != 0; Period /= 2, T /= 2) {
         /* Period and step size are halved at each iteration */
-        if (TraceLevel >= 2)
+        if (lkh.TraceLevel >= 2)
             printff
                 ("  T = %d, Period = %d, BestW = %0.1f, Norm = %d\n",
-                 T, Period, (double) BestW / Precision, Norm);
-        for (P = 1; T && P <= Period && Norm != 0; P++) {
+                 T, Period, (double) BestW / lkh.Precision, lkh.Norm);
+        for (P = 1; T && P <= Period && lkh.Norm != 0; P++) {
             /* Adjust the Pi-values */
-            t = FirstNode;
+            t = lkh.FirstNode;
             do {
                 if (t->V != 0) {
                     t->Pi += T * (7 * t->V + 3 * t->LastV) / 10;
@@ -101,53 +101,53 @@ GainType Ascent()
                 }
                 t->LastV = t->V;
             }
-            while ((t = t->Suc) != FirstNode);
+            while ((t = t->Suc) != lkh.FirstNode);
             /* Compute a minimum 1-tree in the sparse graph */
             W = Minimum1TreeCost(1);
             /* Test if an improvement has been found */
-            if (W > BestW || (W == BestW && Norm < BestNorm)) {
+            if (W > BestW || (W == BestW && lkh.Norm < BestNorm)) {
                 /* If the lower bound becomes greater than twice its
                    initial value it is taken as a sign that the graph might be
                    too sparse */
-                if (W - W0 > (W0 >= 0 ? W0 : -W0) && AscentCandidates > 0
-                    && AscentCandidates < Dimension) {
-                    W = Minimum1TreeCost(CandidateSetType == DELAUNAY
-                                         || MaxCandidates == 0);
+                if (W - W0 > (W0 >= 0 ? W0 : -W0) && lkh.AscentCandidates > 0
+                    && lkh.AscentCandidates < lkh.Dimension) {
+                    W = Minimum1TreeCost(lkh.CandidateSetType == DELAUNAY
+                                         || lkh.MaxCandidates == 0);
                     if (W < W0) {
                         /* Double the number of candidate edges 
                            and start all over again */
-                        if (TraceLevel >= 2)
+                        if (lkh.TraceLevel >= 2)
                             printff("Warning: AscentCandidates doubled\n");
-                        if ((AscentCandidates *= 2) > Dimension)
-                            AscentCandidates = Dimension;
+                        if ((lkh.AscentCandidates *= 2) > lkh.Dimension)
+                            lkh.AscentCandidates = lkh.Dimension;
                         goto Start;
                     }
                     W0 = W;
                 }
                 BestW = W;
-                BestNorm = Norm;
+                BestNorm = lkh.Norm;
                 /* Update the BestPi-values */
-                t = FirstNode;
+                t = lkh.FirstNode;
                 do
                     t->BestPi = t->Pi;
-                while ((t = t->Suc) != FirstNode);
-                if (TraceLevel >= 2)
+                while ((t = t->Suc) != lkh.FirstNode);
+                if (lkh.TraceLevel >= 2)
                     printff
                         ("* T = %d, Period = %d, P = %d, BestW = %0.1f, Norm = %d\n",
-                         T, Period, P, (double) BestW / Precision, Norm);
+                         T, Period, P, (double) BestW / lkh.Precision, lkh.Norm);
                 /* If in the initial phase, the step size is doubled */
-                if (InitialPhase && T * sqrt((double) Norm) > 0)
+                if (InitialPhase && T * sqrt((double) lkh.Norm) > 0)
                     T *= 2;
                 /* If the improvement was found at the last iteration of the 
                    current period, then double the period */
-                if (CandidateSetType != DELAUNAY && P == Period
-                    && (Period *= 2) > InitialPeriod)
-                    Period = InitialPeriod;
+                if (lkh.CandidateSetType != DELAUNAY && P == Period
+                    && (Period *= 2) > lkh.InitialPeriod)
+                    Period = lkh.InitialPeriod;
             } else {
-                if (TraceLevel >= 3)
+                if (lkh.TraceLevel >= 3)
                     printff
                         ("  T = %d, Period = %d, P = %d, W = %0.1f, Norm = %d\n",
-                         T, Period, P, (double) W / Precision, Norm);
+                         T, Period, P, (double) W / lkh.Precision, lkh.Norm);
                 if (InitialPhase && P > Period / 2) {
                     /* Conclude the initial phase */
                     InitialPhase = 0;
@@ -158,31 +158,31 @@ GainType Ascent()
         }
     }
 
-    t = FirstNode;
+    t = lkh.FirstNode;
     do {
         t->Pi = t->BestPi;
         t->BestPi = 0;
-    } while ((t = t->Suc) != FirstNode);
+    } while ((t = t->Suc) != lkh.FirstNode);
 
     /* Compute a minimum 1-tree */
-    W = BestW = Minimum1TreeCost(CandidateSetType == DELAUNAY
-                                 || MaxCandidates == 0);
+    W = BestW = Minimum1TreeCost(lkh.CandidateSetType == DELAUNAY
+                                 || lkh.MaxCandidates == 0);
 
-    if (MaxCandidates > 0) {
+    if (lkh.MaxCandidates > 0) {
         FreeCandidateSets();
-        if (CandidateSetType == DELAUNAY)
+        if (lkh.CandidateSetType == DELAUNAY)
             CreateDelaunayCandidateSet();
     } else {
         Candidate *Nt;
-        t = FirstNode;
+        t = lkh.FirstNode;
         do {
             for (Nt = t->CandidateSet; Nt && Nt->To; Nt++)
                 Nt->Cost += t->Pi + Nt->To->Pi;
         }
-        while ((t = t->Suc) != FirstNode);
+        while ((t = t->Suc) != lkh.FirstNode);
     }
-    if (TraceLevel >= 2)
+    if (lkh.TraceLevel >= 2)
         printff("Ascent: BestW = %0.1f, Norm = %d\n",
-                (double) BestW / Precision, Norm);
+                (double) BestW / lkh.Precision, lkh.Norm);
     return W;
 }

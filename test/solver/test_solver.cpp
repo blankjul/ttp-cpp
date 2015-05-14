@@ -1,36 +1,38 @@
 #include "solver/tsp_exhaustive_solver.h"
 #include "solver/ttpmo_exhaustive_solver.h"
 #include "solver/ttpso_exhaustive_solver.h"
-#include "solver/tsp_greedy_solver.h"
-#include "problems/ttp.h"
-#include "model/tour.h"
+#include "solver/tsp_lin_kernighan.h"
 #include "gtest/gtest.h"
 #include "examples/test_examples.h"
-
+#include "generator/generator.h"
+#include "solver/knp_combo.h"
 
 using namespace ttp;
 
 
-TEST(TSPExhaustiveSolver, solve) {
 
-    Map m(4);
-    m.set(0,1,2);
-    m.set(0,2,3);
-    m.set(2,3,4);
-    m.set(1,3,5);
-    TSPExhaustiveSolver s;
 
-    //TTP::Tour t = s.solve(m);
+
+
+
+TEST(KNPComboSolver, solve2) {
+
+
+    KnapsackProblem knp = ProblemFactory::createKNP(10000, 1000,ProblemFactory::KnapsackType::STRONLY_CORRELATED, 10);
+    KNPComboSolver knpsolver;
+    knpsolver.solve(knp);
 
     //EXPECT_EQ(0, m.get(1,1));
 }
 
 
 
+
+
 TEST(TTPExhaustiveSolver, solveSO) {
 
-    MapPtr m = exampleMap();
 
+    MapPtr m = exampleMap();
     TravellingThiefProblem ttps(m,3);
     vector<pair<ItemPtr, int>> items = exampleItemsLarge();
     ttps.setRentingRate(1);
@@ -39,11 +41,15 @@ TEST(TTPExhaustiveSolver, solveSO) {
     TTPSOExhaustiveSolver s;
     auto result = s.solve(ttps);
 
-    std::vector<int> v = {0,1,3,2};
-    //std::cout << result.first;
-    //EXPECT_EQ(v, result.first.getVector());
+    std::vector<int> route {0,1,3,2};
+    std::vector<int> pickingPlan {0, 1, 1, 0, 0, 0};
+
+    EXPECT_EQ(route, result.first.getVector());
+    EXPECT_EQ(pickingPlan, ttps.convertKnapsackToVector(result.second));
 
 }
+
+
 
 TEST(TTPExhaustiveSolver, solveMO) {
 

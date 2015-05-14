@@ -21,7 +21,7 @@ TEST(TTPMO, TestCase1) {
     std::vector<int> v = {0,2,1,3};
     Tour t(v);
 
-    Knapsack k = ttpmo.convertKnapsack(std::vector<int> {0,1,0,1,0,0});
+    Knapsack k = ttpmo.convertVectorToKnapsack(std::vector<int> {0, 1, 0, 1, 0, 0});
 
     auto p = ttpmo.evaluateMO(t, k);
 
@@ -43,7 +43,7 @@ TEST(TTPMO, TestCaseG3) {
     std::vector<int> v2 = {0,1,2,3};
     Tour t2(v2);
 
-    Knapsack k2 = ttpmo.convertKnapsack(std::vector<int> {0,0,0,0,0,0});
+    Knapsack k2 = ttpmo.convertVectorToKnapsack(std::vector<int> {0, 0, 0, 0, 0, 0});
 
 
     auto p2 = ttpmo.evaluateMO(t2, k2);
@@ -64,7 +64,7 @@ TEST(TTPMO, TestCaseG2) {
     std::vector<int> v2 = {0,1,3,2};
     Tour t2(v2);
 
-    Knapsack k2 = ttpmo.convertKnapsack(std::vector<int> {0,1,0,0,0,0});
+    Knapsack k2 = ttpmo.convertVectorToKnapsack(std::vector<int> {0, 1, 0, 0, 0, 0});
 
 
     auto p2 = ttpmo.evaluateMO(t2, k2);
@@ -87,7 +87,7 @@ TEST(TTPMO, TestCaseG1) {
     std::vector<int> v2 = {0,1,3,2};
     Tour t2(v2);
 
-    Knapsack k2 = ttpmo.convertKnapsack(std::vector<int> {0,1,1,0,0,0});
+    Knapsack k2 = ttpmo.convertVectorToKnapsack(std::vector<int> {0, 1, 1, 0, 0, 0});
 
 
     auto p2 = ttpmo.evaluateMO(t2, k2);
@@ -109,7 +109,7 @@ TEST(TTPMO, TestCaseNoNegativeTime) {
     std::vector<int> v2 = {0,1,2,3};
     Tour t2(v2);
 
-    Knapsack k2 = ttpmo.convertKnapsack(std::vector<int> {0,1,0,0,1,0});
+    Knapsack k2 = ttpmo.convertVectorToKnapsack(std::vector<int> {0, 1, 0, 0, 1, 0});
 
 
     auto p2 = ttpmo.evaluateMO(t2, k2);

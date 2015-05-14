@@ -23,7 +23,7 @@ namespace ttp {
     class KnapsackSolver {
 
     public:
-        virtual Knapsack solve(KnapsackProblem & tsp) = 0;
+        virtual Knapsack solve(KnapsackProblem & knp) = 0;
     };
 
 

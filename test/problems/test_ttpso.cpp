@@ -23,7 +23,7 @@ TEST(TTPSO, Evaluate1) {
     std::vector<int> v = {0,2,1,3};
     Tour t(v);
 
-    Knapsack k = ttpso.convertKnapsack(std::vector<int> {0,1,0,1,0,0});
+    Knapsack k = ttpso.convertVectorToKnapsack(std::vector<int> {0, 1, 0, 1, 0, 0});
 
 
     double targetValue = ttpso.evaluateSO(t, k, 1);
@@ -48,7 +48,7 @@ TEST(TTPSO, Evaluate2) {
     std::vector<int> v = {0,1,3,2};
     Tour t(v);
 
-    Knapsack k = ttpso.convertKnapsack(std::vector<int> {0,1,1,0,0,0});
+    Knapsack k = ttpso.convertVectorToKnapsack(std::vector<int> {0, 1, 1, 0, 0, 0});
 
 
     double targetValue = ttpso.evaluateSO(t, k, 1);

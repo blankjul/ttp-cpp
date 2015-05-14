@@ -1,5 +1,7 @@
 include_directories(${CMAKE_SOURCE_DIR}/vendor/tclap-1.2.1/include)
 include_directories(${CMAKE_SOURCE_DIR}/lib)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/LKH-2.0.7/SRC/INCLUDE)
+
 
 
 ADD_DEFINITIONS(

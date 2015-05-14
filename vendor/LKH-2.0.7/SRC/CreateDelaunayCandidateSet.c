@@ -17,33 +17,33 @@ void CreateDelaunayCandidateSet()
     edge *e_start, *e;
     int d, i;
 
-    if (TraceLevel >= 2)
+    if (lkh.TraceLevel >= 2)
         printff("Creating Delaunay candidate set ... ");
-    if (Level == 0 && MaxCandidates == 0) {
+    if (Level == 0 && lkh.MaxCandidates == 0) {
         AddTourCandidates();
-        From = FirstNode;
+        From = lkh.FirstNode;
         do {
             if (!From->CandidateSet)
                 eprintf("MAX_CANDIDATES = 0: No candidates");
-        } while ((From = From->Suc) != FirstNode);
-        if (TraceLevel >= 2)
+        } while ((From = From->Suc) != lkh.FirstNode);
+        if (lkh.TraceLevel >= 2)
             printff("done\n");
         return;
     }
 
     /* Find the Delaunay edges */
-    delaunay(Dimension);
+    delaunay(lkh.Dimension);
 
     /* Add the Delaunay edges to the candidate set */
-    for (i = 0; i < Dimension; i++) {
+    for (i = 0; i < lkh.Dimension; i++) {
         u = &p_array[i];
-        From = &NodeSet[u->id];
+        From = &lkh.NodeSet[u->id];
         e_start = e = u->entry_pt;
         do {
             v = Other_point(e, u);
             if (u < v) {
-                To = &NodeSet[v->id];
-                d = D(From, To);
+                To = &lkh.NodeSet[v->id];
+                d = lkh.D(From, To);
                 AddCandidate(From, To, d, 1);
                 AddCandidate(To, From, d, 1);
             }
@@ -51,55 +51,55 @@ void CreateDelaunayCandidateSet()
     }
     free_memory();
     if (Level == 0 &&
-        (WeightType == GEO || WeightType == GEOM ||
-         WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS)) {
-        if (TraceLevel >= 2)
+        (lkh.WeightType == GEO || lkh.WeightType == GEOM ||
+         lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS)) {
+        if (lkh.TraceLevel >= 2)
             printff("done\n");
-        From = FirstNode;
-        while ((From = From->Suc) != FirstNode)
-            if ((From->Y > 0) != (FirstNode->Y > 0))
+        From = lkh.FirstNode;
+        while ((From = From->Suc) != lkh.FirstNode)
+            if ((From->Y > 0) != (lkh.FirstNode->Y > 0))
                 break;
-        if (From != FirstNode) {
+        if (From != lkh.FirstNode) {
             /* Transform longitude (180 and -180 map to 0) */
-            From = FirstNode;
+            From = lkh.FirstNode;
             do {
                 From->Zc = From->Y;
-                if (WeightType == GEO || WeightType == GEO_MEEUS)
+                if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
                     From->Y =
                         (int) From->Y + 5.0 * (From->Y -
                                                (int) From->Y) / 3.0;
                 From->Y += From->Y > 0 ? -180 : 180;
-                if (WeightType == GEO || WeightType == GEO_MEEUS)
+                if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
                     From->Y =
                         (int) From->Y + 3.0 * (From->Y -
                                                (int) From->Y) / 5.0;
-            } while ((From = From->Suc) != FirstNode);
+            } while ((From = From->Suc) != lkh.FirstNode);
             Level++;
             CreateDelaunayCandidateSet();
             Level--;
-            From = FirstNode;
+            From = lkh.FirstNode;
             do
                 From->Y = From->Zc;
-            while ((From = From->Suc) != FirstNode);
+            while ((From = From->Suc) != lkh.FirstNode);
         }
     }
     if (Level == 0) {
         AddTourCandidates();
         /* Add quadrant neighbors if any node has less than two candidates. 
            That is, if it should happen that delaunay_edges fails. */
-        From = FirstNode;
+        From = lkh.FirstNode;
         do {
             if (From->CandidateSet == 0 ||
                 From->CandidateSet[0].To == 0
                 || From->CandidateSet[1].To == 0) {
-                if (TraceLevel >= 2)
+                if (lkh.TraceLevel >= 2)
                     printff("*** Not complete ***\n");
-                AddExtraCandidates(CoordType == THREED_COORDS ? 8 : 4,
+                AddExtraCandidates(lkh.CoordType == THREED_COORDS ? 8 : 4,
                                    QUADRANT, 1);
                 break;
             }
-        } while ((From = From->Suc) != FirstNode);
-        if (TraceLevel >= 2)
+        } while ((From = From->Suc) != lkh.FirstNode);
+        if (lkh.TraceLevel >= 2)
             printff("done\n");
     }
 }

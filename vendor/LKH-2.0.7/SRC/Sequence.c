@@ -1,6 +1,7 @@
 #include "Sequence.h"
 #include "Segment.h"
 
+
 /*
  * This file contains the functions FindPermutation and FeasibleKOptMove.
  */

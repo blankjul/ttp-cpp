@@ -42,38 +42,38 @@ void SolveRoheSubproblems()
 
     /* Compute upper bound for the original problem */
     GlobalBestCost = 0;
-    N = FirstNode;
+    N = lkh.FirstNode;
     do {
         if (!Fixed(N, N->SubproblemSuc))
-            GlobalBestCost += Distance(N, N->SubproblemSuc);
+            GlobalBestCost += lkh.Distance(N, N->SubproblemSuc);
         N->Subproblem = 0;
     }
-    while ((N = N->SubproblemSuc) != FirstNode);
-    if (TraceLevel >= 1) {
-        if (TraceLevel >= 2)
+    while ((N = N->SubproblemSuc) != lkh.FirstNode);
+    if (lkh.TraceLevel >= 1) {
+        if (lkh.TraceLevel >= 2)
             printff("\n");
         printff("*** Rohe partitioning *** [Cost = " GainFormat "]\n",
                 GlobalBestCost);
     }
-    if (WeightType == GEO || WeightType == GEOM ||
-        WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS) {
-        N = FirstNode;
+    if (lkh.WeightType == GEO ||lkh. WeightType == GEOM ||
+            lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS) {
+        N = lkh.FirstNode;
         do {
             N->Xc = N->X;
             N->Yc = N->Y;
             N->Zc = N->Z;
-            if (WeightType == GEO || WeightType == GEO_MEEUS)
+            if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
                 GEO2XYZ(N->Xc, N->Yc, &N->X, &N->Y, &N->Z);
             else
                 GEOM2XYZ(N->Xc, N->Yc, &N->X, &N->Y, &N->Z);
-        } while ((N = N->SubproblemSuc) != FirstNode);
-        CoordType = THREED_COORDS;
+        } while ((N = N->SubproblemSuc) != lkh.FirstNode);
+        lkh.CoordType = THREED_COORDS;
     }
-    N = FirstNode;
+    N = lkh.FirstNode;
     XMin = XMax = N->X;
     YMin = YMax = N->Y;
     ZMin = ZMax = N->Z;
-    while ((N = N->SubproblemSuc) != FirstNode) {
+    while ((N = N->SubproblemSuc) != lkh.FirstNode) {
         if (N->X < XMin)
             XMin = N->X;
         else if (N->X > XMax)
@@ -87,10 +87,10 @@ void SolveRoheSubproblems()
         else if (N->Z > ZMax)
             ZMax = N->Z;
     }
-    KDTree = BuildKDTree(SubproblemSize);
-    Remaining = Dimension;
-    while (Remaining > SubproblemSize) {
-        N = FirstNode;
+    KDTree = BuildKDTree(lkh.SubproblemSize);
+    Remaining = lkh.Dimension;
+    while (Remaining > lkh.SubproblemSize) {
+        N = lkh.FirstNode;
         i = Random() % Remaining;
         while (i--)
             N = N->Suc;
@@ -106,10 +106,10 @@ void SolveRoheSubproblems()
             WindowSize(N->X - CMid * DX, N->X + CMid * DX,
                        N->Y - CMid * DY, N->Y + CMid * DY,
                        N->Z - CMid * DZ, N->Z + CMid * DZ,
-                       0, Dimension - 1);
-            if (Size >= 2.0 / 3 * SubproblemSize && Size <= SubproblemSize)
+                       0, lkh.Dimension - 1);
+            if (Size >= 2.0 / 3 * lkh.SubproblemSize && Size <= lkh.SubproblemSize)
                 break;
-            if (Size < 2.0 / 3 * SubproblemSize)
+            if (Size < 2.0 / 3 * lkh.SubproblemSize)
                 CLow = CMid;
             else
                 CHigh = CMid;
@@ -118,43 +118,43 @@ void SolveRoheSubproblems()
         MakeSubproblem(N->X - CMid * DX, N->X + CMid * DX,
                        N->Y - CMid * DY, N->Y + CMid * DY,
                        N->Z - CMid * DZ, N->Z + CMid * DZ,
-                       ++Subproblems, 0, Dimension - 1);
+                       ++Subproblems, 0, lkh.Dimension - 1);
         Remaining -= Size;
     }
     if (Remaining > 3) {
         Subproblems++;
-        N = FirstNode;
+        N = lkh.FirstNode;
         do
             N->Subproblem = Subproblems;
-        while ((N = N->Suc) != FirstNode);
+        while ((N = N->Suc) != lkh.FirstNode);
     }
-    if (WeightType == GEO || WeightType == GEOM || WeightType == GEO_MEEUS
-        || WeightType == GEOM_MEEUS) {
-        N = FirstNode;
+    if (lkh.WeightType == GEO || lkh.WeightType == GEOM || lkh.WeightType == GEO_MEEUS
+        || lkh.WeightType == GEOM_MEEUS) {
+        N = lkh.FirstNode;
         do {
             N->X = N->Xc;
             N->Y = N->Yc;
             N->Z = N->Zc;
-        } while ((N = N->SubproblemSuc) != FirstNode);
-        CoordType = TWOD_COORDS;
+        } while ((N = N->SubproblemSuc) != lkh.FirstNode);
+        lkh.CoordType = TWOD_COORDS;
     }
     free(KDTree);
     for (CurrentSubproblem = 1;
          CurrentSubproblem <= Subproblems; CurrentSubproblem++) {
         OldGlobalBestCost = GlobalBestCost;
         SolveSubproblem(CurrentSubproblem, Subproblems, &GlobalBestCost);
-        if (SubproblemsCompressed && GlobalBestCost == OldGlobalBestCost)
+        if (lkh.SubproblemsCompressed && GlobalBestCost == OldGlobalBestCost)
             SolveCompressedSubproblem(CurrentSubproblem, Subproblems,
                                       &GlobalBestCost);
     }
     printff("\nCost = " GainFormat, GlobalBestCost);
-    if (Optimum != MINUS_INFINITY && Optimum != 0)
+    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
         printff(", Gap = %0.4f%%",
-                100.0 * (GlobalBestCost - Optimum) / Optimum);
+                100.0 * (GlobalBestCost - lkh.Optimum) / lkh.Optimum);
     printff(", Time = %0.2f sec. %s\n", fabs(GetTime() - EntryTime),
-            GlobalBestCost < Optimum ? "<" : GlobalBestCost ==
-            Optimum ? "=" : "");
-    if (SubproblemBorders && Subproblems > 1)
+            GlobalBestCost < lkh.Optimum ? "<" : GlobalBestCost ==
+                                                         lkh.Optimum ? "=" : "");
+    if (lkh.SubproblemBorders && Subproblems > 1)
         SolveSubproblemBorderProblems(Subproblems, &GlobalBestCost);
 }
 
@@ -168,14 +168,14 @@ static void WindowSize(double XMin, double XMax, double YMin, double YMax,
 {
     Node *N;
 
-    if (end - start + 1 <= SubproblemSize) {
+    if (end - start + 1 <= lkh.SubproblemSize) {
         int i;
         for (i = start; i <= end; i++) {
             N = KDTree[i];
             if (N->Subproblem == 0 && N->X >= XMin && N->X <= XMax &&
                 N->Y >= YMin && N->Y <= YMax &&
                 N->Z >= ZMin && N->Z <= ZMax)
-                if (++Size > SubproblemSize)
+                if (++Size > lkh.SubproblemSize)
                     return;
         }
     } else {
@@ -184,11 +184,11 @@ static void WindowSize(double XMin, double XMax, double YMin, double YMax,
         if (N->Subproblem == 0 && N->X >= XMin && N->X <= XMax &&
             N->Y >= YMin && N->Y <= YMax && N->Z >= ZMin && N->Z <= ZMax)
             Size++;
-        if (Size <= SubproblemSize &&
+        if (Size <= lkh.SubproblemSize &&
             (N->Axis == 0 ? N->X >= XMin : N->Axis == 1 ? N->Y >= YMin :
              N->Z >= ZMin))
             WindowSize(XMin, XMax, YMin, YMax, ZMin, ZMax, start, mid - 1);
-        if (Size <= SubproblemSize &&
+        if (Size <= lkh.SubproblemSize &&
             (N->Axis == 0 ? N->X <= XMax : N->Axis == 1 ? N->Y <= YMax :
              N->Z <= ZMax))
             WindowSize(XMin, XMax, YMin, YMax, ZMin, ZMax, mid + 1, end);
@@ -207,7 +207,7 @@ static void MakeSubproblem(double XMin, double XMax, double YMin,
 {
     Node *N, *Next;
 
-    if (end - start + 1 <= SubproblemSize) {
+    if (end - start + 1 <= lkh.SubproblemSize) {
         int i;
         for (i = start; i <= end; i++) {
             N = KDTree[i];
@@ -215,10 +215,10 @@ static void MakeSubproblem(double XMin, double XMax, double YMin,
                 N->Y >= YMin && N->Y <= YMax &&
                 N->Z >= ZMin && N->Z <= ZMax) {
                 N->Subproblem = Subproblem;
-                if (N == FirstNode) {
+                if (N == lkh.FirstNode) {
                     Next = N->Suc;
                     Follow(N, N);
-                    FirstNode = Next;
+                    lkh.FirstNode = Next;
                 } else
                     Follow(N, N);
             }
@@ -229,10 +229,10 @@ static void MakeSubproblem(double XMin, double XMax, double YMin,
         if (N->Subproblem == 0 && N->X >= XMin && N->X <= XMax &&
             N->Y >= YMin && N->Y <= YMax && N->Z >= ZMin && N->Z <= ZMax) {
             N->Subproblem = Subproblem;
-            if (N == FirstNode) {
+            if (N == lkh.FirstNode) {
                 Next = N->Suc;
                 Follow(N, N);
-                FirstNode = Next;
+                lkh.FirstNode = Next;
             } else
                 Follow(N, N);
         }

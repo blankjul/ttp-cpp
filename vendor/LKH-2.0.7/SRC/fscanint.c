@@ -34,3 +34,4 @@ int fscanint(FILE * f, int *v)
     *v = sign * val;
     return 1;
 }
+
