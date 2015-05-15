@@ -25,8 +25,6 @@ namespace ttp {
         ifstream file(pathToFile);
         if (!file) throw std::runtime_error("File " + pathToFile + " does not exist");
 
-        //resetAllData();
-
         lkh.MaxMatrixDimension = numeric_limits<int>::max();
 
         // set the filePtr
@@ -75,16 +73,16 @@ namespace ttp {
 
 
 
+
         return map;
 
     }
 
     int* LKHWrapper::calc(MapPtr map) {
 
-        //resetAllData();
 
         InitParameters();
-        lkh.TraceLevel = 0;
+        lkh.TraceLevel = 1;
 
         int i, K;
         lkh.ProblemType = TSP;

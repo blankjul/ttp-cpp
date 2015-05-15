@@ -28,7 +28,8 @@ namespace ttp {
             }
 
             double minCosts = numeric_limits<double>::max();
-            Tour *bestTour;
+            std::vector<int> bestTour;
+            std::vector<int> bestPickingPlan;
 
 
             // for all the possible tsp tours
@@ -39,7 +40,6 @@ namespace ttp {
 
 
                 // create the start solution
-
                 for (int i = 0; i < pow(2, ttp.sizeOfItems()); i++) {
 
                     std::vector<int> b;
@@ -56,17 +56,20 @@ namespace ttp {
 
                     double time = p.first;
                     double value = p.second;
+
                     if (time < minCosts) {
-                        bestTour = &t;
+                        bestTour = std::vector<int> (v);
+                        bestPickingPlan = b;
+                        minCosts = time;
                     }
 
-                    //cout << time << "," << value << endl;
-
-/*
-                    cout << t << " , ";
-                    for (int j = 0; j < b.size(); ++j) cout << b[j] << ' ';
-                    cout << "[" << k.size() << "]" << " -> " << fixed << time << " , " << value << '\n';
-*/
+                    /*
+                    if (value > 0) {
+                        cout << t << " , ";
+                        for (int j = 0; j < b.size(); ++j) cout << b[j] << ' ';
+                        cout << "[" << k.size() << "]" << " -> " <<  time << " , " << value << '\n';
+                    }
+                     */
 
                 }
 
@@ -74,7 +77,9 @@ namespace ttp {
             } while (next_permutation(v.begin(), v.end()) && v[0] == 0);
 
 
-            return make_pair(*bestTour, Knapsack());
+            Tour t(bestTour);
+            Knapsack k = ttp.convertVectorToKnapsack(bestPickingPlan);
+            return make_pair(t,k);
 
 
         }

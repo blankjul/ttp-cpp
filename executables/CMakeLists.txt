@@ -21,6 +21,14 @@ add_executable(ttpgenerator
 target_link_libraries(ttpgenerator ttp)
 
 
+add_executable(ttpfactory
+    ttpfactory.cpp
+)
+target_link_libraries(ttpfactory ttp)
+
+
+
 
 install (TARGETS ttpsolver RUNTIME DESTINATION bin)
 install (TARGETS ttpgenerator RUNTIME DESTINATION bin)
+install (TARGETS ttpfactory RUNTIME DESTINATION bin)

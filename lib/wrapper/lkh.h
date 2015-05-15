@@ -13,12 +13,10 @@ namespace ttp {
 
     public:
 
+
         MapPtr createMap(std::string);
 
         int *calc(MapPtr map);
-
-
-
 
     };
 

@@ -11,25 +11,50 @@
 
 
 /**
+ * Create a random TSP Problem with n cities
+ */
+TEST(GeneratorTest, TSPRandom) {
+    auto tsp = ttp::ProblemFactory::createTSP(5);
+    EXPECT_EQ(0, tsp.getMap()->get(0,0));
+    EXPECT_TRUE( tsp.getMap()->get(0,1) != 0);
+}
+
+
+
+/**
+ * Tests if when a seed is given the values stays the same
+ */
+TEST(GeneratorTest, TSPRandomSeed) {
+    auto m1 = ttp::ProblemFactory::createTSP(5, 100).getMap();
+    auto m2 = ttp::ProblemFactory::createTSP(5, 100).getMap();
+    for (int i = 0; i < m1->count(); ++i) {
+        for (int j = 0; j < m1->count(); ++j) {
+            EXPECT_EQ(m1->get(i,j), m2->get(i,j));
+        }
+    }
+}
+
+
+
+/**
  * Test if exeception is thrown when file does not exist
  */
 TEST(GeneratorTest, TSPFileDoesNotExist) {
-    ASSERT_THROW(ttp::ProblemFactory::createTSP("nofile"), std::runtime_error);
+    ASSERT_THROW(ttp::ProblemFactory::createTSPFromFile("nofile"), std::runtime_error);
 }
 
 /**
  * Test what happends when the format is wrong
  */
 TEST(GeneratorTest, TSPWrongInputFormat) {
-    ASSERT_THROW(ttp::ProblemFactory::createTSP("README.md"), std::runtime_error);
+    ASSERT_THROW(ttp::ProblemFactory::createTSPFromFile("README.md"), std::runtime_error);
 }
 
 /**
  * Read twice
  */
 TEST(GeneratorTest, TSPReadTwice) {
-    ttp::ProblemFactory::createTSP("../data/tsplib/bier127.tsp");
-    ttp::ProblemFactory::createTSP("../data/tsplib/berlin52.tsp");
+    //ttp::ProblemFactory::createTSPFromFile("../data/tsplib/bier127.tsp");
 }
 
 
@@ -104,7 +129,7 @@ TEST(GeneratorTest, ExampleCase) {
 TEST(GeneratorTest, TSPLIBBerlin) {
     //ttp::TravellingSalesmanProblem tsp = ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
 
-    ttp::TravellingSalesmanProblem tsp =  ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
+    ttp::TravellingSalesmanProblem tsp =  ttp::ProblemFactory::createTSPFromFile("../test/generator/berlin4.tsp");
 
     ttp::MapPtr m = tsp.getMap();
 

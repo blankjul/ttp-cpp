@@ -1,16 +1,27 @@
 #include "ttp.h"
 #include <cmath>
 #include <iostream>
+#include <algorithm>
+#include "json/json.h"
+
 
 namespace ttp {
 
 
-    TravellingThiefProblem::TravellingThiefProblem(MapPtr map, vector<ItemPtr> items, int maxWeight) : TravellingThiefProblem(map,maxWeight){
-        int itemsPerCity = items.size() / map->count();
-        for (int i = 0; i < items.size(); ++i) {
-            int currentCity = i / itemsPerCity;
-            add(items[i], currentCity);
+    TravellingThiefProblem::TravellingThiefProblem(MapPtr map, vector<ItemPtr> items, int itemsPerCity, int maxWeight)
+            : TravellingThiefProblem(map, maxWeight) {
+
+        if (items.size() < (map->count() - 1) * itemsPerCity)
+            throw std::runtime_error("The items are not enough to fill all the cities according to itemsPerCity!");
+
+        int counter = 0;
+        for (int j = 1; j < map->count(); ++j) {
+            for (int i = 0; i < itemsPerCity; ++i) {
+                add(items[counter++], j);
+            }
         }
+
+
     }
 
 
@@ -36,7 +47,7 @@ namespace ttp {
     void  TravellingThiefProblem::setMaxSpeed(double maxSpeed) {
         TravellingThiefProblem::maxSpeed = maxSpeed;
     }
-    
+
 
     int  TravellingThiefProblem::getMaxWeight() const {
         return maxWeight;
@@ -67,7 +78,7 @@ namespace ttp {
         return b;
     }
 
-    const vector<pair<ItemPtr, int>> & TravellingThiefProblem::getItems() const {
+    const vector<pair<ItemPtr, int>> &TravellingThiefProblem::getItems() const {
         return items;
     }
 
@@ -79,8 +90,10 @@ namespace ttp {
     }
 
 
-
     void TravellingThiefProblem::add(ItemPtr i, int city) {
+
+        if (city == 0) throw std::runtime_error("The first city does not have any item!");
+
         auto it = itemsMap.find(city);
 
         if (it == itemsMap.end()) {
@@ -89,7 +102,7 @@ namespace ttp {
             v.push_back(i);
 
             // add the current city
-            pair< int, vector<ItemPtr> > pair (city,v);
+            pair<int, vector<ItemPtr> > pair(city, v);
             itemsMap.insert(pair);
 
         } else {
@@ -99,7 +112,8 @@ namespace ttp {
     }
 
 
-    void TravellingThiefProblem::calcTour(Tour &t, Knapsack &k, double &currentTime , vector<pair<ItemPtr,double>> & pickedItems) {
+    void TravellingThiefProblem::calcTour(Tour &t, Knapsack &k, double &currentTime,
+                                          vector<pair<ItemPtr, double>> &pickedItems) {
 
         // initialize the values
         double currentSpeed = maxSpeed;
@@ -140,7 +154,7 @@ namespace ttp {
         return items.size();
     }
 
-    const MapPtr& TravellingThiefProblem::getMap() const {
+    const MapPtr &TravellingThiefProblem::getMap() const {
         return m;
     }
 
@@ -154,9 +168,9 @@ namespace ttp {
 
         // calculate the tour
         double elapsedTime = 0;
-        vector<pair<ItemPtr,double>> pickedItems;
+        vector<pair<ItemPtr, double>> pickedItems;
 
-        calcTour(t,k,elapsedTime, pickedItems);
+        calcTour(t, k, elapsedTime, pickedItems);
 
         // calculate the values of the knapsack when arrived
         double finalValue = 0;
@@ -170,7 +184,7 @@ namespace ttp {
 
 
     pair<double, double> TravellingThiefProblem::evaluateMO(Tour &t, Knapsack &k, double droppingRate,
-                                                          double droppingConstant) {
+                                                            double droppingConstant) {
         // calculate the tour
         double elapsedTime = 0;
         vector<pair<ItemPtr, double>> pickedItems;
@@ -190,6 +204,96 @@ namespace ttp {
 
         return pair<double, double>(elapsedTime, finalValue);
     }
+
+
+    void TravellingThiefProblem::toJson(std::ostream &s) {
+        s << "{\n\"type\": \"ttp\", \n";
+        s << "\"numberOfCities\": " << m->count() << ", \n";
+        s << "\"maxWeight\": " << getMaxWeight() << ", \n";
+        s << "\"droppingRate\": " << getDroppingRate() << ", \n";
+        s << "\"droppingConstant\": " << getDroppingConstant() << ", \n";
+        s << "\"rentingRate\": " << getRentingRate() << ", \n";
+
+        // print the distance matrixs
+        s << "\"matrix\": [\n";
+        for (int i = 0; i < m->count(); ++i) {
+            s << "[";
+            for (int j = 0; j < m->count(); ++j) {
+                int value = m->get(i, j);
+                s << value;
+                if (j != m->count() - 1) s << ",";
+            }
+            s << "]";
+            if (i != m->count() - 1) s << ",";
+            s << "\n";
+        }
+        s << "]\n";
+
+        s << ", \n \"items\": [\n";
+        vector<pair<ItemPtr, int>> l = getItems();
+        for (int i = 0; i < l.size(); ++i) {
+            ItemPtr ptr = l[i].first;
+            int city = l[i].second;
+            s << "[" << ptr->getValue() << "," << ptr->getWeight() << "," << city << "]";
+            if (i != l.size() - 1) s << ",";
+        }
+
+        s << "]\n";
+        s << "}\n";
+    }
+
+
+    TravellingThiefProblem TravellingThiefProblem::fromJson(std::istream &is) {
+
+        Json::Value root;   // will contains the root value after parsing.
+        Json::Reader reader;
+        bool parsingSuccessful = reader.parse(is, root);
+        if (!parsingSuccessful) {
+            throw std::runtime_error("Could not read the JSON file!");
+        }
+
+        std::string type = root.get("type", "unknown").asString();
+        if (type != "ttp") throw std::runtime_error("Problem type has to be ttp!");
+
+        int numOfCities = root.get("numberOfCities", -1).asInt();
+        if (numOfCities < 0) throw std::runtime_error("Please define numberOfCities larger than zero!");
+
+        int maxWeight = root.get("maxWeight", -1).asInt();
+        if (maxWeight < 0) throw std::runtime_error("Max Weight has to specified and larger than zero!");
+
+        double droppingRate = root.get("droppingRate", -1).asDouble();
+        if (droppingRate < 0 || droppingRate > 1) throw std::runtime_error("No droppingRate between [0,1] found!");
+
+        double droppingConstant = root.get("droppingConstant", 0).asDouble();
+        if (droppingRate < 0) throw std::runtime_error("No droppingConstant larger than zero was found.");
+
+        double rentingRate = root.get("rentingRate", -1).asDouble();
+        if (rentingRate < 0 || rentingRate > 1) throw std::runtime_error("No rentingRate between [0,1] found!");
+
+
+        MapPtr m = make_shared<Map>(numOfCities);
+
+        const Json::Value matrix = root["matrix"];
+        for (int i = 0; i < matrix.size(); ++i) { // Iterates over the sequence elements.
+            const Json::Value row = matrix[i];
+            for (int j = 0; j < row.size(); ++j) {
+                m->set(i, j, row[j].asDouble());
+            }
+        }
+
+        TravellingThiefProblem ttp(m, maxWeight);
+
+        const Json::Value items = root["items"];
+        for (int i = 0; i < items.size(); ++i) { // Iterates over the sequence elements.
+            const Json::Value item = items[i];
+            ItemPtr ptr = make_shared<Item>(item[0].asInt(), item[1].asInt());
+            ttp.add(ptr, item[2].asInt());
+        }
+
+        return ttp;
+
+    }
+
 
 
     double TravellingThiefProblem::getRentingRate() const {

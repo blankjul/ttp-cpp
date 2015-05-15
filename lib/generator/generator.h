@@ -23,7 +23,7 @@ namespace ttp {
 
 
         /**
-         * Enumeration for specifing the Knapsack factory.
+         * Enumeration for the Knapsack factory.
          */
         enum class KnapsackType{ UNCORRELATED=1, WEAKLY_CORRELATED=2, STRONLY_CORRELATED=3, SUBSET_SUM=4};
 
@@ -31,7 +31,13 @@ namespace ttp {
         /**
          * Creates a TravellingSalesmanProblem from a given TSPLIB file from Reinelt.
          */
-        static TravellingSalesmanProblem createTSP(string pathToFile);
+        static TravellingSalesmanProblem createTSPFromFile(string pathToFile);
+
+
+        /**
+         * Create a TSP Problem randomly with n cities on the map.
+         */
+        static TravellingSalesmanProblem createTSP(int n, long seed = time(NULL));
 
 
         /**
@@ -72,7 +78,7 @@ namespace ttp {
          *  \return one TTP
          *
          */
-        static TravellingThiefProblem createTTP(TravellingSalesmanProblem, KnapsackProblem);
+        static TravellingThiefProblem createTTP(TravellingSalesmanProblem, KnapsackProblem, int itemsPerCity);
 
 
         /**
@@ -83,7 +89,7 @@ namespace ttp {
          *  \return multiple TTPs
          *
          */
-        static vector<TravellingThiefProblem> createMultipleTTP(TravellingSalesmanProblem tsp, vector<KnapsackProblem> knps);
+        static vector<TravellingThiefProblem> createMultipleTTP(TravellingSalesmanProblem tsp, vector<KnapsackProblem> knps, int itemsPerCity);
 
 
     private:

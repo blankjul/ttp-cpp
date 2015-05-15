@@ -24,7 +24,10 @@ namespace ttp {
     }
 
     bool Map::set(int i, int j, double value) {
-        if (i >= n or j >= n) return false;
+        // there is no distance between the city itself
+        if (i == n ) return false;
+        // out of bounds
+        else if (i >= n or j >= n) return false;
         else {
             costs[i][j] = value;
             if (symmetrical) costs[j][i] = value;

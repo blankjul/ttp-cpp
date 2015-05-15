@@ -63,53 +63,16 @@ int main(int argc, char **argv) {
         long seed = argRandomSeed.getValue();
         if (seed == -1) seed = time(NULL);
 
-        TravellingSalesmanProblem tsp = ProblemFactory::createTSP(filePath);
+        TravellingSalesmanProblem tsp = ProblemFactory::createTSPFromFile(filePath);
         KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity * tsp.count(), range, type, c, seed);
-        TravellingThiefProblem ttp = ProblemFactory::createTTP(tsp, knp);
+        TravellingThiefProblem ttp = ProblemFactory::createTTP(tsp, knp, itemPerCity);
 
 
         // write results to a file
         ofstream jsonFile ("output.json");
 
-        auto m = ttp.getMap();
-        if (jsonFile.is_open())
-        {
-            jsonFile << "{\n\"type\": \"ttp\", \n";
-            jsonFile << "\"maxWeight\": \"" << ttp.getMaxWeight() << "\", \n";
-            jsonFile << "\"droppingRate\": \"" << ttp.getDroppingRate() << "\", \n";
-            jsonFile << "\"droppingConstant\": \"" << ttp.getDroppingConstant() << "\", \n";
-            jsonFile << "\"rentingRate\": \"" << ttp.getRentingRate() << "\", \n";
-
-            // print the distance matrix
-            jsonFile << "\"matrix\": [\n";
-            for (int i = 0; i < m->count(); ++i) {
-                jsonFile << "[";
-                for (int j = 0; j < m->count(); ++j) {
-                    int value = m->get(i, j);
-                    jsonFile << value;
-                    if (j != m->count() -1) jsonFile << ",";
-                }
-                jsonFile << "]";
-                if (i != m->count() -1) jsonFile << ",";
-                jsonFile << "\n";
-            }
-            jsonFile << "]\n";
-
-            jsonFile << ", \n \"items\": [\n";
-            vector<pair<ItemPtr, int>> l = ttp.getItems();
-            for (int i = 0; i < l.size(); ++i) {
-                ItemPtr ptr = l[i].first;
-                int city = l[i].second;
-                jsonFile << "[" << ptr->getValue() << "," << ptr->getWeight() << "," << city <<  "]";
-                if (i != l.size() -1) jsonFile << ",";
-            }
-
-            jsonFile << "]\n";
-            jsonFile << "}\n";
-            jsonFile.close();
-        }
-        else cout << "Unable to open file";
-
+        ttp.toJson(jsonFile);
+        jsonFile.close();
 
 
 

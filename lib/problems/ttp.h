@@ -7,6 +7,7 @@
 #include "model/knapsack.h"
 
 
+
 using namespace std;
 
 namespace ttp {
@@ -100,7 +101,7 @@ namespace ttp {
          *
          * The items are distributed to the cities automatically.
          */
-        TravellingThiefProblem(MapPtr map, vector<ItemPtr>, int maxWeight);
+        TravellingThiefProblem(MapPtr map, vector<ItemPtr>, int itemsPerCity, int maxWeight);
 
         /**
          * Add multpile items to this problem
@@ -175,6 +176,17 @@ namespace ttp {
          * \return <time,value> as a MOP result
          */
         pair<double, double> evaluateMO(Tour &t, Knapsack &k, double droppingRate = DEFAULT_DROPPING_RATE, double droppingConstant = DEFAULT_DROPPING_CONSTANT);
+
+
+        /**
+         * fills the stream with a json representation of this object.
+         */
+        void toJson(std::ostream &s);
+
+        /**
+         * fills the stream with a json representation of this object.
+         */
+        static TravellingThiefProblem fromJson(std::istream &s);
 
 
         /*
