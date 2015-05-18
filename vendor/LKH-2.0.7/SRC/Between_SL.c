@@ -27,17 +27,17 @@ int Between_SL(const Node * ta, const Node * tb, const Node * tc)
     Pc = tc->Parent;
     if (Pa == Pc) {
         if (Pb == Pa)
-            return (lkh.Reversed == Pa->Reversed) ==
+            return (Reversed == Pa->Reversed) ==
                 (ta->Rank < tc->Rank ?
                  tb->Rank > ta->Rank && tb->Rank < tc->Rank :
                  tb->Rank > ta->Rank || tb->Rank < tc->Rank);
-        return (lkh.Reversed == Pa->Reversed) == (ta->Rank > tc->Rank);
+        return (Reversed == Pa->Reversed) == (ta->Rank > tc->Rank);
     }
     if (Pb == Pc)
-        return (lkh.Reversed == Pb->Reversed) == (tb->Rank < tc->Rank);
+        return (Reversed == Pb->Reversed) == (tb->Rank < tc->Rank);
     if (Pa == Pb)
-        return (lkh.Reversed == Pa->Reversed) == (ta->Rank < tb->Rank);
-    return lkh.Reversed !=
+        return (Reversed == Pa->Reversed) == (ta->Rank < tb->Rank);
+    return Reversed !=
         (Pa->Rank < Pc->Rank ?
          Pb->Rank > Pa->Rank && Pb->Rank < Pc->Rank :
          Pb->Rank > Pa->Rank || Pb->Rank < Pc->Rank);

@@ -11,7 +11,7 @@ void TrimCandidateSet(int MaxCandidates)
     Candidate *NFrom;
     int Count;
 
-    From = lkh.FirstNode;
+    From = FirstNode;
     do {
         Count = 0;
         for (NFrom = From->CandidateSet; NFrom->To; NFrom++)
@@ -23,5 +23,5 @@ void TrimCandidateSet(int MaxCandidates)
                                           1) * sizeof(Candidate)));
             From->CandidateSet[MaxCandidates].To = 0;
         }
-    } while ((From = From->Suc) != lkh.FirstNode);
+    } while ((From = From->Suc) != FirstNode);
 }

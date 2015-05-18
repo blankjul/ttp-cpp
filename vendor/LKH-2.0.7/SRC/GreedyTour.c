@@ -50,19 +50,19 @@ GainType GreedyTour()
     int Count, i;
     double EntryTime = GetTime();
 
-    if (lkh.TraceLevel >= 1) {
-        if (lkh.InitialTourAlgorithm == BORUVKA)
+    if (TraceLevel >= 1) {
+        if (InitialTourAlgorithm == BORUVKA)
             printff("Boruvka = ");
-        else if (lkh.InitialTourAlgorithm == GREEDY)
+        else if (InitialTourAlgorithm == GREEDY)
             printff("Greedy = ");
-        else if (lkh.InitialTourAlgorithm == NEAREST_NEIGHBOR)
+        else if (InitialTourAlgorithm == NEAREST_NEIGHBOR)
             printff("Nearest-Neighbor = ");
-        else if (lkh.InitialTourAlgorithm == QUICK_BORUVKA)
+        else if (InitialTourAlgorithm == QUICK_BORUVKA)
             printff("Quick-Boruvka = ");
     }
     Cost = 0;
     EdgesInFragments = 0;
-    From = lkh.FirstNode;
+    From = FirstNode;
     do {
         From->Degree = 0;
         From->Tail = From;
@@ -70,25 +70,25 @@ GainType GreedyTour()
         From->Next = From->Suc;
         From->Pred = From->Suc = 0;
     }
-    while ((From = From->Next) != lkh.FirstNode);
+    while ((From = From->Next) != FirstNode);
     Count = 0;
     for (;;) {
         if ((To = NearestNeighbor(From)) && FixedOrCommon(From, To))
             AddEdgeToFragments(From, To);
         else {
             if ((From->Nearest = To)) {
-                if (lkh.InitialTourAlgorithm == GREEDY) {
+                if (InitialTourAlgorithm == GREEDY) {
                     From->Rank = From->Cost;
                     HeapLazyInsert(From);
                 } else
                     Count++;
             }
-            if ((From = From->Next) == lkh.FirstNode)
+            if ((From = From->Next) == FirstNode)
                 break;
         }
     }
-    if (lkh.InitialTourAlgorithm == NEAREST_NEIGHBOR) {
-        if (EdgesInFragments < lkh.Dimension) {
+    if (InitialTourAlgorithm == NEAREST_NEIGHBOR) {
+        if (EdgesInFragments < Dimension) {
             while (From->Degree == 2)
                 From = From->Tail;
             for (;;) {
@@ -96,27 +96,27 @@ GainType GreedyTour()
                 Node *Nearest = 0;
                 while ((To = NearestNeighbor(From))) {
                     AddEdgeToFragments(From, To);
-                    if (EdgesInFragments == lkh.Dimension)
+                    if (EdgesInFragments == Dimension)
                         break;
                     From = To->Degree < 2 ? To : To->Tail;
                     while (From->Degree == 2)
                         From = From->Tail;
                 }
-                if (EdgesInFragments == lkh.Dimension)
+                if (EdgesInFragments == Dimension)
                     break;
-                To = lkh.FirstNode;
+                To = FirstNode;
                 do {
                     if (MayBeAddedToFragments(From, To) &&
-                        (!lkh.c || lkh.c(From, To) < Min)
-                        && (d = lkh.C(From, To)) < Min) {
+                        (!c || c(From, To) < Min)
+                        && (d = C(From, To)) < Min) {
                         Min = From->Cost = d;
                         Nearest = To;
                     }
-                } while ((To = To->Next) != lkh.FirstNode);
+                } while ((To = To->Next) != FirstNode);
                 assert(Nearest);
                 To = Nearest;
                 AddEdgeToFragments(From, To);
-                if (EdgesInFragments == lkh.Dimension)
+                if (EdgesInFragments == Dimension)
                     break;
                 while (From->Degree == 2)
                     From = From->Tail;
@@ -124,7 +124,7 @@ GainType GreedyTour()
             }
         }
     } else {
-        if (lkh.InitialTourAlgorithm == GREEDY) {
+        if (InitialTourAlgorithm == GREEDY) {
             Heapify();
             while ((From = HeapDeleteMin())) {
                 To = From->Nearest;
@@ -137,10 +137,10 @@ GainType GreedyTour()
             }
         } else {
             assert(Perm = (Node **) malloc(Count * sizeof(Node *)));
-            for (From = lkh.FirstNode, i = 0; i < Count; From = From->Next)
+            for (From = FirstNode, i = 0; i < Count; From = From->Next)
                 if (From->Nearest)
                     Perm[i++] = From;
-            if (lkh.InitialTourAlgorithm == QUICK_BORUVKA) {
+            if (InitialTourAlgorithm == QUICK_BORUVKA) {
                 qsort(Perm, Count, sizeof(Node *), compareX);
                 for (i = 0; i < Count; i++) {
                     From = Perm[i];
@@ -149,7 +149,7 @@ GainType GreedyTour()
                         i--;
                     }
                 }
-            } else if (lkh.InitialTourAlgorithm == BORUVKA) {
+            } else if (InitialTourAlgorithm == BORUVKA) {
                 while (Count > 0) {
                     qsort(Perm, Count, sizeof(Node *), compareCost);
                     for (i = 0; i < Count; i++) {
@@ -171,10 +171,10 @@ GainType GreedyTour()
             }
             free(Perm);
         }
-        if (EdgesInFragments < lkh.Dimension) {
+        if (EdgesInFragments < Dimension) {
             /* Create a list of the degree-0 and degree-1 nodes */
             First = 0;
-            From = lkh.FirstNode;
+            From = FirstNode;
             do {
                 if (From->Degree != 2) {
                     From->OldSuc = First;
@@ -185,7 +185,7 @@ GainType GreedyTour()
                     First = From;
                 }
             }
-            while ((From = From->Next) != lkh.FirstNode);
+            while ((From = From->Next) != FirstNode);
             First->OldPred = Last;
             Last->OldSuc = First;
             /* Initialize the heap */
@@ -217,7 +217,7 @@ GainType GreedyTour()
         }
     }
     /* Orient Pred and Suc so that the list of nodes represents a tour */
-    To = lkh.FirstNode;
+    To = FirstNode;
     From = To->Pred;
     do {
         if (To->Suc == From) {
@@ -226,13 +226,13 @@ GainType GreedyTour()
         }
         From = To;
     }
-    while ((To = From->Suc) != lkh.FirstNode);
+    while ((To = From->Suc) != FirstNode);
     To->Pred = From;
-    Cost /= lkh.Precision;
-    if (lkh.TraceLevel >= 1) {
+    Cost /= Precision;
+    if (TraceLevel >= 1) {
         printff(GainFormat, Cost);
-        if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
-            printff(", Gap = %0.1f%%", 100.0 * (Cost - lkh.Optimum) / lkh.Optimum);
+        if (Optimum != MINUS_INFINITY && Optimum != 0)
+            printff(", Gap = %0.1f%%", 100.0 * (Cost - Optimum) / Optimum);
         printff(", Time = %0.2f sec.\n", fabs(GetTime() - EntryTime));
     }
     return Cost;
@@ -258,7 +258,7 @@ static Node *NearestNeighbor(Node * From)
     static int mark = 0;
     Candidate *NN;
     Node *To, *N, *First = 0, *Last = 0, *Nearest = 0;
-    int MaxLevel = lkh.Dimension, Min = INT_MAX, d;
+    int MaxLevel = Dimension, Min = INT_MAX, d;
 
     if (From->Degree == 2)
         return 0;
@@ -288,8 +288,8 @@ static Node *NearestNeighbor(Node * From)
                 To->Level = N->Level + 1;
                 if (MayBeAddedToFragments(From, To) &&
                     (N == From ? (d = NN->Cost) < Min :
-                     (!lkh.c || lkh.c(From, To) < Min)
-                     && (d = lkh.C(From, To)) < Min)) {
+                     (!c || c(From, To) < Min)
+                     && (d = C(From, To)) < Min)) {
                     Min = From->Cost = d;
                     /* Randomization */
                     if (!Nearest && Random() % 3 != 0)
@@ -328,7 +328,7 @@ static Node *NearestInList(Node * From, Node * First)
     To = First;
     do {
         if (MayBeAddedToFragments(From, To) &&
-            (!lkh.c || lkh.c(From, To) < Min) && (d = lkh.C(From, To)) < Min) {
+            (!c || c(From, To) < Min) && (d = C(From, To)) < Min) {
             Min = From->Cost = d;
             Nearest = To;
         }
@@ -346,7 +346,7 @@ static Node *NearestInList(Node * From, Node * First)
 static int MayBeAddedToFragments(Node * From, Node * To)
 {
     return From != To && From->Degree != 2 && To->Degree != 2 &&
-        (From->Tail != To || EdgesInFragments == lkh.Dimension - 1) &&
+        (From->Tail != To || EdgesInFragments == Dimension - 1) &&
         !Forbidden(From, To);
 }
 

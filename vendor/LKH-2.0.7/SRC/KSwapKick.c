@@ -21,11 +21,11 @@ void KSwapKick(int K)
 
     assert(s = (Node **) malloc(K * sizeof(Node *)));
     Count = 0;
-    N = lkh.FirstNode;
+    N = FirstNode;
     do {
         N->Rank = ++Count;
         N->V = 0;
-    } while ((N = N->Suc) != lkh.FirstNode);
+    } while ((N = N->Suc) != FirstNode);
     N = s[0] = RandomNode();
     if (!N)
         goto End_KSwapKick;
@@ -60,19 +60,19 @@ static Node *RandomNode()
     Node *N;
     int Count;
 
-    if (lkh.Dimension == lkh.DimensionSaved)
-        N = &lkh.NodeSet[1 + Random() % lkh.Dimension];
+    if (Dimension == DimensionSaved)
+        N = &NodeSet[1 + Random() % Dimension];
     else {
-        N = lkh.FirstNode;
-        for (Count = Random() % lkh.Dimension; Count > 0; Count--)
+        N = FirstNode;
+        for (Count = Random() % Dimension; Count > 0; Count--)
             N = N->Suc;
     }
     Count = 0;
-    while ((FixedOrCommon(N, N->Suc) || N->V) && Count < lkh.Dimension) {
+    while ((FixedOrCommon(N, N->Suc) || N->V) && Count < Dimension) {
         N = N->Suc;
         Count++;
     }
-    return Count < lkh.Dimension ? N : 0;
+    return Count < Dimension ? N : 0;
 }
 
 static int compare(const void *Na, const void *Nb)

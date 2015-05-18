@@ -35,10 +35,10 @@ char *ReadLine(FILE * InputFile)
         Buffer[i] = (char) c;
     }
     Buffer[i] = '\0';
-    if (!lkh.LastLine || (int) strlen(lkh.LastLine) < i) {
-        free(lkh.LastLine);
-        assert(lkh.LastLine = (char *) malloc((i + 1) * sizeof(char)));
+    if (!LastLine || (int) strlen(LastLine) < i) {
+        free(LastLine);
+        assert(LastLine = (char *) malloc((i + 1) * sizeof(char)));
     }
-    strcpy(lkh.LastLine, Buffer);
+    strcpy(LastLine, Buffer);
     return c == EOF && i == 0 ? 0 : Buffer;
 }

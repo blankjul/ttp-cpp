@@ -13,15 +13,15 @@ void RestoreTour()
     Node *t1, *t2, *t3, *t4;
 
     /* Loop as long as the stack is not empty */
-    while (lkh.Swaps > 0) {
+    while (Swaps > 0) {
         /* Undo topmost 2-opt move */
-        lkh.Swaps--;
-        t1 = lkh.SwapStack[lkh.Swaps].t1;
-        t2 = lkh.SwapStack[lkh.Swaps].t2;
-        t3 = lkh.SwapStack[lkh.Swaps].t3;
-        t4 = lkh.SwapStack[lkh.Swaps].t4;
+        Swaps--;
+        t1 = SwapStack[Swaps].t1;
+        t2 = SwapStack[Swaps].t2;
+        t3 = SwapStack[Swaps].t3;
+        t4 = SwapStack[Swaps].t4;
         Swap1(t3, t2, t1);
-        lkh.Swaps--;
+        Swaps--;
         /* Make edges (t1,t2) and (t2,t3) excludable again */
         t1->OldPredExcluded = t1->OldSucExcluded = 0;
         t2->OldPredExcluded = t2->OldSucExcluded = 0;

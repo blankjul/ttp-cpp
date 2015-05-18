@@ -10,73 +10,73 @@
 void AddTourCandidates()
 {
     Node *Na, *Nb;
-    int i, d, Subproblem = lkh.FirstNode->Subproblem;
+    int i, d, Subproblem = FirstNode->Subproblem;
 
     /* Add fixed edges */
-    Na = lkh.FirstNode;
+    Na = FirstNode;
     do {
         if (Na->FixedTo1)
-            AddCandidate(Na, Na->FixedTo1, lkh.D(Na, Na->FixedTo1), 0);
+            AddCandidate(Na, Na->FixedTo1, D(Na, Na->FixedTo1), 0);
         if (Na->FixedTo2)
-            AddCandidate(Na, Na->FixedTo2, lkh.D(Na, Na->FixedTo2), 0);
+            AddCandidate(Na, Na->FixedTo2, D(Na, Na->FixedTo2), 0);
     }
-    while ((Na = Na->Suc) != lkh.FirstNode);
+    while ((Na = Na->Suc) != FirstNode);
 
     /* Add MERGE_TOUR_FILE edges */
-    for (i = 0; i < lkh.MergeTourFiles; i++) {
-        Na = lkh.FirstNode;
+    for (i = 0; i < MergeTourFiles; i++) {
+        Na = FirstNode;
         do {
             Nb = Na->MergeSuc[i];
             if (!Nb)
                 break;
             if (Na->Subproblem == Subproblem &&
                 Nb->Subproblem == Subproblem) {
-                d = lkh.D(Na, Nb);
+                d = D(Na, Nb);
                 AddCandidate(Na, Nb, d, 1);
                 AddCandidate(Nb, Na, d, 1);
             }
         }
-        while ((Na = Nb) != lkh.FirstNode);
+        while ((Na = Nb) != FirstNode);
     }
 
     /* Add INITIAL_TOUR_FILE edges */
-    Na = lkh.FirstNode;
+    Na = FirstNode;
     do {
         Nb = Na->InitialSuc;
         if (!Nb)
             break;
         if (Na->Subproblem == Subproblem && Nb->Subproblem == Subproblem) {
-            d = lkh.D(Na, Nb);
+            d = D(Na, Nb);
             AddCandidate(Na, Nb, d, 1);
             AddCandidate(Nb, Na, d, 1);
         }
     }
-    while ((Na = Nb) != lkh.FirstNode);
+    while ((Na = Nb) != FirstNode);
 
     /* Add INPUT_TOUR_FILE edges */
-    Na = lkh.FirstNode;
+    Na = FirstNode;
     do {
         Nb = Na->InputSuc;
         if (!Nb)
             break;
         if (Na->Subproblem == Subproblem && Nb->Subproblem == Subproblem) {
-            d = lkh.D(Na, Nb);
+            d = D(Na, Nb);
             AddCandidate(Na, Nb, d, 1);
             AddCandidate(Nb, Na, d, 1);
         }
     }
-    while ((Na = Nb) != lkh.FirstNode);
+    while ((Na = Nb) != FirstNode);
 
     /* Add SUBPROBLEM_TOUR_FILE edges */
-    Na = lkh.FirstNode;
+    Na = FirstNode;
     do {
         Nb = Na->SubproblemSuc;
         if (!Nb)
             break;
         if (Na->Subproblem == Subproblem && Nb->Subproblem == Subproblem) {
-            d = lkh.D(Na, Nb);
+            d = D(Na, Nb);
             AddCandidate(Na, Nb, d, 1);
             AddCandidate(Nb, Na, d, 1);
         }
-    } while ((Na = Nb) != lkh.FirstNode);
+    } while ((Na = Nb) != FirstNode);
 }

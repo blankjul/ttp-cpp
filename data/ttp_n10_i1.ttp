@@ -1,7 +1,7 @@
 {
 "type": "ttp", 
 "numberOfCities": 10, 
-"maxWeight": 3000, 
+"maxWeight": 1558, 
 "droppingRate": 0.9, 
 "droppingConstant": 10, 
 "rentingRate": 1, 

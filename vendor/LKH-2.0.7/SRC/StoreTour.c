@@ -24,12 +24,12 @@ void StoreTour()
     Candidate *Nt;
     int i;
 
-    while (lkh.Swaps > 0) {
-        lkh.Swaps--;
+    while (Swaps > 0) {
+        Swaps--;
         for (i = 1; i <= 4; i++) {
-            t = i == 1 ? lkh.SwapStack[lkh.Swaps].t1 :
-                i == 2 ? lkh.SwapStack[lkh.Swaps].t2 :
-                i == 3 ? lkh.SwapStack[lkh.Swaps].t3 : lkh.SwapStack[lkh.Swaps].t4;
+            t = i == 1 ? SwapStack[Swaps].t1 :
+                i == 2 ? SwapStack[Swaps].t2 :
+                i == 3 ? SwapStack[Swaps].t3 : SwapStack[Swaps].t4;
             Activate(t);
             t->OldPred = t->Pred;
             t->OldSuc = t->Suc;

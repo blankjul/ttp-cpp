@@ -29,38 +29,38 @@ void SolveKMeansSubproblems()
 
     /* Compute upper bound for the original problem */
     GlobalBestCost = 0;
-    N = lkh.FirstNode;
+    N = FirstNode;
     do {
         if (!Fixed(N, N->SubproblemSuc))
-            GlobalBestCost += lkh.Distance(N, N->SubproblemSuc);
+            GlobalBestCost += Distance(N, N->SubproblemSuc);
         N->Subproblem = 0;
     }
-    while ((N = N->SubproblemSuc) != lkh.FirstNode);
-    if (lkh.TraceLevel >= 1) {
-        if (lkh.TraceLevel >= 2)
+    while ((N = N->SubproblemSuc) != FirstNode);
+    if (TraceLevel >= 1) {
+        if (TraceLevel >= 2)
             printff("\n");
         printff("*** K-means partitioning *** [Cost = " GainFormat "]\n",
                 GlobalBestCost);
     }
 
-    Subproblems = (int) ceil((double) lkh.Dimension / lkh.SubproblemSize);
+    Subproblems = (int) ceil((double) Dimension / SubproblemSize);
     KMeansClustering(Subproblems);
     for (CurrentSubproblem = 1;
          CurrentSubproblem <= Subproblems; CurrentSubproblem++) {
         OldGlobalBestCost = GlobalBestCost;
         SolveSubproblem(CurrentSubproblem, Subproblems, &GlobalBestCost);
-        if (lkh.SubproblemsCompressed && GlobalBestCost == OldGlobalBestCost)
+        if (SubproblemsCompressed && GlobalBestCost == OldGlobalBestCost)
             SolveCompressedSubproblem(CurrentSubproblem, Subproblems,
                                       &GlobalBestCost);
     }
     printff("\nCost = " GainFormat, GlobalBestCost);
-    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
+    if (Optimum != MINUS_INFINITY && Optimum != 0)
         printff(", Gap = %0.4f%%",
-                100.0 * (GlobalBestCost - lkh.Optimum) / lkh.Optimum);
+                100.0 * (GlobalBestCost - Optimum) / Optimum);
     printff(", Time = %0.2f sec. %s\n", fabs(GetTime() - EntryTime),
-            GlobalBestCost < lkh.Optimum ? "<" : GlobalBestCost ==
-                                                         lkh.Optimum ? "=" : "");
-    if (lkh.SubproblemBorders && Subproblems > 1)
+            GlobalBestCost < Optimum ? "<" : GlobalBestCost ==
+            Optimum ? "=" : "");
+    if (SubproblemBorders && Subproblems > 1)
         SolveSubproblemBorderProblems(Subproblems, &GlobalBestCost);
 }
 
@@ -93,12 +93,12 @@ static void KMeansClustering(int K)
     assert(Count = (int *) calloc(K + 1, sizeof(int)));
     assert(Movement = (int *) calloc(K + 1, sizeof(int)));
     assert(MMax = (int *) calloc(K + 1, sizeof(int)));
-    assert(Perm = (Node **) malloc(lkh.Dimension * sizeof(Node *)));
+    assert(Perm = (Node **) malloc(Dimension * sizeof(Node *)));
 
     /* Pick random initial centers */
-    for (i = 0; i < lkh.Dimension; i++)
-        Perm[i] = &lkh.NodeSet[i + 1];
-    for (j = 1; j < lkh.Dimension; j++) {
+    for (i = 0; i < Dimension; i++)
+        Perm[i] = &NodeSet[i + 1];
+    for (j = 1; j < Dimension; j++) {
         i = Random() % j;
         N = Perm[j];
         Perm[j] = Perm[i];
@@ -111,13 +111,13 @@ static void KMeansClustering(int K)
     }
 
     /* Assign each node to center 0 (a ghost cluster) */
-    N = lkh.FirstNode;
+    N = FirstNode;
     do {
         N->BestPi = N->Pi;
         N->Pi = 0;
-        if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
+        if (WeightType == GEO || WeightType == GEO_MEEUS)
             GEO2XYZ(N->X, N->Y, &N->Xc, &N->Yc, &N->Zc);
-        else if (lkh.WeightType == GEOM || lkh.WeightType == GEOM_MEEUS)
+        else if (WeightType == GEOM || WeightType == GEOM_MEEUS)
             GEOM2XYZ(N->X, N->Y, &N->Xc, &N->Yc, &N->Zc);
         else {
             N->Xc = N->X;
@@ -131,13 +131,13 @@ static void KMeansClustering(int K)
         SumYc[0] += N->Yc;
         SumZc[0] += N->Zc;
         Count[0]++;
-    } while ((N = N->Suc) != lkh.FirstNode);
+    } while ((N = N->Suc) != FirstNode);
     Xc = Center[0].Xc = SumXc[0] / Count[0];
     Yc = Center[0].Yc = SumYc[0] / Count[0];
     Zc = Center[0].Zc = SumZc[0] / Count[0];
-    if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
+    if (WeightType == GEO || WeightType == GEO_MEEUS)
         XYZ2GEO(Xc, Yc, Zc, &Center[0].X, &Center[0].Y);
-    if (lkh.WeightType == GEOM || lkh.WeightType == GEOM_MEEUS)
+    if (WeightType == GEOM || WeightType == GEOM_MEEUS)
         XYZ2GEOM(Xc, Yc, Zc, &Center[0].X, &Center[0].Y);
     else {
         Center[0].X = Xc;
@@ -156,9 +156,9 @@ static void KMeansClustering(int K)
                     N->Cost = N->NextCost = INT_MAX;
                 else {
                     N->Cost =
-                            lkh.Distance(N, &Center[N->Subproblem]) * lkh.Precision;
+                        Distance(N, &Center[N->Subproblem]) * Precision;
                     N->NextCost =
-                            lkh.Distance(N, &Center[N->LastV]) * lkh.Precision;
+                        Distance(N, &Center[N->LastV]) * Precision;
                     if (N->Cost > N->NextCost) {
                         i = N->LastV;
                         N->LastV = N->Subproblem;
@@ -172,20 +172,20 @@ static void KMeansClustering(int K)
                     if (i == N->Subproblem || i == N->LastV)
                         continue;
                     d = INT_MIN;
-                    if ((!lkh.c || lkh.c(N, &Center[i]) <= N->Cost) &&
+                    if ((!c || c(N, &Center[i]) <= N->Cost) &&
                         (d =
-                                 lkh.Distance(N, &Center[i]) * lkh.Precision) <= N->Cost) {
+                         Distance(N, &Center[i]) * Precision) <= N->Cost) {
                         N->NextCost = N->Cost;
                         N->Cost = d;
                         N->LastV = N->Subproblem;
                         if (d < N->NextCost)
                             N->Subproblem = i;
                     } else if (d < N->NextCost &&
-                               (!lkh.c || lkh.c(N, &Center[i]) < N->NextCost) &&
+                               (!c || c(N, &Center[i]) < N->NextCost) &&
                                (d != INT_MIN || (d =
-                                                         lkh.Distance(N,
+                                                 Distance(N,
                                                           &Center[i]) *
-                                                                 lkh.Precision) <
+                                                 Precision) <
                                 N->NextCost)) {
                         N->NextCost = d;
                         N->LastV = i;
@@ -204,10 +204,10 @@ static void KMeansClustering(int K)
                     Count[N->Subproblem]++;
                 }
             }
-        } while ((N = N->Suc) != lkh.FirstNode);
+        } while ((N = N->Suc) != FirstNode);
         if (!Moving)
             break;
-        if (lkh.TraceLevel >= 2)
+        if (TraceLevel >= 2)
             printff("Moving %d %s\n", Moving,
                     Moving > 1 ? "points" : "point");
         /* Move centers */
@@ -220,16 +220,16 @@ static void KMeansClustering(int K)
                 Xc = Center[i].Xc = SumXc[i] / Count[i];
                 Yc = Center[i].Yc = SumYc[i] / Count[i];
                 Zc = Center[i].Zc = SumZc[i] / Count[i];
-                if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
+                if (WeightType == GEO || WeightType == GEO_MEEUS)
                     XYZ2GEO(Xc, Yc, Zc, &Center[i].X, &Center[i].Y);
-                else if (lkh.WeightType == GEOM || lkh.WeightType == GEOM_MEEUS)
+                else if (WeightType == GEOM || WeightType == GEOM_MEEUS)
                     XYZ2GEOM(Xc, Yc, Zc, &Center[i].X, &Center[i].Y);
                 else {
                     Center[i].X = Xc;
                     Center[i].Y = Yc;
                     Center[i].Z = Zc;
                 }
-                Movement[i] = lkh.Distance(&Old, &Center[i]) * lkh.Precision;
+                Movement[i] = Distance(&Old, &Center[i]) * Precision;
                 if (Movement[i] > Max)
                     Max = Movement[i];
             } else
@@ -247,10 +247,10 @@ static void KMeansClustering(int K)
         }
     }
 
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         N->Pi = N->BestPi;
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     free(Center);
     free(SumXc);
     free(SumYc);

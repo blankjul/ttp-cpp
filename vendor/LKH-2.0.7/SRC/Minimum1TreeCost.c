@@ -21,21 +21,21 @@ GainType Minimum1TreeCost(int Sparse)
     int Max = INT_MIN;
 
     MinimumSpanningTree(Sparse);
-    N = lkh.FirstNode;
+    N = FirstNode;
     do {
         N->V = -2;
         Sum += N->Pi;
     }
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     Sum *= -2;
-    while ((N = N->Suc) != lkh.FirstNode) {
+    while ((N = N->Suc) != FirstNode) {
         N->V++;
         N->Dad->V++;
         Sum += N->Cost;
         N->Next = 0;
     }
-    lkh.FirstNode->Dad = lkh.FirstNode->Suc;
-    lkh.FirstNode->Cost = lkh.FirstNode->Suc->Cost;
+    FirstNode->Dad = FirstNode->Suc;
+    FirstNode->Cost = FirstNode->Suc->Cost;
     do {
         if (N->V == -1) {
             Connect(N, Max, Sparse);
@@ -45,27 +45,27 @@ GainType Minimum1TreeCost(int Sparse)
             }
         }
     }
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     N1->Next->V++;
     N1->V++;
     Sum += N1->NextCost;
-    lkh.Norm = 0;
+    Norm = 0;
     do
-        lkh.Norm += N->V * N->V;
-    while ((N = N->Suc) != lkh.FirstNode);
-    if (N1 == lkh.FirstNode)
+        Norm += N->V * N->V;
+    while ((N = N->Suc) != FirstNode);
+    if (N1 == FirstNode)
         N1->Suc->Dad = 0;
     else {
-        lkh.FirstNode->Dad = 0;
-        Precede(N1, lkh.FirstNode);
-        lkh.FirstNode = N1;
+        FirstNode->Dad = 0;
+        Precede(N1, FirstNode);
+        FirstNode = N1;
     }
-    if (lkh.Norm == 0) {
-        for (N = lkh.FirstNode->Dad; N; N1 = N, N = N->Dad)
+    if (Norm == 0) {
+        for (N = FirstNode->Dad; N; N1 = N, N = N->Dad)
             Follow(N, N1);
-        for (N = lkh.FirstNode->Suc; N != lkh.FirstNode; N = N->Suc)
+        for (N = FirstNode->Suc; N != FirstNode; N = N->Suc)
             N->Dad = N->Pred;
-        lkh.FirstNode->Suc->Dad = 0;
+        FirstNode->Suc->Dad = 0;
     }
     return Sum;
 }

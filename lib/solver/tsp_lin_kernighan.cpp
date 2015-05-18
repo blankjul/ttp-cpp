@@ -1,5 +1,5 @@
 #include "tsp_lin_kernighan.h"
-#include "wrapper/lkh.h"
+#include "wrapper/lkh_wrapper.h"
 
 
 using namespace std;
@@ -11,12 +11,8 @@ namespace ttp {
 
         MapPtr m = tsp.getMap();
 
-
-        //createMap("../data/tsplib/berlin52.tsp");
         LKHWrapper lkh;
         int* ptr = lkh.calc(tsp.getMap());
-
-
 
 
         vector<int> result;

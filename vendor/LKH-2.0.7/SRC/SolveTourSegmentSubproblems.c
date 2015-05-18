@@ -24,37 +24,37 @@ void SolveTourSegmentSubproblems()
     double EntryTime = GetTime();
 
     AllocateStructures();
-    Subproblems = (int) ceil((double) lkh.Dimension / lkh.SubproblemSize);
+    Subproblems = (int) ceil((double) Dimension / SubproblemSize);
     ReadPenalties();
-    lkh.FirstNode = &lkh.NodeSet[Random() % lkh.Dimension + 1];
+    FirstNode = &NodeSet[Random() % Dimension + 1];
 
     /* Compute upper bound for the original problem */
     GlobalBestCost = 0;
-    N = FirstNodeSaved = lkh.FirstNode;
+    N = FirstNodeSaved = FirstNode;
     do {
         if (!Fixed(N, N->SubproblemSuc))
-            GlobalBestCost += lkh.Distance(N, N->SubproblemSuc);
+            GlobalBestCost += Distance(N, N->SubproblemSuc);
         N->Subproblem = 0;
     }
-    while ((N = N->SubproblemSuc) != lkh.FirstNode);
+    while ((N = N->SubproblemSuc) != FirstNode);
     for (Round = 1; Round <= 2; Round++) {
         if (Round == 2 && Subproblems == 1)
             break;
-        if (lkh.TraceLevel >= 1) {
-            if (Round == 2 || lkh.TraceLevel >= 2)
+        if (TraceLevel >= 1) {
+            if (Round == 2 || TraceLevel >= 2)
                 printff("\n");
             printff
                 ("*** Tour segment partitioning *** [Round %d of %d, Cost = "
                  GainFormat "]\n", Round, Subproblems > 1 ? 2 : 1,
                  GlobalBestCost);
         }
-        lkh.FirstNode = FirstNodeSaved;
+        FirstNode = FirstNodeSaved;
         if (Round == 2)
-            for (i = lkh.SubproblemSize / 2; i > 0; i--)
-                lkh.FirstNode = lkh.FirstNode->SubproblemSuc;
+            for (i = SubproblemSize / 2; i > 0; i--)
+                FirstNode = FirstNode->SubproblemSuc;
         for (CurrentSubproblem = 1;
              CurrentSubproblem <= Subproblems; CurrentSubproblem++) {
-            for (i = 0, N = lkh.FirstNode; i < lkh.SubproblemSize;
+            for (i = 0, N = FirstNode; i < SubproblemSize;
                  i++, N = N->SubproblemSuc) {
                 N->Subproblem =
                     (Round - 1) * Subproblems + CurrentSubproblem;
@@ -64,21 +64,21 @@ void SolveTourSegmentSubproblems()
             OldGlobalBestCost = GlobalBestCost;
             SolveSubproblem((Round - 1) * Subproblems + CurrentSubproblem,
                             Subproblems, &GlobalBestCost);
-            if (lkh.SubproblemsCompressed
+            if (SubproblemsCompressed
                 && GlobalBestCost == OldGlobalBestCost)
                 SolveCompressedSubproblem((Round - 1) * Subproblems +
                                           CurrentSubproblem, Subproblems,
                                           &GlobalBestCost);
-            lkh.FirstNode = N;
+            FirstNode = N;
         }
     }
     printff("\nCost = " GainFormat, GlobalBestCost);
-    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
+    if (Optimum != MINUS_INFINITY && Optimum != 0)
         printff(", Gap = %0.4f%%",
-                100.0 * (GlobalBestCost - lkh.Optimum) / lkh.Optimum);
+                100.0 * (GlobalBestCost - Optimum) / Optimum);
     printff(", Time = %0.2f sec. %s\n", fabs(GetTime() - EntryTime),
-            GlobalBestCost < lkh.Optimum ? "<" : GlobalBestCost ==
-                                                     lkh.Optimum ? "=" : "");
-    if (lkh.SubproblemBorders && Subproblems > 1)
+            GlobalBestCost < Optimum ? "<" : GlobalBestCost ==
+            Optimum ? "=" : "");
+    if (SubproblemBorders && Subproblems > 1)
         SolveSubproblemBorderProblems(Subproblems, &GlobalBestCost);
 }

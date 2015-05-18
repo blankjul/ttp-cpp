@@ -44,42 +44,42 @@ GainType Gain23()
     int X2, X4, X6, X8, Case6 = 0, Case8 = 0;
     int Breadth2, Breadth4, Breadth6;
 
-    if (!s1 || s1->Subproblem != lkh.FirstNode->Subproblem)
-        s1 = lkh.FirstNode;
+    if (!s1 || s1->Subproblem != FirstNode->Subproblem)
+        s1 = FirstNode;
     s1Stop = s1;
     for (X2 = 1; X2 <= 2; X2++) {
-        lkh.Reversed = X2 == 1 ? OldReversed : (OldReversed ^= 1);
+        Reversed = X2 == 1 ? OldReversed : (OldReversed ^= 1);
         do {
             s2 = SUC(s1);
             if (FixedOrCommon(s1, s2))
                 continue;
-            G0 = lkh.C(s1, s2);
+            G0 = C(s1, s2);
             Breadth2 = 0;
             /* Choose (s2,s3) as a candidate edge emanating from s2 */
             for (Ns2 = s2->CandidateSet; (s3 = Ns2->To); Ns2++) {
                 if (s3 == s2->Pred || s3 == s2->Suc)
                     continue;
-                if (++Breadth2 > lkh.MaxBreadth)
+                if (++Breadth2 > MaxBreadth)
                     break;
                 G1 = G0 - Ns2->Cost;
                 for (X4 = 1; X4 <= 2; X4++) {
                     s4 = X4 == 1 ? SUC(s3) : PRED(s3);
                     if (FixedOrCommon(s3, s4))
                         continue;
-                    G2 = G1 + lkh.C(s3, s4);
+                    G2 = G1 + C(s3, s4);
                     /* Try any gainful nonfeasible 2-opt move 
                        followed by a 2-, 3- or 4-opt move */
                     if (X4 == 1 && s4 != s1 && !Forbidden(s4, s1) &&
-                        2 * SegmentSize(s2, s3) <= lkh.Dimension &&
-                        (!lkh.c || G2 - lkh.c(s4, s1) > 0) &&
-                        (G3 = G2 - lkh.C(s4, s1)) > 0 &&
+                        2 * SegmentSize(s2, s3) <= Dimension &&
+                        (!c || G2 - c(s4, s1) > 0) &&
+                        (G3 = G2 - C(s4, s1)) > 0 &&
                         (Gain = BridgeGain(s1, s2, s3, s4, 0, 0, 0, 0, 0,
                                            G3)) > 0)
                         return Gain;
                     if (X4 == 2 &&
                         !Forbidden(s4, s1) &&
-                        (!lkh.c || G2 - lkh.c(s4, s1) > 0) &&
-                        (Gain = G2 - lkh.C(s4, s1)) > 0) {
+                        (!c || G2 - c(s4, s1) > 0) &&
+                        (Gain = G2 - C(s4, s1)) > 0) {
                         Swap1(s1, s2, s3);
                         return Gain;
                     }
@@ -93,7 +93,7 @@ GainType Gain23()
                         if (s5 == s4->Pred || s5 == s4->Suc ||
                             (G3 = G2 - Ns4->Cost) <= 0)
                             continue;
-                        if (++Breadth4 > lkh.MaxBreadth)
+                        if (++Breadth4 > MaxBreadth)
                             break;
                         /* Choose s6 as one of s5's two neighbors on the tour */
                         for (X6 = 1; X6 <= 2; X6++) {
@@ -121,11 +121,11 @@ GainType Gain23()
                             }
                             if (FixedOrCommon(s5, s6))
                                 continue;
-                            G4 = G3 + lkh.C(s5, s6);
+                            G4 = G3 + C(s5, s6);
                             Gain6 = 0;
                             if (!Forbidden(s6, s1) &&
-                                (!lkh.c || G4 - lkh.c(s6, s1) > 0) &&
-                                (Gain6 = G4 - lkh.C(s6, s1)) > 0) {
+                                (!c || G4 - c(s6, s1) > 0) &&
+                                (Gain6 = G4 - C(s6, s1)) > 0) {
                                 if (Case6 <= 2 || Case6 == 5 || Case6 == 6) {
                                     Make3OptMove(s1, s2, s3, s4, s5, s6,
                                                  Case6);
@@ -147,7 +147,7 @@ GainType Gain23()
                                                                   s2)
                                     || (G5 = G4 - Ns6->Cost) <= 0)
                                     continue;
-                                if (++Breadth6 > lkh.MaxBreadth)
+                                if (++Breadth6 > MaxBreadth)
                                     break;
                                 /* Choose s6 as one of s5's two neighbors 
                                    on the tour */
@@ -220,9 +220,9 @@ GainType Gain23()
                                     if (FixedOrCommon(s7, s8)
                                         || Forbidden(s8, s1))
                                         continue;
-                                    G6 = G5 + lkh.C(s7, s8);
-                                    if ((!lkh.c || G6 - lkh.c(s8, s1) > 0) &&
-                                        (Gain = G6 - lkh.C(s8, s1)) > 0) {
+                                    G6 = G5 + C(s7, s8);
+                                    if ((!c || G6 - c(s8, s1) > 0) &&
+                                        (Gain = G6 - C(s8, s1)) > 0) {
                                         if (Case8 <= 15) {
                                             Make4OptMove(s1, s2, s3, s4,
                                                          s5, s6, s7, s8,

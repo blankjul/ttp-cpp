@@ -199,6 +199,7 @@
 static const char Delimiters[] = " :=\n\t\r\f\v\xef\xbb\xbf";
 static void CheckSpecificationPart(void);
 static char *Copy(char *S);
+static void CreateNodes(void);
 static void Read_DIMENSION(void);
 static void Read_DISPLAY_DATA_SECTION(void);
 static void Read_DISPLAY_DATA_TYPE(void);
@@ -216,29 +217,37 @@ static void Read_TYPE(void);
 static int TwoDWeightType(void);
 static int ThreeDWeightType(void);
 
-void ReadProblem()
+
+void ReadProblem() {
+
+    if (!(ProblemFile = fopen(ProblemFileName, "r")))
+        eprintf("Cannot open PROBLEM_FILE: \"%s\"", ProblemFileName);
+    if (TraceLevel >= 1)
+        printff("Reading PROBLEM_FILE: \"%s\" ... ", ProblemFileName);
+
+    ReadProblemFromFile(ProblemFile);
+
+}
+
+
+void ReadProblemFromFile(FILE* file)
 {
     int i, K;
     char *Line, *Keyword;
 
+    ProblemFile = file;
 
-    if (!(lkh.ProblemFile = fopen(lkh.ProblemFileName, "r"))) {
-        if (lkh.TraceLevel >= 1) printf("Cannot open PROBLEM_FILE: \"%s\"", lkh.ProblemFileName);
-        return;
-    }
-    if (lkh.TraceLevel >= 1)
-        printff("Reading PROBLEM_FILE: \"%s\" ... ", lkh.ProblemFileName);
     FreeStructures();
-    lkh.FirstNode = 0;
-    lkh.WeightType = lkh.WeightFormat = lkh.ProblemType = -1;
-    lkh.CoordType = NO_COORDS;
-    lkh.Name = Copy("Unnamed");
-    lkh.Type = lkh.EdgeWeightType = lkh.EdgeWeightFormat = 0;
-    lkh.EdgeDataFormat = lkh.NodeCoordType = lkh.DisplayDataType = 0;
-    lkh.Distance = 0;
-    lkh.C = 0;
-    lkh.c = 0;
-    while ((Line = ReadLine(lkh.ProblemFile))) {
+    FirstNode = 0;
+    WeightType = WeightFormat = ProblemType = -1;
+    CoordType = NO_COORDS;
+    Name = Copy("Unnamed");
+    Type = EdgeWeightType = EdgeWeightFormat = 0;
+    EdgeDataFormat = NodeCoordType = DisplayDataType = 0;
+    Distance = 0;
+    C = 0;
+    c = 0;
+    while ((Line = ReadLine(ProblemFile))) {
         if (!(Keyword = strtok(Line, Delimiters)))
             continue;
         for (i = 0; i < (int) strlen(Keyword); i++)
@@ -275,224 +284,221 @@ void ReadProblem()
         else if (!strcmp(Keyword, "NODE_COORD_TYPE"))
             Read_NODE_COORD_TYPE();
         else if (!strcmp(Keyword, "TOUR_SECTION"))
-            Read_TOUR_SECTION(&lkh.ProblemFile);
+            Read_TOUR_SECTION(&ProblemFile);
         else if (!strcmp(Keyword, "TYPE"))
             Read_TYPE();
-        else {
-            if (lkh.TraceLevel >= 1) printf("Unknown keyword: %s", Keyword);
-            return;
-        }
+        else
+            eprintf("Unknown keyword: %s", Keyword);
     }
-    lkh.Swaps = 0;
-
+    Swaps = 0;
 
     /* Adjust parameters */
-    if (lkh.Seed == 0)
-        lkh.Seed = (unsigned) time(0);
-    if (lkh.Precision == 0)
-        lkh.Precision = 100;
-    if (lkh.InitialStepSize == 0)
-        lkh.InitialStepSize = 1;
-    if (lkh.MaxSwaps < 0)
-        lkh.MaxSwaps = lkh.Dimension;
-    if (lkh.KickType > lkh.Dimension / 2)
-        lkh.KickType = lkh.Dimension / 2;
-    if (lkh.Runs == 0)
-        lkh.Runs = 10;
-    if (lkh.MaxCandidates > lkh.Dimension - 1)
-        lkh.MaxCandidates = lkh.Dimension - 1;
-    if (lkh.ExtraCandidates > lkh.Dimension - 1)
-        lkh.ExtraCandidates = lkh.Dimension - 1;
-    if (lkh.SubproblemSize >= lkh.Dimension)
-        lkh.SubproblemSize = lkh.Dimension;
-    else if (lkh.SubproblemSize == 0) {
-        if (lkh.AscentCandidates > lkh.Dimension - 1)
-            lkh.AscentCandidates = lkh.Dimension - 1;
-        if (lkh.InitialPeriod < 0) {
-            lkh.InitialPeriod = lkh.Dimension / 2;
-            if (lkh.InitialPeriod < 100)
-                lkh.InitialPeriod = 100;
+    if (Seed == 0)
+        Seed = (unsigned) time(0);
+    if (Precision == 0)
+        Precision = 100;
+    if (InitialStepSize == 0)
+        InitialStepSize = 1;
+    if (MaxSwaps < 0)
+        MaxSwaps = Dimension;
+    if (KickType > Dimension / 2)
+        KickType = Dimension / 2;
+    if (Runs == 0)
+        Runs = 10;
+    if (MaxCandidates > Dimension - 1)
+        MaxCandidates = Dimension - 1;
+    if (ExtraCandidates > Dimension - 1)
+        ExtraCandidates = Dimension - 1;
+    if (SubproblemSize >= Dimension)
+        SubproblemSize = Dimension;
+    else if (SubproblemSize == 0) {
+        if (AscentCandidates > Dimension - 1)
+            AscentCandidates = Dimension - 1;
+        if (InitialPeriod < 0) {
+            InitialPeriod = Dimension / 2;
+            if (InitialPeriod < 100)
+                InitialPeriod = 100;
         }
-        if (lkh.Excess < 0)
-            lkh.Excess = 1.0 / lkh.Dimension;
-        if (lkh.MaxTrials == -1)
-            lkh.MaxTrials = lkh.Dimension;
-        MakeHeap(lkh.Dimension);
+        if (Excess < 0)
+            Excess = 1.0 / Dimension;
+        if (MaxTrials == -1)
+            MaxTrials = Dimension;
+        MakeHeap(Dimension);
     }
 
-    if (lkh.CostMatrix == 0 && lkh.Dimension <= lkh.MaxMatrixDimension && lkh.Distance != 0
-        && lkh.Distance != Distance_1 && lkh.Distance != Distance_ATSP &&
-            lkh.WeightType != GEO && lkh.WeightType != GEOM &&
-            lkh.WeightType != GEO_MEEUS && lkh.WeightType != GEOM_MEEUS) {
+    if (CostMatrix == 0 && Dimension <= MaxMatrixDimension && Distance != 0
+        && Distance != Distance_1 && Distance != Distance_ATSP &&
+        WeightType != GEO && WeightType != GEOM &&
+        WeightType != GEO_MEEUS && WeightType != GEOM_MEEUS) {
         Node *Ni, *Nj;
-        assert(lkh.CostMatrix =
-               (int *) calloc((size_t) lkh.Dimension * (lkh.Dimension - 1) / 2,
+        assert(CostMatrix =
+               (int *) calloc((size_t) Dimension * (Dimension - 1) / 2,
                               sizeof(int)));
-        Ni = lkh.FirstNode->Suc;
+        Ni = FirstNode->Suc;
         do {
             Ni->C =
-                &lkh.CostMatrix[(size_t) (Ni->Id - 1) * (Ni->Id - 2) / 2] - 1;
-            if (lkh.ProblemType != HPP || Ni->Id < lkh.Dimension)
-                for (Nj = lkh.FirstNode; Nj != Ni; Nj = Nj->Suc) {
-                    Ni->C[Nj->Id] = Fixed(Ni, Nj) ? 0 : lkh.Distance(Ni, Nj);
-                }
+                &CostMatrix[(size_t) (Ni->Id - 1) * (Ni->Id - 2) / 2] - 1;
+            if (ProblemType != HPP || Ni->Id < Dimension)
+                for (Nj = FirstNode; Nj != Ni; Nj = Nj->Suc)
+                    Ni->C[Nj->Id] = Fixed(Ni, Nj) ? 0 : Distance(Ni, Nj);
             else
-                for (Nj = lkh.FirstNode; Nj != Ni; Nj = Nj->Suc) {
+                for (Nj = FirstNode; Nj != Ni; Nj = Nj->Suc)
                     Ni->C[Nj->Id] = 0;
-                }
         }
-        while ((Ni = Ni->Suc) != lkh.FirstNode);
-        lkh.WeightType = EXPLICIT;
-        lkh.c = 0;
+        while ((Ni = Ni->Suc) != FirstNode);
+        WeightType = EXPLICIT;
+        c = 0;
     }
-    if (lkh.Precision > 1 && (lkh.WeightType == EXPLICIT || lkh.ProblemType == ATSP)) {
-        int j, n = lkh.ProblemType == ATSP ? lkh.Dimension / 2 : lkh.Dimension;
+    if (Precision > 1 && (WeightType == EXPLICIT || ProblemType == ATSP)) {
+        int j, n = ProblemType == ATSP ? Dimension / 2 : Dimension;
         for (i = 2; i <= n; i++) {
-            Node *N = &lkh.NodeSet[i];
+            Node *N = &NodeSet[i];
             for (j = 1; j < i; j++)
-                if (N->C[j] * lkh.Precision / lkh.Precision != N->C[j])
-                    eprintf("PRECISION (= %d) is too large", lkh.Precision);
+                if (N->C[j] * Precision / Precision != N->C[j])
+                    eprintf("PRECISION (= %d) is too large", Precision);
         }
     }
-    lkh.C = lkh.WeightType == EXPLICIT ? C_EXPLICIT : C_FUNCTION;
-    lkh.D = lkh.WeightType == EXPLICIT ? D_EXPLICIT : D_FUNCTION;
-    if (lkh.SubsequentMoveType == 0)
-        lkh.SubsequentMoveType = lkh.MoveType;
-    K = lkh.MoveType >= lkh.SubsequentMoveType
-        || !lkh.SubsequentPatching ? lkh.MoveType : lkh.SubsequentMoveType;
-    if (lkh.PatchingC > K)
-        lkh.PatchingC = K;
-    if (lkh.PatchingA > 1 && lkh.PatchingA >= lkh.PatchingC)
-        lkh.PatchingA = lkh.PatchingC > 2 ? lkh.PatchingC - 1 : 1;
-    if (lkh.NonsequentialMoveType == -1 ||
-            lkh.NonsequentialMoveType > K + lkh.PatchingC + lkh.PatchingA - 1)
-        lkh.NonsequentialMoveType = K + lkh.PatchingC + lkh.PatchingA - 1;
-    if (lkh.PatchingC >= 1 && lkh.NonsequentialMoveType >= 4) {
-        lkh.BestMove = lkh.BestSubsequentMove = BestKOptMove;
-        if (!lkh.SubsequentPatching && lkh.SubsequentMoveType <= 5) {
+    C = WeightType == EXPLICIT ? C_EXPLICIT : C_FUNCTION;
+    D = WeightType == EXPLICIT ? D_EXPLICIT : D_FUNCTION;
+    if (SubsequentMoveType == 0)
+        SubsequentMoveType = MoveType;
+    K = MoveType >= SubsequentMoveType
+        || !SubsequentPatching ? MoveType : SubsequentMoveType;
+    if (PatchingC > K)
+        PatchingC = K;
+    if (PatchingA > 1 && PatchingA >= PatchingC)
+        PatchingA = PatchingC > 2 ? PatchingC - 1 : 1;
+    if (NonsequentialMoveType == -1 ||
+        NonsequentialMoveType > K + PatchingC + PatchingA - 1)
+        NonsequentialMoveType = K + PatchingC + PatchingA - 1;
+    if (PatchingC >= 1 && NonsequentialMoveType >= 4) {
+        BestMove = BestSubsequentMove = BestKOptMove;
+        if (!SubsequentPatching && SubsequentMoveType <= 5) {
             MoveFunction BestOptMove[] =
                 { 0, 0, Best2OptMove, Best3OptMove,
                 Best4OptMove, Best5OptMove
             };
-            lkh.BestSubsequentMove = BestOptMove[lkh.SubsequentMoveType];
+            BestSubsequentMove = BestOptMove[SubsequentMoveType];
         }
     } else {
         MoveFunction BestOptMove[] = { 0, 0, Best2OptMove, Best3OptMove,
             Best4OptMove, Best5OptMove
         };
-        lkh.BestMove = lkh.MoveType <= 5 ? BestOptMove[lkh.MoveType] : BestKOptMove;
-        lkh.BestSubsequentMove = lkh.SubsequentMoveType <= 5 ?
-            BestOptMove[lkh.SubsequentMoveType] : BestKOptMove;
+        BestMove = MoveType <= 5 ? BestOptMove[MoveType] : BestKOptMove;
+        BestSubsequentMove = SubsequentMoveType <= 5 ?
+            BestOptMove[SubsequentMoveType] : BestKOptMove;
     }
-    if (lkh.ProblemType == HCP || lkh.ProblemType == HPP)
-        lkh.MaxCandidates = 0;
-    if (lkh.TraceLevel >= 1) {
+    if (ProblemType == HCP || ProblemType == HPP)
+        MaxCandidates = 0;
+    if (TraceLevel >= 1) {
         printff("done\n");
         PrintParameters();
-    } //else printff("PROBLEM_FILE = %s\n", ProblemFileName ? ProblemFileName : "");
-    fclose(lkh.ProblemFile);
-    if (lkh.InitialTourFileName)
-        ReadTour(lkh.InitialTourFileName, &lkh.InitialTourFile);
-    if (lkh.InputTourFileName)
-        ReadTour(lkh.InputTourFileName, &lkh.InputTourFile);
-    if (lkh.SubproblemTourFileName && lkh.SubproblemSize > 0)
-        ReadTour(lkh.SubproblemTourFileName, &lkh.SubproblemTourFile);
-    if (lkh.MergeTourFiles >= 1) {
-        free(lkh.MergeTourFile);
-        assert(lkh.MergeTourFile =
-               (FILE **) malloc(lkh.MergeTourFiles * sizeof(FILE *)));
-        for (i = 0; i < lkh.MergeTourFiles; i++)
-            ReadTour(lkh.MergeTourFileName[i], &lkh.MergeTourFile[i]);
+    } else
+        if (TraceLevel >= 1) printff("PROBLEM_FILE = %s\n",
+                ProblemFileName ? ProblemFileName : "");
+    fclose(ProblemFile);
+    if (InitialTourFileName)
+        ReadTour(InitialTourFileName, &InitialTourFile);
+    if (InputTourFileName)
+        ReadTour(InputTourFileName, &InputTourFile);
+    if (SubproblemTourFileName && SubproblemSize > 0)
+        ReadTour(SubproblemTourFileName, &SubproblemTourFile);
+    if (MergeTourFiles >= 1) {
+        free(MergeTourFile);
+        assert(MergeTourFile =
+               (FILE **) malloc(MergeTourFiles * sizeof(FILE *)));
+        for (i = 0; i < MergeTourFiles; i++)
+            ReadTour(MergeTourFileName[i], &MergeTourFile[i]);
     }
-    free(lkh.LastLine);
-    lkh.LastLine = 0;
+    free(LastLine);
+    LastLine = 0;
 }
 
 static int TwoDWeightType()
 {
-    return lkh.WeightType == EUC_2D || lkh.WeightType == MAX_2D ||
-        lkh.WeightType == MAN_2D || lkh.WeightType == CEIL_2D ||
-        lkh.WeightType == GEO || lkh.WeightType == GEOM ||
-        lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS ||
-        lkh.WeightType == ATT ||
-        (lkh.WeightType == SPECIAL && lkh.CoordType == TWOD_COORDS);
+    return WeightType == EUC_2D || WeightType == MAX_2D ||
+        WeightType == MAN_2D || WeightType == CEIL_2D ||
+        WeightType == GEO || WeightType == GEOM ||
+        WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS ||
+        WeightType == ATT ||
+        (WeightType == SPECIAL && CoordType == TWOD_COORDS);
 }
 
 static int ThreeDWeightType()
 {
-    return lkh.WeightType == EUC_3D || lkh.WeightType == MAX_3D ||
-        lkh.WeightType == MAN_3D || lkh.WeightType == CEIL_3D ||
-        lkh.WeightType == XRAY1 || lkh.WeightType == XRAY2 ||
-        (lkh.WeightType == SPECIAL && lkh.CoordType == THREED_COORDS);
+    return WeightType == EUC_3D || WeightType == MAX_3D ||
+        WeightType == MAN_3D || WeightType == CEIL_3D ||
+        WeightType == XRAY1 || WeightType == XRAY2 ||
+        (WeightType == SPECIAL && CoordType == THREED_COORDS);
 }
 
 static void CheckSpecificationPart()
 {
-    if (lkh.ProblemType == -1)
+    if (ProblemType == -1)
         eprintf("TYPE is missing");
-    if (lkh.Dimension < 3)
+    if (Dimension < 3)
         eprintf("DIMENSION < 3 or not specified");
-    if (lkh.WeightType == -1 && lkh.ProblemType != ATSP && lkh.ProblemType != HCP)
+    if (WeightType == -1 && ProblemType != ATSP && ProblemType != HCP)
         eprintf("EDGE_WEIGHT_TYPE is missing");
-    if (lkh.WeightType == EXPLICIT && lkh.WeightFormat == -1)
+    if (WeightType == EXPLICIT && WeightFormat == -1)
         eprintf("EDGE_WEIGHT_FORMAT is missing");
-    if (lkh.WeightType == EXPLICIT && lkh.WeightFormat == FUNCTION)
+    if (WeightType == EXPLICIT && WeightFormat == FUNCTION)
         eprintf("Conflicting EDGE_WEIGHT_TYPE and EDGE_WEIGHT_FORMAT");
-    if (lkh.WeightType != EXPLICIT
-        && (lkh.WeightType != SPECIAL || lkh.CoordType != NO_COORDS)
-        && lkh.WeightType != -1 && lkh.WeightFormat != -1
-        && lkh.WeightFormat != FUNCTION)
+    if (WeightType != EXPLICIT
+        && (WeightType != SPECIAL || CoordType != NO_COORDS)
+        && WeightType != -1 && WeightFormat != -1
+        && WeightFormat != FUNCTION)
         eprintf("Conflicting EDGE_WEIGHT_TYPE and EDGE_WEIGHT_FORMAT");
-    if (lkh.ProblemType == ATSP && lkh.WeightType != EXPLICIT && lkh.WeightType != -1)
+    if (ProblemType == ATSP && WeightType != EXPLICIT && WeightType != -1)
         eprintf("Conflicting TYPE and EDGE_WEIGHT_TYPE");
-    if (lkh.ProblemType == ATSP && lkh.WeightFormat != FULL_MATRIX)
+    if (ProblemType == ATSP && WeightFormat != FULL_MATRIX)
         eprintf("Conflicting TYPE and EDGE_WEIGHT_FORMAT");
-    if (lkh.CandidateSetType == DELAUNAY && !TwoDWeightType()
-        && lkh.MaxCandidates > 0)
+    if (CandidateSetType == DELAUNAY && !TwoDWeightType()
+        && MaxCandidates > 0)
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for CANDIDATE_SET_TYPE = DELAUNAY");
-    if (lkh.CandidateSetType == NN && !TwoDWeightType()
-        && !ThreeDWeightType() && lkh.MaxCandidates > 0)
+    if (CandidateSetType == NN && !TwoDWeightType()
+        && !ThreeDWeightType() && MaxCandidates > 0)
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for CANDIDATE_SET_TYPE = "
              "NEAREST-NEIGHBOR");
-    if (lkh.CandidateSetType == QUADRANT && !TwoDWeightType()
-        && !ThreeDWeightType() && lkh.MaxCandidates + lkh.ExtraCandidates > 0)
+    if (CandidateSetType == QUADRANT && !TwoDWeightType()
+        && !ThreeDWeightType() && MaxCandidates + ExtraCandidates > 0)
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for CANDIDATE_SET_TYPE = QUADRANT");
-    if (lkh.ExtraCandidateSetType == NN && !TwoDWeightType()
-        && !ThreeDWeightType() && lkh.ExtraCandidates > 0)
+    if (ExtraCandidateSetType == NN && !TwoDWeightType()
+        && !ThreeDWeightType() && ExtraCandidates > 0)
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for EXTRA_CANDIDATE_SET_TYPE = "
              "NEAREST-NEIGHBOR");
-    if (lkh.ExtraCandidateSetType == QUADRANT && !TwoDWeightType()
+    if (ExtraCandidateSetType == QUADRANT && !TwoDWeightType()
         && !ThreeDWeightType()
-        && lkh.ExtraCandidates > 0)
+        && ExtraCandidates > 0)
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for EXTRA_CANDIDATE_SET_TYPE = "
              "QUADRANT");
-    if (lkh.InitialTourAlgorithm == QUICK_BORUVKA && !TwoDWeightType()
+    if (InitialTourAlgorithm == QUICK_BORUVKA && !TwoDWeightType()
         && !ThreeDWeightType())
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for INITIAL_TOUR_ALGORITHM = "
              "QUICK-BORUVKA");
-    if (lkh.InitialTourAlgorithm == SIERPINSKI && !TwoDWeightType())
+    if (InitialTourAlgorithm == SIERPINSKI && !TwoDWeightType())
         eprintf
             ("Illegal EDGE_WEIGHT_TYPE for INITIAL_TOUR_ALGORITHM = "
              "SIERPINSKI");
-    if (lkh.DelaunayPartitioning && !TwoDWeightType())
+    if (DelaunayPartitioning && !TwoDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for DELAUNAY specification");
-    if (lkh.KarpPartitioning && !TwoDWeightType() && !ThreeDWeightType())
+    if (KarpPartitioning && !TwoDWeightType() && !ThreeDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for KARP specification");
-    if (lkh.KMeansPartitioning && !TwoDWeightType() && !ThreeDWeightType())
+    if (KMeansPartitioning && !TwoDWeightType() && !ThreeDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for K-MEANS specification");
-    if (lkh.MoorePartitioning && !TwoDWeightType())
+    if (MoorePartitioning && !TwoDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for MOORE specification");
-    if (lkh.RohePartitioning && !TwoDWeightType() && !ThreeDWeightType())
+    if (RohePartitioning && !TwoDWeightType() && !ThreeDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for ROHE specification");
-    if (lkh.SierpinskiPartitioning && !TwoDWeightType())
+    if (SierpinskiPartitioning && !TwoDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for SIERPINSKI specification");
-    if (lkh.SubproblemBorders && !TwoDWeightType() && !ThreeDWeightType())
+    if (SubproblemBorders && !TwoDWeightType() && !ThreeDWeightType())
         eprintf("Illegal EDGE_WEIGHT_TYPE for BORDERS specification");
 }
 
@@ -507,38 +513,38 @@ static char *Copy(char *S)
     return Buffer;
 }
 
-void CreateNodes()
+static void CreateNodes()
 {
     Node *Prev = 0, *N = 0;
     int i;
 
-    if (lkh.Dimension <= 0)
+    if (Dimension <= 0)
         eprintf("DIMENSION is not positive (or not specified)");
-    if (lkh.ProblemType == ATSP)
-        lkh.Dimension *= 2;
-    else if (lkh.ProblemType == HPP) {
-        lkh.Dimension++;
-        if (lkh.Dimension > lkh.MaxMatrixDimension)
+    if (ProblemType == ATSP)
+        Dimension *= 2;
+    else if (ProblemType == HPP) {
+        Dimension++;
+        if (Dimension > MaxMatrixDimension)
             eprintf("Dimension too large in HPP problem");
     }
-    assert(lkh.NodeSet = (Node *) calloc(lkh.Dimension + 1, sizeof(Node)));
-    for (i = 1; i <= lkh.Dimension; i++, Prev = N) {
-        N = &lkh.NodeSet[i];
+    assert(NodeSet = (Node *) calloc(Dimension + 1, sizeof(Node)));
+    for (i = 1; i <= Dimension; i++, Prev = N) {
+        N = &NodeSet[i];
         if (i == 1)
-            lkh.FirstNode = N;
+            FirstNode = N;
         else
             Link(Prev, N);
         N->Id = i;
-        if (lkh.MergeTourFiles >= 1)
+        if (MergeTourFiles >= 1)
             assert(N->MergeSuc =
-                   (Node **) calloc(lkh.MergeTourFiles, sizeof(Node *)));
+                   (Node **) calloc(MergeTourFiles, sizeof(Node *)));
     }
-    Link(N, lkh.FirstNode);
+    Link(N, FirstNode);
 }
 
 static void Read_NAME()
 {
-    if (!(lkh.Name = Copy(strtok(0, Delimiters))))
+    if (!(Name = Copy(strtok(0, Delimiters))))
         eprintf("NAME: string expected");
 }
 
@@ -546,9 +552,9 @@ static void Read_DIMENSION()
 {
     char *Token = strtok(0, Delimiters);
 
-    if (!Token || !sscanf(Token, "%d", &lkh.Dimension))
+    if (!Token || !sscanf(Token, "%d", &Dimension))
         eprintf("DIMENSION: integer expected");
-    lkh.DimensionSaved = lkh.Dimension;
+    DimensionSaved = Dimension;
 }
 
 static void Read_DISPLAY_DATA_SECTION()
@@ -557,73 +563,73 @@ static void Read_DISPLAY_DATA_SECTION()
     int Id, i;
 
     CheckSpecificationPart();
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension--;
-    if (!lkh.DisplayDataType || strcmp(lkh.DisplayDataType, "TWOD_DISPLAY"))
+    if (ProblemType == HPP)
+        Dimension--;
+    if (!DisplayDataType || strcmp(DisplayDataType, "TWOD_DISPLAY"))
         eprintf
             ("DISPLAY_DATA_SECTION conflicts with DISPLAY_DATA_TYPE: %s",
-             lkh.DisplayDataType);
-    if (!lkh.FirstNode)
+             DisplayDataType);
+    if (!FirstNode)
         CreateNodes();
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         N->V = 0;
-    while ((N = N->Suc) != lkh.FirstNode);
-    N = lkh.FirstNode;
-    for (i = 1; i <= lkh.Dimension; i++) {
-        if (!fscanint(lkh.ProblemFile, &Id))
+    while ((N = N->Suc) != FirstNode);
+    N = FirstNode;
+    for (i = 1; i <= Dimension; i++) {
+        if (!fscanint(ProblemFile, &Id))
             eprintf("Missing nodes in DIPLAY_DATA_SECTION");
-        if (Id <= 0 || Id > lkh.Dimension)
+        if (Id <= 0 || Id > Dimension)
             eprintf("(DIPLAY_DATA_SECTION) Node number out of range: %d",
                     Id);
-        N = &lkh.NodeSet[Id];
+        N = &NodeSet[Id];
         if (N->V == 1)
             eprintf("(DIPLAY_DATA_SECTION) Node number occours twice: %d",
                     N->Id);
         N->V = 1;
-        if (!fscanf(lkh.ProblemFile, "%lf", &N->X))
+        if (!fscanf(ProblemFile, "%lf", &N->X))
             eprintf("Missing X-coordinate in DIPLAY_DATA_SECTION");
-        if (!fscanf(lkh.ProblemFile, "%lf", &N->Y))
+        if (!fscanf(ProblemFile, "%lf", &N->Y))
             eprintf("Missing Y-coordinate in DIPLAY_DATA_SECTION");
     }
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         if (!N->V)
             break;
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     if (!N->V)
         eprintf("(DIPLAY_DATA_SECTION) No coordinates given for node %d",
                 N->Id);
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension++;
+    if (ProblemType == HPP)
+        Dimension++;
 }
 
 static void Read_DISPLAY_DATA_TYPE()
 {
     unsigned int i;
 
-    if (!(lkh.DisplayDataType = Copy(strtok(0, Delimiters))))
+    if (!(DisplayDataType = Copy(strtok(0, Delimiters))))
         eprintf("DISPLAY_DATA_TYPE: string expected");
-    for (i = 0; i < strlen(lkh.DisplayDataType); i++)
-        lkh.DisplayDataType[i] = (char) toupper(lkh.DisplayDataType[i]);
-    if (strcmp(lkh.DisplayDataType, "COORD_DISPLAY") &&
-        strcmp(lkh.DisplayDataType, "TWOD_DISPLAY") &&
-        strcmp(lkh.DisplayDataType, "NO_DISPLAY"))
-        eprintf("Unknown DISPLAY_DATA_TYPE: %s", lkh.DisplayDataType);
+    for (i = 0; i < strlen(DisplayDataType); i++)
+        DisplayDataType[i] = (char) toupper(DisplayDataType[i]);
+    if (strcmp(DisplayDataType, "COORD_DISPLAY") &&
+        strcmp(DisplayDataType, "TWOD_DISPLAY") &&
+        strcmp(DisplayDataType, "NO_DISPLAY"))
+        eprintf("Unknown DISPLAY_DATA_TYPE: %s", DisplayDataType);
 }
 
 static void Read_EDGE_DATA_FORMAT()
 {
     unsigned int i;
 
-    if (!(lkh.EdgeDataFormat = Copy(strtok(0, Delimiters))))
+    if (!(EdgeDataFormat = Copy(strtok(0, Delimiters))))
         eprintf("EDGE_DATA_FORMAT: string expected");
-    for (i = 0; i < strlen(lkh.EdgeDataFormat); i++)
-        lkh.EdgeDataFormat[i] = (char) toupper(lkh.EdgeDataFormat[i]);
-    if (strcmp(lkh.EdgeDataFormat, "EDGE_LIST") &&
-        strcmp(lkh.EdgeDataFormat, "ADJ_LIST"))
-        eprintf("Unknown EDGE_DATA_FORMAT: %s", lkh.EdgeDataFormat);
-    if (lkh.SubproblemTourFileName)
+    for (i = 0; i < strlen(EdgeDataFormat); i++)
+        EdgeDataFormat[i] = (char) toupper(EdgeDataFormat[i]);
+    if (strcmp(EdgeDataFormat, "EDGE_LIST") &&
+        strcmp(EdgeDataFormat, "ADJ_LIST"))
+        eprintf("Unknown EDGE_DATA_FORMAT: %s", EdgeDataFormat);
+    if (SubproblemTourFileName)
         eprintf("(EDGE_DATA_FORMAT)"
                 " cannot be used together with SUBPROBLEM_TOUR_FILE");
 }
@@ -634,33 +640,33 @@ static void Read_EDGE_DATA_SECTION()
     int i, j;
 
     CheckSpecificationPart();
-    if (!lkh.EdgeDataFormat)
+    if (!EdgeDataFormat)
         eprintf("Missing EDGE_DATA_FORMAT specification");
-    if (!lkh.FirstNode)
+    if (!FirstNode)
         CreateNodes();
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension--;
-    if (!strcmp(lkh.EdgeDataFormat, "EDGE_LIST")) {
-        if (!fscanint(lkh.ProblemFile, &i))
+    if (ProblemType == HPP)
+        Dimension--;
+    if (!strcmp(EdgeDataFormat, "EDGE_LIST")) {
+        if (!fscanint(ProblemFile, &i))
             i = -1;
         while (i != -1) {
             if (i <= 0
-                || i > (lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2))
+                || i > (ProblemType != ATSP ? Dimension : Dimension / 2))
                 eprintf("(EDGE_DATA_SECTION) Node number out of range: %d",
                         i);
-            fscanint(lkh.ProblemFile, &j);
+            fscanint(ProblemFile, &j);
             if (j <= 0
-                || j > (lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2))
+                || j > (ProblemType != ATSP ? Dimension : Dimension / 2))
                 eprintf("(EDGE_DATA_SECTION) Node number out of range: %d",
                         j);
             if (i == j)
                 eprintf("(EDGE_DATA_SECTION) Illgal edge: %d to %d", i, j);
-            if (lkh.ProblemType == ATSP) {
-                i += lkh.Dimension / 2;
-                j += lkh.Dimension / 2;
+            if (ProblemType == ATSP) {
+                i += Dimension / 2;
+                j += Dimension / 2;
             }
-            Ni = &lkh.NodeSet[i];
-            Nj = &lkh.NodeSet[j];
+            Ni = &NodeSet[i];
+            Nj = &NodeSet[j];
             if (!Ni->CandidateSet) {
                 assert(Ni->CandidateSet =
                        (Candidate *) calloc(3, sizeof(Candidate)));
@@ -678,7 +684,7 @@ static void Read_EDGE_DATA_SECTION()
                                               1) * sizeof(Candidate)));
                 Ni->CandidateSet[Ni->V].To = 0;
             }
-            if (lkh.ProblemType != ATSP) {
+            if (ProblemType != ATSP) {
                 if (!Nj->CandidateSet) {
                     assert(Nj->CandidateSet =
                            (Candidate *) calloc(3, sizeof(Candidate)));
@@ -686,7 +692,7 @@ static void Read_EDGE_DATA_SECTION()
                     Nj->CandidateSet[0].Cost = 0;
                     Nj->CandidateSet[0].Alpha = 0;
                     Nj->V = 1;
-                } else if (lkh.ProblemType !=!IsCandidate(Nj, Ni)) {
+                } else if (ProblemType !=!IsCandidate(Nj, Ni)) {
                     Nj->CandidateSet[Nj->V].To = Ni;
                     Nj->CandidateSet[Nj->V].Cost = 0;
                     Nj->CandidateSet[Nj->V].Alpha = Nj->V;
@@ -697,38 +703,38 @@ static void Read_EDGE_DATA_SECTION()
                     Nj->CandidateSet[Nj->V].To = 0;
                 }
             }
-            if (!fscanint(lkh.ProblemFile, &i))
+            if (!fscanint(ProblemFile, &i))
                 i = -1;
         }
-    } else if (!strcmp(lkh.EdgeDataFormat, "ADJ_LIST")) {
-        Ni = lkh.FirstNode;
+    } else if (!strcmp(EdgeDataFormat, "ADJ_LIST")) {
+        Ni = FirstNode;
         do
             Ni->V = 0;
-        while ((Ni = Ni->Suc) != lkh.FirstNode);
-        if (!fscanint(lkh.ProblemFile, &i))
+        while ((Ni = Ni->Suc) != FirstNode);
+        if (!fscanint(ProblemFile, &i))
             i = -1;
         while (i != -1) {
             if (i <= 0
-                || i > (lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2))
+                || i > (ProblemType != ATSP ? Dimension : Dimension / 2))
                 eprintf("(EDGE_DATA_SECTION) Node number out of range: %d",
                         i);
-            if (lkh.ProblemType == ATSP)
-                i += lkh.Dimension / 2;
-            Ni = &lkh.NodeSet[i];
-            fscanint(lkh.ProblemFile, &j);
+            if (ProblemType == ATSP)
+                i += Dimension / 2;
+            Ni = &NodeSet[i];
+            fscanint(ProblemFile, &j);
             while (j != -1) {
                 if (j <= 0
-                    || j > (lkh.ProblemType !=
-                            ATSP ? lkh.Dimension : lkh.Dimension / 2))
+                    || j > (ProblemType !=
+                            ATSP ? Dimension : Dimension / 2))
                     eprintf
                         ("(EDGE_DATA_SECTION) Node number out of range: %d",
                          j);
                 if (i == j)
                     eprintf("(EDGE_DATA_SECTION) Illgal edge: %d to %d",
                             i, j);
-                if (lkh.ProblemType == ATSP)
-                    j += lkh.Dimension / 2;
-                Nj = &lkh.NodeSet[j];
+                if (ProblemType == ATSP)
+                    j += Dimension / 2;
+                Nj = &NodeSet[j];
                 if (!Ni->CandidateSet) {
                     assert(Ni->CandidateSet =
                            (Candidate *) calloc(3, sizeof(Candidate)));
@@ -746,7 +752,7 @@ static void Read_EDGE_DATA_SECTION()
                                                   1) * sizeof(Candidate)));
                     Ni->CandidateSet[Ni->V].To = 0;
                 }
-                if (lkh.ProblemType != ATSP) {
+                if (ProblemType != ATSP) {
                     if (!Nj->CandidateSet) {
                         assert(Nj->CandidateSet =
                                (Candidate *) calloc(3, sizeof(Candidate)));
@@ -765,49 +771,49 @@ static void Read_EDGE_DATA_SECTION()
                         Nj->CandidateSet[Nj->V].To = 0;
                     }
                 }
-                if (!fscanint(lkh.ProblemFile, &j))
+                if (!fscanint(ProblemFile, &j))
                     j = -1;
             }
-            if (!fscanint(lkh.ProblemFile, &i))
+            if (!fscanint(ProblemFile, &i))
                 i = -1;
         }
     } else
         eprintf("(EDGE_DATA_SECTION) No EDGE_DATA_FORMAT specified");
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension++;
-    lkh.Distance = Distance_1;
+    if (ProblemType == HPP)
+        Dimension++;
+    Distance = Distance_1;
 }
 
 static void Read_EDGE_WEIGHT_FORMAT()
 {
     unsigned int i;
 
-    if (!(lkh.EdgeWeightFormat = Copy(strtok(0, Delimiters))))
+    if (!(EdgeWeightFormat = Copy(strtok(0, Delimiters))))
         eprintf("EDGE_WEIGHT_FORMAT: string expected");
-    for (i = 0; i < strlen(lkh.EdgeWeightFormat); i++)
-        lkh.EdgeWeightFormat[i] = (char) toupper(lkh.EdgeWeightFormat[i]);
-    if (!strcmp(lkh.EdgeWeightFormat, "FUNCTION"))
-        lkh.WeightFormat = FUNCTION;
-    else if (!strcmp(lkh.EdgeWeightFormat, "FULL_MATRIX"))
-        lkh.WeightFormat = FULL_MATRIX;
-    else if (!strcmp(lkh.EdgeWeightFormat, "UPPER_ROW"))
-        lkh.WeightFormat = UPPER_ROW;
-    else if (!strcmp(lkh.EdgeWeightFormat, "LOWER_ROW"))
-        lkh.WeightFormat = LOWER_ROW;
-    else if (!strcmp(lkh.EdgeWeightFormat, "UPPER_DIAG_ROW"))
-        lkh.WeightFormat = UPPER_DIAG_ROW;
-    else if (!strcmp(lkh.EdgeWeightFormat, "LOWER_DIAG_ROW"))
-        lkh.WeightFormat = LOWER_DIAG_ROW;
-    else if (!strcmp(lkh.EdgeWeightFormat, "UPPER_COL"))
-        lkh.WeightFormat = UPPER_COL;
-    else if (!strcmp(lkh.EdgeWeightFormat, "LOWER_COL"))
-        lkh.WeightFormat = LOWER_COL;
-    else if (!strcmp(lkh.EdgeWeightFormat, "UPPER_DIAG_COL"))
-        lkh.WeightFormat = UPPER_DIAG_COL;
-    else if (!strcmp(lkh.EdgeWeightFormat, "LOWER_DIAG_COL"))
-        lkh.WeightFormat = LOWER_DIAG_COL;
+    for (i = 0; i < strlen(EdgeWeightFormat); i++)
+        EdgeWeightFormat[i] = (char) toupper(EdgeWeightFormat[i]);
+    if (!strcmp(EdgeWeightFormat, "FUNCTION"))
+        WeightFormat = FUNCTION;
+    else if (!strcmp(EdgeWeightFormat, "FULL_MATRIX"))
+        WeightFormat = FULL_MATRIX;
+    else if (!strcmp(EdgeWeightFormat, "UPPER_ROW"))
+        WeightFormat = UPPER_ROW;
+    else if (!strcmp(EdgeWeightFormat, "LOWER_ROW"))
+        WeightFormat = LOWER_ROW;
+    else if (!strcmp(EdgeWeightFormat, "UPPER_DIAG_ROW"))
+        WeightFormat = UPPER_DIAG_ROW;
+    else if (!strcmp(EdgeWeightFormat, "LOWER_DIAG_ROW"))
+        WeightFormat = LOWER_DIAG_ROW;
+    else if (!strcmp(EdgeWeightFormat, "UPPER_COL"))
+        WeightFormat = UPPER_COL;
+    else if (!strcmp(EdgeWeightFormat, "LOWER_COL"))
+        WeightFormat = LOWER_COL;
+    else if (!strcmp(EdgeWeightFormat, "UPPER_DIAG_COL"))
+        WeightFormat = UPPER_DIAG_COL;
+    else if (!strcmp(EdgeWeightFormat, "LOWER_DIAG_COL"))
+        WeightFormat = LOWER_DIAG_COL;
     else
-        eprintf("Unknown EDGE_WEIGHT_FORMAT: %s", lkh.EdgeWeightFormat);
+        eprintf("Unknown EDGE_WEIGHT_FORMAT: %s", EdgeWeightFormat);
 }
 
 static void Read_EDGE_WEIGHT_SECTION()
@@ -816,40 +822,40 @@ static void Read_EDGE_WEIGHT_SECTION()
     int i, j, n, W;
 
     CheckSpecificationPart();
-    if (!lkh.FirstNode)
+    if (!FirstNode)
         CreateNodes();
-    if (lkh.ProblemType != ATSP) {
-        assert(lkh.CostMatrix =
-               (int *) calloc((size_t) lkh.Dimension * (lkh.Dimension - 1) / 2,
+    if (ProblemType != ATSP) {
+        assert(CostMatrix =
+               (int *) calloc((size_t) Dimension * (Dimension - 1) / 2,
                               sizeof(int)));
-        Ni = lkh.FirstNode->Suc;
+        Ni = FirstNode->Suc;
         do {
             Ni->C =
-                &lkh.CostMatrix[(size_t) (Ni->Id - 1) * (Ni->Id - 2) / 2] - 1;
+                &CostMatrix[(size_t) (Ni->Id - 1) * (Ni->Id - 2) / 2] - 1;
         }
-        while ((Ni = Ni->Suc) != lkh.FirstNode);
+        while ((Ni = Ni->Suc) != FirstNode);
     } else {
-        n = lkh.Dimension / 2;
-        assert(lkh.CostMatrix = (int *) calloc((size_t) n * n, sizeof(int)));
-        for (Ni = lkh.FirstNode; Ni->Id <= n; Ni = Ni->Suc)
-            Ni->C = &lkh.CostMatrix[(size_t) (Ni->Id - 1) * n] - 1;
+        n = Dimension / 2;
+        assert(CostMatrix = (int *) calloc((size_t) n * n, sizeof(int)));
+        for (Ni = FirstNode; Ni->Id <= n; Ni = Ni->Suc)
+            Ni->C = &CostMatrix[(size_t) (Ni->Id - 1) * n] - 1;
     }
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension--;
-    switch (lkh.WeightFormat) {
+    if (ProblemType == HPP)
+        Dimension--;
+    switch (WeightFormat) {
     case FULL_MATRIX:
-        if (lkh.ProblemType == ATSP) {
-            n = lkh.Dimension / 2;
+        if (ProblemType == ATSP) {
+            n = Dimension / 2;
             for (i = 1; i <= n; i++) {
-                Ni = &lkh.NodeSet[i];
+                Ni = &NodeSet[i];
                 for (j = 1; j <= n; j++) {
-                    if (!fscanint(lkh.ProblemFile, &W))
+                    if (!fscanint(ProblemFile, &W))
                         eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                     Ni->C[j] = W;
-                    if (i != j && W > lkh.M)
-                        lkh.M = W;
+                    if (i != j && W > M)
+                        M = W;
                 }
-                Nj = &lkh.NodeSet[i + n];
+                Nj = &NodeSet[i + n];
                 if (!Ni->FixedTo1)
                     Ni->FixedTo1 = Nj;
                 else if (!Ni->FixedTo2)
@@ -859,12 +865,12 @@ static void Read_EDGE_WEIGHT_SECTION()
                 else if (!Nj->FixedTo2)
                     Nj->FixedTo2 = Ni;
             }
-            lkh.Distance = Distance_ATSP;
-            lkh.WeightType = -1;
+            Distance = Distance_ATSP;
+            WeightType = -1;
         } else
-            for (i = 1, Ni = lkh.FirstNode; i <= lkh.Dimension; i++, Ni = Ni->Suc) {
-                for (j = 1; j <= lkh.Dimension; j++) {
-                    if (!fscanint(lkh.ProblemFile, &W))
+            for (i = 1, Ni = FirstNode; i <= Dimension; i++, Ni = Ni->Suc) {
+                for (j = 1; j <= Dimension; j++) {
+                    if (!fscanint(ProblemFile, &W))
                         eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                     if (j < i)
                         Ni->C[j] = W;
@@ -872,28 +878,28 @@ static void Read_EDGE_WEIGHT_SECTION()
             }
         break;
     case UPPER_ROW:
-        for (i = 1, Ni = lkh.FirstNode; i < lkh.Dimension; i++, Ni = Ni->Suc) {
-            for (j = i + 1, Nj = Ni->Suc; j <= lkh.Dimension;
+        for (i = 1, Ni = FirstNode; i < Dimension; i++, Ni = Ni->Suc) {
+            for (j = i + 1, Nj = Ni->Suc; j <= Dimension;
                  j++, Nj = Nj->Suc) {
-                if (!fscanint(lkh.ProblemFile, &W))
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 Nj->C[i] = W;
             }
         }
         break;
     case LOWER_ROW:
-        for (i = 2, Ni = lkh.FirstNode->Suc; i <= lkh.Dimension; i++, Ni = Ni->Suc) {
+        for (i = 2, Ni = FirstNode->Suc; i <= Dimension; i++, Ni = Ni->Suc) {
             for (j = 1; j < i; j++) {
-                if (!fscanint(lkh.ProblemFile, &W))
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 Ni->C[j] = W;
             }
         }
         break;
     case UPPER_DIAG_ROW:
-        for (i = 1, Ni = lkh.FirstNode; i <= lkh.Dimension; i++, Ni = Ni->Suc) {
-            for (j = i, Nj = Ni; j <= lkh.Dimension; j++, Nj = Nj->Suc) {
-                if (!fscanint(lkh.ProblemFile, &W))
+        for (i = 1, Ni = FirstNode; i <= Dimension; i++, Ni = Ni->Suc) {
+            for (j = i, Nj = Ni; j <= Dimension; j++, Nj = Nj->Suc) {
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 if (i != j)
                     Nj->C[i] = W;
@@ -901,9 +907,9 @@ static void Read_EDGE_WEIGHT_SECTION()
         }
         break;
     case LOWER_DIAG_ROW:
-        for (i = 1, Ni = lkh.FirstNode; i <= lkh.Dimension; i++, Ni = Ni->Suc) {
+        for (i = 1, Ni = FirstNode; i <= Dimension; i++, Ni = Ni->Suc) {
             for (j = 1; j <= i; j++) {
-                if (!fscanint(lkh.ProblemFile, &W))
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 if (j != i)
                     Ni->C[j] = W;
@@ -911,28 +917,28 @@ static void Read_EDGE_WEIGHT_SECTION()
         }
         break;
     case UPPER_COL:
-        for (j = 2, Nj = lkh.FirstNode->Suc; j <= lkh.Dimension; j++, Nj = Nj->Suc) {
+        for (j = 2, Nj = FirstNode->Suc; j <= Dimension; j++, Nj = Nj->Suc) {
             for (i = 1; i < j; i++) {
-                if (!fscanint(lkh.ProblemFile, &W))
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 Nj->C[i] = W;
             }
         }
         break;
     case LOWER_COL:
-        for (j = 1, Nj = lkh.FirstNode; j < lkh.Dimension; j++, Nj = Nj->Suc) {
-            for (i = j + 1, Ni = Nj->Suc; i <= lkh.Dimension;
+        for (j = 1, Nj = FirstNode; j < Dimension; j++, Nj = Nj->Suc) {
+            for (i = j + 1, Ni = Nj->Suc; i <= Dimension;
                  i++, Ni = Ni->Suc) {
-                if (!fscanint(lkh.ProblemFile, &W))
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 Ni->C[j] = W;
             }
         }
         break;
     case UPPER_DIAG_COL:
-        for (j = 1, Nj = lkh.FirstNode; j <= lkh.Dimension; j++, Nj = Nj->Suc) {
+        for (j = 1, Nj = FirstNode; j <= Dimension; j++, Nj = Nj->Suc) {
             for (i = 1; i <= j; i++) {
-                if (!fscanint(lkh.ProblemFile, &W))
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 if (i != j)
                     Nj->C[i] = W;
@@ -940,9 +946,9 @@ static void Read_EDGE_WEIGHT_SECTION()
         }
         break;
     case LOWER_DIAG_COL:
-        for (j = 1, Nj = lkh.FirstNode; j <= lkh.Dimension; j++, Nj = Nj->Suc) {
-            for (i = j, Ni = Nj; i <= lkh.Dimension; i++, Ni = Ni->Suc) {
-                if (!fscanint(lkh.ProblemFile, &W))
+        for (j = 1, Nj = FirstNode; j <= Dimension; j++, Nj = Nj->Suc) {
+            for (i = j, Ni = Nj; i <= Dimension; i++, Ni = Ni->Suc) {
+                if (!fscanint(ProblemFile, &W))
                     eprintf("Missing weight in EDGE_WEIGHT_SECTION");
                 if (i != j)
                     Ni->C[j] = W;
@@ -950,92 +956,92 @@ static void Read_EDGE_WEIGHT_SECTION()
         }
         break;
     }
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension++;
+    if (ProblemType == HPP)
+        Dimension++;
 }
 
 static void Read_EDGE_WEIGHT_TYPE()
 {
     unsigned int i;
 
-    if (!(lkh.EdgeWeightType = Copy(strtok(0, Delimiters))))
+    if (!(EdgeWeightType = Copy(strtok(0, Delimiters))))
         eprintf("EDGE_WEIGHT_TYPE: string expected");
-    for (i = 0; i < strlen(lkh.EdgeWeightType); i++)
-        lkh.EdgeWeightType[i] = (char) toupper(lkh.EdgeWeightType[i]);
-    if (!strcmp(lkh.EdgeWeightType, "ATT")) {
-        lkh.WeightType = ATT;
-        lkh.Distance = Distance_ATT;
-        lkh.c = c_ATT;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "CEIL_2D")) {
-        lkh.WeightType = CEIL_2D;
-        lkh.Distance = Distance_CEIL_2D;
-        lkh.c = c_CEIL_2D;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "CEIL_3D")) {
-        lkh.WeightType = CEIL_3D;
-        lkh.Distance = Distance_CEIL_3D;
-        lkh.c = c_CEIL_3D;
-        lkh.CoordType = THREED_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "EUC_2D")) {
-        lkh.WeightType = EUC_2D;
-        lkh.Distance = Distance_EUC_2D;
-        lkh.c = c_EUC_2D;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "EUC_3D")) {
-        lkh.WeightType = EUC_3D;
-        lkh.Distance = Distance_EUC_3D;
-        lkh.c = c_EUC_3D;
-        lkh.CoordType = THREED_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "EXPLICIT")) {
-        lkh.WeightType = EXPLICIT;
-        lkh.Distance = Distance_EXPLICIT;
-    } else if (!strcmp(lkh.EdgeWeightType, "MAN_2D")) {
-        lkh.WeightType = MAN_2D;
-        lkh.Distance = Distance_MAN_2D;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "MAN_3D")) {
-        lkh.WeightType = MAN_3D;
-        lkh.Distance = Distance_MAN_3D;
-        lkh.CoordType = THREED_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "MAX_2D")) {
-        lkh.WeightType = MAX_2D;
-        lkh.Distance = Distance_MAX_2D;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "MAX_3D")) {
-        lkh.WeightType = MAX_3D;
-        lkh.Distance = Distance_MAX_3D;
-        lkh.CoordType = THREED_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "GEO")) {
-        lkh.WeightType = GEO;
-        lkh.Distance = Distance_GEO;
-        lkh.c = c_GEO;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "GEOM")) {
-        lkh.WeightType = GEOM;
-        lkh.Distance = Distance_GEOM;
-        lkh.c = c_GEOM;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "GEO_MEEUS")) {
-        lkh.WeightType = GEO_MEEUS;
-        lkh.Distance = Distance_GEO_MEEUS;
-        lkh.c = c_GEO_MEEUS;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "GEOM_MEEUS")) {
-        lkh.WeightType = GEOM_MEEUS;
-        lkh.Distance = Distance_GEOM_MEEUS;
-        lkh.c = c_GEOM_MEEUS;
-        lkh.CoordType = TWOD_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "XRAY1")) {
-        lkh.WeightType = XRAY1;
-        lkh.Distance = Distance_XRAY1;
-        lkh.CoordType = THREED_COORDS;
-    } else if (!strcmp(lkh.EdgeWeightType, "XRAY2")) {
-        lkh.WeightType = XRAY2;
-        lkh.Distance = Distance_XRAY2;
-        lkh.CoordType = THREED_COORDS;
+    for (i = 0; i < strlen(EdgeWeightType); i++)
+        EdgeWeightType[i] = (char) toupper(EdgeWeightType[i]);
+    if (!strcmp(EdgeWeightType, "ATT")) {
+        WeightType = ATT;
+        Distance = Distance_ATT;
+        c = c_ATT;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "CEIL_2D")) {
+        WeightType = CEIL_2D;
+        Distance = Distance_CEIL_2D;
+        c = c_CEIL_2D;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "CEIL_3D")) {
+        WeightType = CEIL_3D;
+        Distance = Distance_CEIL_3D;
+        c = c_CEIL_3D;
+        CoordType = THREED_COORDS;
+    } else if (!strcmp(EdgeWeightType, "EUC_2D")) {
+        WeightType = EUC_2D;
+        Distance = Distance_EUC_2D;
+        c = c_EUC_2D;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "EUC_3D")) {
+        WeightType = EUC_3D;
+        Distance = Distance_EUC_3D;
+        c = c_EUC_3D;
+        CoordType = THREED_COORDS;
+    } else if (!strcmp(EdgeWeightType, "EXPLICIT")) {
+        WeightType = EXPLICIT;
+        Distance = Distance_EXPLICIT;
+    } else if (!strcmp(EdgeWeightType, "MAN_2D")) {
+        WeightType = MAN_2D;
+        Distance = Distance_MAN_2D;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "MAN_3D")) {
+        WeightType = MAN_3D;
+        Distance = Distance_MAN_3D;
+        CoordType = THREED_COORDS;
+    } else if (!strcmp(EdgeWeightType, "MAX_2D")) {
+        WeightType = MAX_2D;
+        Distance = Distance_MAX_2D;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "MAX_3D")) {
+        WeightType = MAX_3D;
+        Distance = Distance_MAX_3D;
+        CoordType = THREED_COORDS;
+    } else if (!strcmp(EdgeWeightType, "GEO")) {
+        WeightType = GEO;
+        Distance = Distance_GEO;
+        c = c_GEO;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "GEOM")) {
+        WeightType = GEOM;
+        Distance = Distance_GEOM;
+        c = c_GEOM;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "GEO_MEEUS")) {
+        WeightType = GEO_MEEUS;
+        Distance = Distance_GEO_MEEUS;
+        c = c_GEO_MEEUS;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "GEOM_MEEUS")) {
+        WeightType = GEOM_MEEUS;
+        Distance = Distance_GEOM_MEEUS;
+        c = c_GEOM_MEEUS;
+        CoordType = TWOD_COORDS;
+    } else if (!strcmp(EdgeWeightType, "XRAY1")) {
+        WeightType = XRAY1;
+        Distance = Distance_XRAY1;
+        CoordType = THREED_COORDS;
+    } else if (!strcmp(EdgeWeightType, "XRAY2")) {
+        WeightType = XRAY2;
+        Distance = Distance_XRAY2;
+        CoordType = THREED_COORDS;
     } else
-        eprintf("Unknown EDGE_WEIGHT_TYPE: %s", lkh.EdgeWeightType);
+        eprintf("Unknown EDGE_WEIGHT_TYPE: %s", EdgeWeightType);
 }
 
 static void Read_FIXED_EDGES_SECTION()
@@ -1044,26 +1050,26 @@ static void Read_FIXED_EDGES_SECTION()
     int i, j, Count = 0;
 
     CheckSpecificationPart();
-    if (!lkh.FirstNode)
+    if (!FirstNode)
         CreateNodes();
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension--;
-    if (!fscanint(lkh.ProblemFile, &i))
+    if (ProblemType == HPP)
+        Dimension--;
+    if (!fscanint(ProblemFile, &i))
         i = -1;
     while (i != -1) {
         if (i <= 0
-            || i > (lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2))
+            || i > (ProblemType != ATSP ? Dimension : Dimension / 2))
             eprintf("(FIXED_EDGES_SECTION) Node number out of range: %d",
                     i);
-        fscanint(lkh.ProblemFile, &j);
+        fscanint(ProblemFile, &j);
         if (j <= 0
-            || j > (lkh.ProblemType != ATSP ? lkh.Dimension : lkh.Dimension / 2))
+            || j > (ProblemType != ATSP ? Dimension : Dimension / 2))
             eprintf("(FIXED_EDGES_SECTION) Node number out of range: %d",
                     j);
         if (i == j)
             eprintf("(FIXED_EDGES_SECTION) Illgal edge: %d to %d", i, j);
-        Ni = &lkh.NodeSet[i];
-        Nj = &lkh.NodeSet[lkh.ProblemType == ATSP ? j + lkh.Dimension / 2 : j];
+        Ni = &NodeSet[i];
+        Nj = &NodeSet[ProblemType == ATSP ? j + Dimension / 2 : j];
         if (!Ni->FixedTo1 || Ni->FixedTo1 == Nj)
             Ni->FixedTo1 = Nj;
         else if (!Ni->FixedTo2 || Ni->FixedTo2 == Nj)
@@ -1084,13 +1090,13 @@ static void Read_FIXED_EDGES_SECTION()
             NPrev = N;
             Count++;
         } while ((N = NNext) && N != Ni);
-        if (N == Ni && Count != lkh.Dimension)
+        if (N == Ni && Count != Dimension)
             eprintf("(FIXED_EDGES_SECTION) Illegal fix: %d to %d", i, j);
-        if (!fscanint(lkh.ProblemFile, &i))
+        if (!fscanint(ProblemFile, &i))
             i = -1;
     }
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension++;
+    if (ProblemType == HPP)
+        Dimension++;
 }
 
 static void Read_NODE_COORD_SECTION()
@@ -1099,65 +1105,65 @@ static void Read_NODE_COORD_SECTION()
     int Id, i;
 
     CheckSpecificationPart();
-    if (lkh.CoordType != TWOD_COORDS && lkh.CoordType != THREED_COORDS)
+    if (CoordType != TWOD_COORDS && CoordType != THREED_COORDS)
         eprintf("NODE_COORD_SECTION conflicts with NODE_COORD_TYPE: %s",
-                lkh.NodeCoordType);
-    if (!lkh.FirstNode)
+                NodeCoordType);
+    if (!FirstNode)
         CreateNodes();
-    N = lkh.FirstNode;
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension--;
-    for (i = 1; i <= lkh.Dimension; i++) {
-        if (!fscanint(lkh.ProblemFile, &Id))
+    N = FirstNode;
+    if (ProblemType == HPP)
+        Dimension--;
+    for (i = 1; i <= Dimension; i++) {
+        if (!fscanint(ProblemFile, &Id))
             eprintf("Missing nodes in NODE_COORD_SECTION");
-        if (Id <= 0 || Id > lkh.Dimension)
+        if (Id <= 0 || Id > Dimension)
             eprintf("(NODE_COORD_SECTION) Node number out of range: %d",
                     Id);
-        N = &lkh.NodeSet[Id];
+        N = &NodeSet[Id];
         if (N->V == 1)
             eprintf("(NODE_COORD_SECTION) Node number occours twice: %d",
                     N->Id);
         N->V = 1;
-        if (!fscanf(lkh.ProblemFile, "%lf", &N->X))
+        if (!fscanf(ProblemFile, "%lf", &N->X))
             eprintf("Missing X-coordinate in NODE_COORD_SECTION");
-        if (!fscanf(lkh.ProblemFile, "%lf", &N->Y))
+        if (!fscanf(ProblemFile, "%lf", &N->Y))
             eprintf("Missing Y-coordinate in NODE_COORD_SECTION");
-        if (lkh.CoordType == THREED_COORDS
-            && !fscanf(lkh.ProblemFile, "%lf", &N->Z))
+        if (CoordType == THREED_COORDS
+            && !fscanf(ProblemFile, "%lf", &N->Z))
             eprintf("Missing Z-coordinate in NODE_COORD_SECTION");
-        if (lkh.Name && !strcmp(lkh.Name, "d657")) {
+        if (Name && !strcmp(Name, "d657")) {
             N->X = (float) N->X;
             N->Y = (float) N->Y;
         }
     }
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
-        if (!N->V && N->Id <= lkh.Dimension)
+        if (!N->V && N->Id <= Dimension)
             break;
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     if (!N->V)
         eprintf("(NODE_COORD_SECTION) No coordinates given for node %d",
                 N->Id);
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension++;
+    if (ProblemType == HPP)
+        Dimension++;
 }
 
 static void Read_NODE_COORD_TYPE()
 {
     unsigned int i;
 
-    if (!(lkh.NodeCoordType = Copy(strtok(0, Delimiters))))
+    if (!(NodeCoordType = Copy(strtok(0, Delimiters))))
         eprintf("NODE_COORD_TYPE: string expected");
-    for (i = 0; i < strlen(lkh.NodeCoordType); i++)
-        lkh.NodeCoordType[i] = (char) toupper(lkh.NodeCoordType[i]);
-    if (!strcmp(lkh.NodeCoordType, "TWOD_COORDS"))
-        lkh.CoordType = TWOD_COORDS;
-    else if (!strcmp(lkh.NodeCoordType, "THREED_COORDS"))
-        lkh.CoordType = THREED_COORDS;
-    else if (!strcmp(lkh.NodeCoordType, "NO_COORDS"))
-        lkh.CoordType = NO_COORDS;
+    for (i = 0; i < strlen(NodeCoordType); i++)
+        NodeCoordType[i] = (char) toupper(NodeCoordType[i]);
+    if (!strcmp(NodeCoordType, "TWOD_COORDS"))
+        CoordType = TWOD_COORDS;
+    else if (!strcmp(NodeCoordType, "THREED_COORDS"))
+        CoordType = THREED_COORDS;
+    else if (!strcmp(NodeCoordType, "NO_COORDS"))
+        CoordType = NO_COORDS;
     else
-        eprintf("Unknown NODE_COORD_TYPE: %s", lkh.NodeCoordType);
+        eprintf("Unknown NODE_COORD_TYPE: %s", NodeCoordType);
 }
 
 static void Read_TOUR_SECTION(FILE ** File)
@@ -1165,63 +1171,63 @@ static void Read_TOUR_SECTION(FILE ** File)
     Node *First = 0, *Last = 0, *N, *Na;
     int i, k;
 
-    if (lkh.TraceLevel >= 1) {
+    if (TraceLevel >= 1) {
         printff("Reading ");
-        if (File == &lkh.InitialTourFile)
-            printff("INITIAL_TOUR_FILE: \"%s\" ... ", lkh.InitialTourFileName);
-        else if (File == &lkh.InputTourFile)
-            printff("INPUT_TOUR_FILE: \"%s\" ... ", lkh.InputTourFileName);
-        else if (File == &lkh.SubproblemTourFile)
+        if (File == &InitialTourFile)
+            printff("INITIAL_TOUR_FILE: \"%s\" ... ", InitialTourFileName);
+        else if (File == &InputTourFile)
+            printff("INPUT_TOUR_FILE: \"%s\" ... ", InputTourFileName);
+        else if (File == &SubproblemTourFile)
             printff("SUBPROBLEM_TOUR_FILE: \"%s\" ... ",
-                    lkh.SubproblemTourFileName);
+                    SubproblemTourFileName);
         else
-            for (i = 0; i < lkh.MergeTourFiles; i++)
-                if (File == &lkh.MergeTourFile[i])
+            for (i = 0; i < MergeTourFiles; i++)
+                if (File == &MergeTourFile[i])
                     printff("MERGE_TOUR_FILE: \"%s\" ... ",
-                            lkh.MergeTourFileName[i]);
+                            MergeTourFileName[i]);
     }
-    if (!lkh.FirstNode)
+    if (!FirstNode)
         CreateNodes();
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         N->V = 0;
-    while ((N = N->Suc) != lkh.FirstNode);
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension--;
-    if (lkh.ProblemType == ATSP)
-        lkh.Dimension /= 2;
+    while ((N = N->Suc) != FirstNode);
+    if (ProblemType == HPP)
+        Dimension--;
+    if (ProblemType == ATSP)
+        Dimension /= 2;
     if (!fscanint(*File, &i))
         i = -1;
-    for (k = 0; k <= lkh.Dimension && i != -1; k++) {
-        if (i <= 0 || i > lkh.Dimension)
+    for (k = 0; k <= Dimension && i != -1; k++) {
+        if (i <= 0 || i > Dimension)
             eprintf("(TOUR_SECTION) Node number out of range: %d", i);
-        N = &lkh.NodeSet[i];
-        if (N->V == 1 && k != lkh.Dimension)
+        N = &NodeSet[i];
+        if (N->V == 1 && k != Dimension)
             eprintf("(TOUR_SECTION) Node number occours twice: %d", N->Id);
         N->V = 1;
         if (k == 0)
             First = Last = N;
         else {
-            if (lkh.ProblemType == ATSP) {
-                Na = N + lkh.Dimension;
+            if (ProblemType == ATSP) {
+                Na = N + Dimension;
                 Na->V = 1;
             } else
                 Na = 0;
-            if (File == &lkh.InitialTourFile) {
+            if (File == &InitialTourFile) {
                 if (!Na)
                     Last->InitialSuc = N;
                 else {
                     Last->InitialSuc = Na;
                     Na->InitialSuc = N;
                 }
-            } else if (File == &lkh.InputTourFile) {
+            } else if (File == &InputTourFile) {
                 if (!Na)
                     Last->InputSuc = N;
                 else {
                     Last->InputSuc = Na;
                     Na->InputSuc = N;
                 }
-            } else if (File == &lkh.SubproblemTourFile) {
+            } else if (File == &SubproblemTourFile) {
                 if (!Na)
                     (Last->SubproblemSuc = N)->SubproblemPred = Last;
                 else {
@@ -1229,8 +1235,8 @@ static void Read_TOUR_SECTION(FILE ** File)
                     (Na->SubproblemSuc = N)->SubproblemPred = Na;
                 }
             } else {
-                for (i = 0; i < lkh.MergeTourFiles; i++) {
-                    if (File == &lkh.MergeTourFile[i]) {
+                for (i = 0; i < MergeTourFiles; i++) {
+                    if (File == &MergeTourFile[i]) {
                         if (!Na)
                             Last->MergeSuc[i] = N;
                         else {
@@ -1242,17 +1248,17 @@ static void Read_TOUR_SECTION(FILE ** File)
             }
             Last = N;
         }
-        if (k < lkh.Dimension)
+        if (k < Dimension)
             fscanint(*File, &i);
-        if (k == lkh.Dimension - 1)
+        if (k == Dimension - 1)
             i = First->Id;
     }
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         if (!N->V)
             eprintf("(TOUR_SECTION) Node is missing: %d", N->Id);
-    while ((N = N->Suc) != lkh.FirstNode);
-    if (File == &lkh.SubproblemTourFile) {
+    while ((N = N->Suc) != FirstNode);
+    if (File == &SubproblemTourFile) {
         do {
             if (N->FixedTo1 &&
                 N->SubproblemPred != N->FixedTo1
@@ -1265,13 +1271,13 @@ static void Read_TOUR_SECTION(FILE ** File)
                 eprintf("Fixed edge (%d, %d) "
                         "does not belong to subproblem tour", N->Id,
                         N->FixedTo2->Id);
-        } while ((N = N->Suc) != lkh.FirstNode);
+        } while ((N = N->Suc) != FirstNode);
     }
-    if (lkh.ProblemType == HPP)
-        lkh.Dimension++;
-    if (lkh.ProblemType == ATSP)
-        lkh.Dimension *= 2;
-    if (lkh.TraceLevel >= 1)
+    if (ProblemType == HPP)
+        Dimension++;
+    if (ProblemType == ATSP)
+        Dimension *= 2;
+    if (TraceLevel >= 1)
         printff("done\n");
 }
 
@@ -1279,29 +1285,29 @@ static void Read_TYPE()
 {
     unsigned int i;
 
-    if (!(lkh.Type = Copy(strtok(0, Delimiters))))
+    if (!(Type = Copy(strtok(0, Delimiters))))
         eprintf("TYPE: string expected");
-    for (i = 0; i < strlen(lkh.Type); i++)
-        lkh.Type[i] = (char) toupper(lkh.Type[i]);
-    if (!strcmp(lkh.Type, "TSP"))
-        lkh.ProblemType = TSP;
-    else if (!strcmp(lkh.Type, "ATSP"))
-        lkh.ProblemType = ATSP;
-    else if (!strcmp(lkh.Type, "SOP")) {
-        lkh.ProblemType = SOP;
-        eprintf("TYPE: Type not implemented: %s", lkh.Type);
-    } else if (!strcmp(lkh.Type, "HCP"))
-        lkh.ProblemType = HCP;
-    else if (!strcmp(lkh.Type, "CVRP")) {
-        lkh.ProblemType = CVRP;
-        eprintf("TYPE: Type not implemented: %s", lkh.Type);
-    } else if (!strcmp(lkh.Type, "TOUR")) {
-        lkh.ProblemType = TOUR;
-        eprintf("TYPE: Type not implemented: %s", lkh.Type);
-    } else if (!strcmp(lkh.Type, "HPP"))
-        lkh.ProblemType = HPP;
+    for (i = 0; i < strlen(Type); i++)
+        Type[i] = (char) toupper(Type[i]);
+    if (!strcmp(Type, "TSP"))
+        ProblemType = TSP;
+    else if (!strcmp(Type, "ATSP"))
+        ProblemType = ATSP;
+    else if (!strcmp(Type, "SOP")) {
+        ProblemType = SOP;
+        eprintf("TYPE: Type not implemented: %s", Type);
+    } else if (!strcmp(Type, "HCP"))
+        ProblemType = HCP;
+    else if (!strcmp(Type, "CVRP")) {
+        ProblemType = CVRP;
+        eprintf("TYPE: Type not implemented: %s", Type);
+    } else if (!strcmp(Type, "TOUR")) {
+        ProblemType = TOUR;
+        eprintf("TYPE: Type not implemented: %s", Type);
+    } else if (!strcmp(Type, "HPP"))
+        ProblemType = HPP;
     else
-        eprintf("Unknown TYPE: %s", lkh.Type);
+        eprintf("Unknown TYPE: %s", Type);
 }
 
 /*
@@ -1356,14 +1362,14 @@ void ReadTour(char *FileName, FILE ** File)
             || !strcmp(Keyword, "TYPE"));
         else if (strcmp(Keyword, "OPTIMUM") == 0) {
             if (!(Token = strtok(0, Delimiters)) ||
-                !sscanf(Token, GainInputFormat, &lkh.Optimum))
+                !sscanf(Token, GainInputFormat, &Optimum))
                 eprintf("[%s] (OPTIMUM): integer expected", FileName);
         } else if (strcmp(Keyword, "DIMENSION") == 0) {
             int Dim = 0;
             if (!(Token = strtok(0, Delimiters)) ||
                 !sscanf(Token, "%d", &Dim))
                 eprintf("[%s] (DIMENSION): integer expected", FileName);
-            if (Dim != lkh.DimensionSaved)
+            if (Dim != DimensionSaved)
                 eprintf
                     ("[%s] (DIMENSION): does not match problem dimension",
                      FileName);

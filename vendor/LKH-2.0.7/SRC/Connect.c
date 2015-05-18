@@ -20,26 +20,26 @@ void Connect(Node * N1, int Max, int Sparse)
     if (!Sparse || N1->CandidateSet == 0 ||
         N1->CandidateSet[0].To == 0 || N1->CandidateSet[1].To == 0) {
         /* Find the requested edge in a dense graph */
-        N = lkh.FirstNode;
+        N = FirstNode;
         do {
             if (N == N1 || N == N1->Dad || N1 == N->Dad)
                 continue;
             if (FixedOrCommon(N1, N)) {
-                N1->NextCost = lkh.D(N1, N);
+                N1->NextCost = D(N1, N);
                 N1->Next = N;
                 return;
             }
             if (!N1->FixedTo2 && !N->FixedTo2 &&
                 !Forbidden(N1, N) &&
-                (!lkh.c || lkh.c(N1, N) < N1->NextCost) &&
-                (d = lkh.D(N1, N)) < N1->NextCost) {
+                (!c || c(N1, N) < N1->NextCost) &&
+                (d = D(N1, N)) < N1->NextCost) {
                 N1->NextCost = d;
                 if (d <= Max)
                     return;
                 N1->Next = N;
             }
         }
-        while ((N = N->Suc) != lkh.FirstNode);
+        while ((N = N->Suc) != FirstNode);
     } else {
         /* Find the requested edge in a sparse graph */
         for (NN1 = N1->CandidateSet; (N = NN1->To); NN1++) {

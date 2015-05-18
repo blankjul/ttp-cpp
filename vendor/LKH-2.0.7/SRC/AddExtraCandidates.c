@@ -19,18 +19,18 @@ void AddExtraCandidates(int K, int CandidateSetType, int Symmetric)
     Node *t;
 
     assert(SavedCandidateSet =
-           (Candidate **) malloc((1 + lkh.DimensionSaved) *
+           (Candidate **) malloc((1 + DimensionSaved) *
                                  sizeof(Candidate *)));
-    t = lkh.FirstNode;
+    t = FirstNode;
     do {
         SavedCandidateSet[t->Id] = t->CandidateSet;
         t->CandidateSet = 0;
-    } while ((t = t->Suc) != lkh.FirstNode);
+    } while ((t = t->Suc) != FirstNode);
     if (CandidateSetType == NN)
         CreateNearestNeighborCandidateSet(K);
     else if (CandidateSetType == QUADRANT)
         CreateQuadrantCandidateSet(K);
-    t = lkh.FirstNode;
+    t = FirstNode;
     do {
         ExtraCandidateSet = t->CandidateSet;
         t->CandidateSet = SavedCandidateSet[t->Id];
@@ -40,6 +40,6 @@ void AddExtraCandidates(int K, int CandidateSetType, int Symmetric)
                 AddCandidate(Nt->To, t, Nt->Cost, Nt->Alpha);
         }
         free(ExtraCandidateSet);
-    } while ((t = t->Suc) != lkh.FirstNode);
+    } while ((t = t->Suc) != FirstNode);
     free(SavedCandidateSet);
 }

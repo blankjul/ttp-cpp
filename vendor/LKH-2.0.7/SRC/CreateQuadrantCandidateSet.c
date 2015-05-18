@@ -43,33 +43,33 @@ void CreateQuadrantCandidateSet(int K)
 
     if (K <= 0)
         return;
-    if (lkh.TraceLevel >= 2)
+    if (TraceLevel >= 2)
         printff("Creating quadrant candidate set ... ");
     KDTree = BuildKDTree(1);
     assert(XMin =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     assert(XMax =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     assert(YMin =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     assert(YMax =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
-    if (lkh.CoordType == THREED_COORDS) {
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
+    if (CoordType == THREED_COORDS) {
         assert(ZMin =
-               (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+               (double *) malloc((1 + DimensionSaved) * sizeof(double)));
         assert(ZMax =
-               (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+               (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     }
-    ComputeBounds(0, lkh.Dimension - 1);
-    Contains = lkh.CoordType == THREED_COORDS ? Contains3D : Contains2D;
+    ComputeBounds(0, Dimension - 1);
+    Contains = CoordType == THREED_COORDS ? Contains3D : Contains2D;
     BoxOverlaps =
-        lkh.CoordType == THREED_COORDS ? BoxOverlaps3D : BoxOverlaps2D;
-    L = lkh.CoordType == THREED_COORDS ? 8 : 4;
+        CoordType == THREED_COORDS ? BoxOverlaps3D : BoxOverlaps2D;
+    L = CoordType == THREED_COORDS ? 8 : 4;
     CandPerQ = K / L;
     assert(CandidateSet =
            (Candidate *) malloc((K + 1) * sizeof(Candidate)));
 
-    From = lkh.FirstNode;
+    From = FirstNode;
     do {
         Count = 0;
         for (NFrom = From->CandidateSet; NFrom && NFrom->To; NFrom++)
@@ -82,7 +82,7 @@ void CreateQuadrantCandidateSet(int K)
             NearestQuadrantNeighbors(From, Q, CandPerQ);
             for (i = 0; i < Candidates; i++) {
                 To = CandidateSet[i].To;
-                if (AddCandidate(From, To, lkh.D(From, To), 1))
+                if (AddCandidate(From, To, D(From, To), 1))
                     Added++;
             }
         }
@@ -90,10 +90,10 @@ void CreateQuadrantCandidateSet(int K)
             NearestQuadrantNeighbors(From, 0, K - Added);
             for (i = 0; i < Candidates; i++) {
                 To = CandidateSet[i].To;
-                AddCandidate(From, To, lkh.D(From, To), 2);
+                AddCandidate(From, To, D(From, To), 2);
             }
         }
-    } while ((From = From->Suc) != lkh.FirstNode);
+    } while ((From = From->Suc) != FirstNode);
 
     free(CandidateSet);
     free(KDTree);
@@ -101,63 +101,63 @@ void CreateQuadrantCandidateSet(int K)
     free(XMax);
     free(YMin);
     free(YMax);
-    if (lkh.CoordType == THREED_COORDS) {
+    if (CoordType == THREED_COORDS) {
         free(ZMin);
         free(ZMax);
     }
     if (Level == 0 &&
-        (lkh.WeightType == GEO || lkh.WeightType == GEOM ||
-         lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS)) {
+        (WeightType == GEO || WeightType == GEOM ||
+         WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS)) {
         Candidate **SavedCandidateSet;
         assert(SavedCandidateSet =
-               (Candidate **) malloc((1 + lkh.DimensionSaved) *
+               (Candidate **) malloc((1 + DimensionSaved) *
                                      sizeof(Candidate *)));
-        if (lkh.TraceLevel >= 2)
+        if (TraceLevel >= 2)
             printff("done\n");
-        From = lkh.FirstNode;
-        while ((From = From->Suc) != lkh.FirstNode)
-            if ((From->Y > 0) != (lkh.FirstNode->Y > 0))
+        From = FirstNode;
+        while ((From = From->Suc) != FirstNode)
+            if ((From->Y > 0) != (FirstNode->Y > 0))
                 break;
-        if (From != lkh.FirstNode) {
+        if (From != FirstNode) {
             /* Transform longitude (180 and -180 map to 0) */
-            From = lkh.FirstNode;
+            From = FirstNode;
             do {
                 SavedCandidateSet[From->Id] = From->CandidateSet;
                 From->CandidateSet = 0;
                 From->Zc = From->Y;
-                if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
+                if (WeightType == GEO || WeightType == GEO_MEEUS)
                     From->Y =
                         (int) From->Y + 5.0 * (From->Y -
                                                (int) From->Y) / 3.0;
                 From->Y += From->Y > 0 ? -180 : 180;
-                if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
+                if (WeightType == GEO || WeightType == GEO_MEEUS)
                     From->Y =
                         (int) From->Y + 3.0 * (From->Y -
                                                (int) From->Y) / 5.0;
-            } while ((From = From->Suc) != lkh.FirstNode);
+            } while ((From = From->Suc) != FirstNode);
             Level++;
             CreateQuadrantCandidateSet(K);
             Level--;
-            From = lkh.FirstNode;
+            From = FirstNode;
             do
                 From->Y = From->Zc;
-            while ((From = From->Suc) != lkh.FirstNode);
+            while ((From = From->Suc) != FirstNode);
             do {
                 Candidate *QCandidateSet = From->CandidateSet;
                 From->CandidateSet = SavedCandidateSet[From->Id];
                 for (NFrom = QCandidateSet; (To = NFrom->To); NFrom++)
                     AddCandidate(From, To, NFrom->Cost, NFrom->Alpha);
                 free(QCandidateSet);
-            } while ((From = From->Suc) != lkh.FirstNode);
+            } while ((From = From->Suc) != FirstNode);
             free(SavedCandidateSet);
         }
     }
     if (Level == 0) {
         ResetCandidateSet();
         AddTourCandidates();
-        if (lkh.CandidateSetSymmetric)
+        if (CandidateSetSymmetric)
             SymmetrizeCandidateSet();
-        if (lkh.TraceLevel >= 2)
+        if (TraceLevel >= 2)
             printff("done\n");
     }
 }
@@ -174,38 +174,38 @@ void CreateNearestNeighborCandidateSet(int K)
     Node *From, *To;
     int i;
 
-    if (lkh.TraceLevel >= 2)
+    if (TraceLevel >= 2)
         printff("Creating nearest neighbor candidate set ... ");
     KDTree = BuildKDTree(1);
     assert(XMin =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     assert(XMax =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     assert(YMin =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     assert(YMax =
-           (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
-    if (lkh.CoordType == THREED_COORDS) {
+           (double *) malloc((1 + DimensionSaved) * sizeof(double)));
+    if (CoordType == THREED_COORDS) {
         assert(ZMin =
-               (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+               (double *) malloc((1 + DimensionSaved) * sizeof(double)));
         assert(ZMax =
-               (double *) malloc((1 + lkh.DimensionSaved) * sizeof(double)));
+               (double *) malloc((1 + DimensionSaved) * sizeof(double)));
     }
-    ComputeBounds(0, lkh.Dimension - 1);
-    Contains = lkh.CoordType == THREED_COORDS ? Contains3D : Contains2D;
+    ComputeBounds(0, Dimension - 1);
+    Contains = CoordType == THREED_COORDS ? Contains3D : Contains2D;
     BoxOverlaps =
-        lkh.CoordType == THREED_COORDS ? BoxOverlaps3D : BoxOverlaps2D;
+        CoordType == THREED_COORDS ? BoxOverlaps3D : BoxOverlaps2D;
     assert(CandidateSet =
            (Candidate *) malloc((K + 1) * sizeof(Candidate)));
 
-    From = lkh.FirstNode;
+    From = FirstNode;
     do {
         NearestQuadrantNeighbors(From, 0, K);
         for (i = 0; i < Candidates; i++) {
             To = CandidateSet[i].To;
-            AddCandidate(From, To, lkh.D(From, To), 1);
+            AddCandidate(From, To, D(From, To), 1);
         }
-    } while ((From = From->Suc) != lkh.FirstNode);
+    } while ((From = From->Suc) != FirstNode);
 
     free(CandidateSet);
     free(KDTree);
@@ -213,32 +213,32 @@ void CreateNearestNeighborCandidateSet(int K)
     free(XMax);
     free(YMin);
     free(YMax);
-    if (lkh.CoordType == THREED_COORDS) {
+    if (CoordType == THREED_COORDS) {
         free(ZMin);
         free(ZMax);
     }
-    if (Level == 0 && (lkh.WeightType == GEOM || lkh.WeightType == GEOM_MEEUS)) {
+    if (Level == 0 && (WeightType == GEOM || WeightType == GEOM_MEEUS)) {
         Candidate **SavedCandidateSet;
         assert(SavedCandidateSet =
-               (Candidate **) malloc((1 + lkh.DimensionSaved) *
+               (Candidate **) malloc((1 + DimensionSaved) *
                                      sizeof(Candidate *)));
-        if (lkh.TraceLevel >= 2)
+        if (TraceLevel >= 2)
             printff("done\n");
         /* Transform longitude (180 and -180 map to 0) */
-        From = lkh.FirstNode;
+        From = FirstNode;
         do {
             SavedCandidateSet[From->Id] = From->CandidateSet;
             From->CandidateSet = 0;
             From->Yc = From->Y;
             From->Y += From->Y > 0 ? -180 : 180;
-        } while ((From = From->Suc) != lkh.FirstNode);
+        } while ((From = From->Suc) != FirstNode);
         Level++;
         CreateNearestNeighborCandidateSet(K);
         Level--;
-        From = lkh.FirstNode;
+        From = FirstNode;
         do
             From->Y = From->Yc;
-        while ((From = From->Suc) != lkh.FirstNode);
+        while ((From = From->Suc) != FirstNode);
         do {
             Candidate *QCandidateSet = From->CandidateSet;
             Candidate *NFrom;
@@ -246,15 +246,15 @@ void CreateNearestNeighborCandidateSet(int K)
             for (NFrom = QCandidateSet; (To = NFrom->To); NFrom++)
                 AddCandidate(From, To, NFrom->Cost, NFrom->Alpha);
             free(QCandidateSet);
-        } while ((From = From->Suc) != lkh.FirstNode);
+        } while ((From = From->Suc) != FirstNode);
         free(SavedCandidateSet);
     }
     if (Level == 0) {
         ResetCandidateSet();
         AddTourCandidates();
-        if (lkh.CandidateSetSymmetric)
+        if (CandidateSetSymmetric)
             SymmetrizeCandidateSet();
-        if (lkh.TraceLevel >= 2)
+        if (TraceLevel >= 2)
             printff("done\n");
     }
 }
@@ -271,7 +271,7 @@ static void ComputeBounds(int start, int end)
         Node *T = KDTree[mid];
         XMin[T->Id] = YMin[T->Id] = DBL_MAX;
         XMax[T->Id] = YMax[T->Id] = -DBL_MAX;
-        if (lkh.CoordType == THREED_COORDS) {
+        if (CoordType == THREED_COORDS) {
             ZMin[T->Id] = DBL_MAX;
             ZMax[T->Id] = -DBL_MAX;
         }
@@ -287,7 +287,7 @@ static void ComputeBounds(int start, int end)
                 YMin[T->Id] = N->Y;
             if (N->Y > YMax[T->Id])
                 YMax[T->Id] = N->Y;
-            if (lkh.CoordType == THREED_COORDS) {
+            if (CoordType == THREED_COORDS) {
                 if (N->Z < ZMin[T->Id])
                     ZMin[T->Id] = N->Z;
                 if (N->Z > ZMax[T->Id])
@@ -484,8 +484,8 @@ static void NQN(Node * N, int Q, int start, int end, int K)
 
     if (start <= end && T != N && Contains(T, Q, N) &&
         !InCandidateSet(N, T) &&
-        (!lkh.c || lkh.c(N, T) - N->Pi - T->Pi <= Radius) &&
-        (d = lkh.Distance(N, T) * lkh.Precision) <= Radius) {
+        (!c || c(N, T) - N->Pi - T->Pi <= Radius) &&
+        (d = Distance(N, T) * Precision) <= Radius) {
         int i = Candidates;
         while (--i >= 0 && d < CandidateSet[i].Cost)
             CandidateSet[i + 1] = CandidateSet[i];
@@ -506,15 +506,15 @@ static void NQN(Node * N, int Q, int start, int end, int K)
             if (Overlaps(Q, diff, 0, axis))
                 NQN(N, Q, start, mid - 1, K);
             if (Overlaps(Q, diff, 1, axis) &&
-                (!lkh.c || lkh.c(N, &P) - N->Pi <= Radius) &&
-                    lkh.Distance(N, &P) * lkh.Precision <= Radius)
+                (!c || c(N, &P) - N->Pi <= Radius) &&
+                Distance(N, &P) * Precision <= Radius)
                 NQN(N, Q, mid + 1, end, K);
         } else {
             if (Overlaps(Q, diff, 1, axis))
                 NQN(N, Q, mid + 1, end, K);
             if (Overlaps(Q, diff, 0, axis) &&
-                (!lkh.c || lkh.c(N, &P) - N->Pi <= Radius) &&
-                    lkh.Distance(N, &P) * lkh.Precision <= Radius)
+                (!c || c(N, &P) - N->Pi <= Radius) &&
+                Distance(N, &P) * Precision <= Radius)
                 NQN(N, Q, start, mid - 1, K);
         }
     }
@@ -531,5 +531,5 @@ static void NearestQuadrantNeighbors(Node * N, int Q, int K)
 {
     Candidates = 0;
     Radius = INT_MAX;
-    NQN(N, Q, 0, lkh.Dimension - 1, K);
+    NQN(N, Q, 0, Dimension - 1, K);
 }

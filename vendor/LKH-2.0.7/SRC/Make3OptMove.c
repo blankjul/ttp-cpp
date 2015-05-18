@@ -25,4 +25,3 @@ Make3OptMove(Node * t1, Node * t2, Node * t3, Node * t4,
         eprintf("Make3OptMove: Internal error");
     }
 }
-

@@ -35,4 +35,3 @@ double GetTime()
 }
 
 #endif
-

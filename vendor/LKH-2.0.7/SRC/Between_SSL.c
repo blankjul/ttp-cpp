@@ -30,32 +30,32 @@ int Between_SSL(const Node * ta, const Node * tb, const Node * tc)
     PPc = Pc->Parent;
     if (Pa == Pc) {
         if (Pb == Pa)
-            return (lkh.Reversed == (Pa->Reversed != PPa->Reversed)) ==
+            return (Reversed == (Pa->Reversed != PPa->Reversed)) ==
                 (ta->Rank < tc->Rank ?
                  tb->Rank > ta->Rank && tb->Rank < tc->Rank :
                  tb->Rank > ta->Rank || tb->Rank < tc->Rank);
-        return (lkh.Reversed == (Pa->Reversed != PPa->Reversed)) == (ta->Rank >
+        return (Reversed == (Pa->Reversed != PPa->Reversed)) == (ta->Rank >
                                                                  tc->Rank);
     }
     if (Pb == Pc)
-        return (lkh.Reversed == (Pb->Reversed != PPb->Reversed)) == (tb->Rank <
+        return (Reversed == (Pb->Reversed != PPb->Reversed)) == (tb->Rank <
                                                                  tc->Rank);
     if (Pa == Pb)
-        return (lkh.Reversed == (Pa->Reversed != PPa->Reversed)) == (ta->Rank <
+        return (Reversed == (Pa->Reversed != PPa->Reversed)) == (ta->Rank <
                                                                  tb->Rank);
     if (PPa == PPc) {
         if (PPb == PPa)
-            return (lkh.Reversed == PPa->Reversed) ==
+            return (Reversed == PPa->Reversed) ==
                 (Pa->Rank < Pc->Rank ?
                  Pb->Rank > Pa->Rank && Pb->Rank < Pc->Rank :
                  Pb->Rank > Pa->Rank || Pb->Rank < Pc->Rank);
-        return (lkh.Reversed == PPa->Reversed) == (Pa->Rank > Pc->Rank);
+        return (Reversed == PPa->Reversed) == (Pa->Rank > Pc->Rank);
     }
     if (PPb == PPc)
-        return (lkh.Reversed == PPb->Reversed) == (Pb->Rank < Pc->Rank);
+        return (Reversed == PPb->Reversed) == (Pb->Rank < Pc->Rank);
     if (PPa == PPb)
-        return (lkh.Reversed == PPa->Reversed) == (Pa->Rank < Pb->Rank);
-    return lkh.Reversed !=
+        return (Reversed == PPa->Reversed) == (Pa->Rank < Pb->Rank);
+    return Reversed !=
         (PPa->Rank < PPc->Rank ?
          PPb->Rank > PPa->Rank && PPb->Rank < PPc->Rank :
          PPb->Rank > PPa->Rank || PPb->Rank < PPc->Rank);

@@ -73,4 +73,3 @@ int HashSearch(HashTable * T, unsigned Hash, GainType Cost)
             i += HashTableSize;
     return T->Entry[i].Hash == Hash;
 }
-

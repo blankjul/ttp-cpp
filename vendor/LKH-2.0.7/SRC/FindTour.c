@@ -25,114 +25,114 @@ GainType FindTour()
     int i;
     double EntryTime = GetTime();
 
-    t = lkh.FirstNode;
+    t = FirstNode;
     do
         t->OldPred = t->OldSuc = t->NextBestSuc = t->BestSuc = 0;
-    while ((t = t->Suc) != lkh.FirstNode);
-    if (lkh.Run == 1 && lkh.Dimension == lkh.DimensionSaved) {
+    while ((t = t->Suc) != FirstNode);
+    if (Run == 1 && Dimension == DimensionSaved) {
         OrdinalTourCost = 0;
-        for (i = 1; i < lkh.Dimension; i++)
-            OrdinalTourCost += lkh.C(&lkh.NodeSet[i], &lkh.NodeSet[i + 1])
-                - lkh.NodeSet[i].Pi - lkh.NodeSet[i + 1].Pi;
-        OrdinalTourCost += lkh.C(&lkh.NodeSet[lkh.Dimension], &lkh.NodeSet[1])
-            - lkh.NodeSet[lkh.Dimension].Pi - lkh.NodeSet[1].Pi;
-        OrdinalTourCost /= lkh.Precision;
+        for (i = 1; i < Dimension; i++)
+            OrdinalTourCost += C(&NodeSet[i], &NodeSet[i + 1])
+                - NodeSet[i].Pi - NodeSet[i + 1].Pi;
+        OrdinalTourCost += C(&NodeSet[Dimension], &NodeSet[1])
+            - NodeSet[Dimension].Pi - NodeSet[1].Pi;
+        OrdinalTourCost /= Precision;
     }
-    lkh.BetterCost = PLUS_INFINITY;
-    if (lkh.MaxTrials > 0)
-        HashInitialize(lkh.HTable);
+    BetterCost = PLUS_INFINITY;
+    if (MaxTrials > 0)
+        HashInitialize(HTable);
     else {
-        lkh.Trial = 1;
+        Trial = 1;
         ChooseInitialTour();
     }
 
-    for (lkh.Trial = 1; lkh.Trial <= lkh.MaxTrials; lkh.Trial++) {
-        if (GetTime() - EntryTime >= lkh.TimeLimit) {
-            if (lkh.TraceLevel >= 1)
+    for (Trial = 1; Trial <= MaxTrials; Trial++) {
+        if (GetTime() - EntryTime >= TimeLimit) {
+            if (TraceLevel >= 1)
                 printff("*** Time limit exceeded ***\n");
             break;
         }
         /* Choose FirstNode at random */
-        if (lkh.Dimension == lkh.DimensionSaved)
-            lkh.FirstNode = &lkh.NodeSet[1 + Random() % lkh.Dimension];
+        if (Dimension == DimensionSaved)
+            FirstNode = &NodeSet[1 + Random() % Dimension];
         else
-            for (i = Random() % lkh.Dimension; i > 0; i--)
-                lkh.FirstNode = lkh.FirstNode->Suc;
+            for (i = Random() % Dimension; i > 0; i--)
+                FirstNode = FirstNode->Suc;
         ChooseInitialTour();
         Cost = LinKernighan();
-        if (lkh.FirstNode->BestSuc) {
+        if (FirstNode->BestSuc) {
             /* Merge tour with current best tour */
-            t = lkh.FirstNode;
-            while ((t = t->Next = t->BestSuc) != lkh.FirstNode);
+            t = FirstNode;
+            while ((t = t->Next = t->BestSuc) != FirstNode);
             Cost = MergeWithTour();
         }
-        if (lkh.Dimension == lkh.DimensionSaved && Cost >= OrdinalTourCost &&
-                lkh.BetterCost > OrdinalTourCost) {
+        if (Dimension == DimensionSaved && Cost >= OrdinalTourCost &&
+            BetterCost > OrdinalTourCost) {
             /* Merge tour with ordinal tour */
-            for (i = 1; i < lkh.Dimension; i++)
-                lkh.NodeSet[i].Next = &lkh.NodeSet[i + 1];
-            lkh.NodeSet[lkh.Dimension].Next = &lkh.NodeSet[1];
+            for (i = 1; i < Dimension; i++)
+                NodeSet[i].Next = &NodeSet[i + 1];
+            NodeSet[Dimension].Next = &NodeSet[1];
             Cost = MergeWithTour();
         }
-        if (Cost < lkh.BetterCost) {
-            if (lkh.TraceLevel >= 1) {
-                printff("* %d: Cost = " GainFormat, lkh.Trial, Cost);
-                if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
+        if (Cost < BetterCost) {
+            if (TraceLevel >= 1) {
+                printff("* %d: Cost = " GainFormat, Trial, Cost);
+                if (Optimum != MINUS_INFINITY && Optimum != 0)
                     printff(", Gap = %0.4f%%",
-                            100.0 * (Cost - lkh.Optimum) / lkh.Optimum);
+                            100.0 * (Cost - Optimum) / Optimum);
                 printff(", Time = %0.2f sec. %s\n",
                         fabs(GetTime() - EntryTime),
-                        Cost < lkh.Optimum ? "<" : Cost == lkh.Optimum ? "=" : "");
+                        Cost < Optimum ? "<" : Cost == Optimum ? "=" : "");
             }
-            lkh.BetterCost = Cost;
+            BetterCost = Cost;
             RecordBetterTour();
-            if (lkh.Dimension == lkh.DimensionSaved && lkh.BetterCost < lkh.BestCost)
-                WriteTour(lkh.OutputTourFileName, lkh.BetterTour, lkh.BetterCost);
-            if (lkh.StopAtOptimum && lkh.BetterCost == lkh.Optimum)
+            if (Dimension == DimensionSaved && BetterCost < BestCost)
+                WriteTour(OutputTourFileName, BetterTour, BetterCost);
+            if (StopAtOptimum && BetterCost == Optimum)
                 break;
             AdjustCandidateSet();
-            HashInitialize(lkh.HTable);
-            HashInsert(lkh.HTable, lkh.Hash, Cost);
-        } else if (lkh.TraceLevel >= 2)
+            HashInitialize(HTable);
+            HashInsert(HTable, Hash, Cost);
+        } else if (TraceLevel >= 2)
             printff("  %d: Cost = " GainFormat ", Time = %0.2f sec.\n",
-                    lkh.Trial, Cost, fabs(GetTime() - EntryTime));
+                    Trial, Cost, fabs(GetTime() - EntryTime));
         /* Record backbones if wanted */
-        if (lkh.Trial <= lkh.BackboneTrials && lkh.BackboneTrials < lkh.MaxTrials) {
+        if (Trial <= BackboneTrials && BackboneTrials < MaxTrials) {
             SwapCandidateSets();
             AdjustCandidateSet();
-            if (lkh.Trial == lkh.BackboneTrials) {
-                if (lkh.TraceLevel >= 1) {
-                    printff("# %d: Backbone candidates ->\n", lkh.Trial);
+            if (Trial == BackboneTrials) {
+                if (TraceLevel >= 1) {
+                    printff("# %d: Backbone candidates ->\n", Trial);
                     CandidateReport();
                 }
             } else
                 SwapCandidateSets();
         }
     }
-    if (lkh.BackboneTrials > 0 && lkh.BackboneTrials < lkh.MaxTrials) {
-        if (lkh.Trial > lkh.BackboneTrials ||
-            (lkh.Trial == lkh.BackboneTrials &&
-             (!lkh.StopAtOptimum || lkh.BetterCost != lkh.Optimum)))
+    if (BackboneTrials > 0 && BackboneTrials < MaxTrials) {
+        if (Trial > BackboneTrials ||
+            (Trial == BackboneTrials &&
+             (!StopAtOptimum || BetterCost != Optimum)))
             SwapCandidateSets();
-        t = lkh.FirstNode;
+        t = FirstNode;
         do {
             free(t->BackboneCandidateSet);
             t->BackboneCandidateSet = 0;
-        } while ((t = t->Suc) != lkh.FirstNode);
+        } while ((t = t->Suc) != FirstNode);
     }
-    t = lkh.FirstNode;
-    if (lkh.Norm == 0) {
+    t = FirstNode;
+    if (Norm == 0) {
         do
             t = t->BestSuc = t->Suc;
-        while (t != lkh.FirstNode);
+        while (t != FirstNode);
     }
     do
         (t->Suc = t->BestSuc)->Pred = t;
-    while ((t = t->BestSuc) != lkh.FirstNode);
-    if (lkh.Trial > lkh.MaxTrials)
-        lkh.Trial = lkh.MaxTrials;
+    while ((t = t->BestSuc) != FirstNode);
+    if (Trial > MaxTrials)
+        Trial = MaxTrials;
     ResetCandidateSet();
-    return lkh.BetterCost;
+    return BetterCost;
 }
 
 /*
@@ -141,10 +141,10 @@ GainType FindTour()
 
 static void SwapCandidateSets()
 {
-    Node *t = lkh.FirstNode;
+    Node *t = FirstNode;
     do {
         Candidate *Temp = t->CandidateSet;
         t->CandidateSet = t->BackboneCandidateSet;
         t->BackboneCandidateSet = Temp;
-    } while ((t = t->Suc) != lkh.FirstNode);
+    } while ((t = t->Suc) != FirstNode);
 }

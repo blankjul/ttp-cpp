@@ -30,7 +30,7 @@ static GainType BestKOptMoveRec(int k, GainType G0);
 
 Node *BestKOptMove(Node * t1, Node * t2, GainType * G0, GainType * Gain)
 {
-    K = lkh.Swaps == 0 ? lkh.MoveType : lkh.SubsequentMoveType;
+    K = Swaps == 0 ? MoveType : SubsequentMoveType;
     *Gain = 0;
     t[1] = t1;
     t[2] = t2;
@@ -85,11 +85,11 @@ static GainType BestKOptMoveRec(int k, GainType G0)
     /* Choose (t2,t3) as a candidate edge emanating from t2 */
     for (Nt2 = t2->CandidateSet; (t3 = Nt2->To); Nt2++) {
         if (t3 == t2->Pred || t3 == t2->Suc ||
-            ((G1 = G0 - Nt2->Cost) <= 0 && lkh.GainCriterionUsed &&
-                    lkh.ProblemType != HCP && lkh.ProblemType != HPP)
+            ((G1 = G0 - Nt2->Cost) <= 0 && GainCriterionUsed &&
+             ProblemType != HCP && ProblemType != HPP)
             || Added(t2, t3))
             continue;
-        if (++Breadth2 > lkh.MaxBreadth)
+        if (++Breadth2 > MaxBreadth)
             break;
         MarkAdded(t2, t3);
         t[2 * k - 1] = t3;
@@ -100,16 +100,16 @@ static GainType BestKOptMoveRec(int k, GainType G0)
             if (FixedOrCommon(t3, t4) || Deleted(t3, t4))
                 continue;
             t[2 * k] = t4;
-            G2 = G1 + lkh.C(t3, t4);
+            G2 = G1 + C(t3, t4);
             G3 = MINUS_INFINITY;
             if (t4 != t1 && !Forbidden(t4, t1) && !Added(t4, t1) &&
-                (!lkh.c || G2 - lkh.c(t4, t1) > 0) &&
-                (G3 = G2 - lkh.C(t4, t1)) > 0 && FeasibleKOptMove(k)) {
+                (!c || G2 - c(t4, t1) > 0) &&
+                (G3 = G2 - C(t4, t1)) > 0 && FeasibleKOptMove(k)) {
                 UnmarkAdded(t2, t3);
                 MakeKOptMove(k);
                 return G3;
             }
-            if (lkh.Backtracking && !Excludable(t3, t4))
+            if (Backtracking && !Excludable(t3, t4))
                 continue;
             MarkDeleted(t3, t4);
             G[2 * k - 1] = G2 - t4->Pi;
@@ -122,13 +122,13 @@ static GainType BestKOptMoveRec(int k, GainType G0)
                 incl[incl[1] = 2 * k] = 1;
             }
             if (t4 != t1 && !Forbidden(t4, t1) &&
-                k + 1 < lkh.NonsequentialMoveType &&
-                    lkh.PatchingC >= 2 && lkh.PatchingA >= 1 &&
-                (lkh.Swaps == 0 || lkh.SubsequentPatching)) {
+                k + 1 < NonsequentialMoveType &&
+                PatchingC >= 2 && PatchingA >= 1 &&
+                (Swaps == 0 || SubsequentPatching)) {
                 if (G3 == MINUS_INFINITY)
-                    G3 = G2 - lkh.C(t4, t1);
-                if ((lkh.PatchingCRestricted ? G3 > 0 && IsCandidate(t4, t1) :
-                     lkh.PatchingCExtended ? G3 > 0
+                    G3 = G2 - C(t4, t1);
+                if ((PatchingCRestricted ? G3 > 0 && IsCandidate(t4, t1) :
+                     PatchingCExtended ? G3 > 0
                      || IsCandidate(t4, t1) : G3 > 0)
                     && (Gain = PatchCycles(k, G3)) > 0) {
                     UnmarkAdded(t2, t3);
@@ -139,15 +139,15 @@ static GainType BestKOptMoveRec(int k, GainType G0)
             UnmarkDeleted(t3, t4);
             if (k == K && t4 != t1 && t3 != t1 && G3 <= 0 &&
                 !Added(t4, t1) &&
-                (!lkh.GainCriterionUsed || G2 - lkh.Precision >= t4->Cost)) {
-                if (!lkh.Backtracking || lkh.Swaps > 0) {
+                (!GainCriterionUsed || G2 - Precision >= t4->Cost)) {
+                if (!Backtracking || Swaps > 0) {
                     if ((G2 > BestG2 ||
                          (G2 == BestG2 && !Near(t3, t4) &&
                           Near(T[2 * K - 1], T[2 * K]))) &&
-                            lkh.Swaps < lkh.MaxSwaps &&
+                        Swaps < MaxSwaps &&
                         Excludable(t3, t4) && !InInputTour(t3, t4)) {
-                        if (lkh.RestrictedSearch && K > 2 &&
-                                lkh.ProblemType != HCP && lkh.ProblemType != HPP) {
+                        if (RestrictedSearch && K > 2 &&
+                            ProblemType != HCP && ProblemType != HPP) {
                             /* Ignore the move if the gain does not vary */
                             G[0] = G[2 * K - 2];
                             G[1] = G[2 * K - 1];
@@ -162,7 +162,7 @@ static GainType BestKOptMoveRec(int k, GainType G0)
                             memcpy(T + 1, t + 1, 2 * K * sizeof(Node *));
                         }
                     }
-                } else if (lkh.MaxSwaps > 0 && FeasibleKOptMove(K)) {
+                } else if (MaxSwaps > 0 && FeasibleKOptMove(K)) {
                     Node *SUCt1 = SUC(t1);
                     MakeKOptMove(K);
                     for (i = 1; i < 2 * k; i += 2) {
@@ -172,7 +172,7 @@ static GainType BestKOptMoveRec(int k, GainType G0)
                     for (i = 2; i < 2 * k; i += 2)
                         UnmarkAdded(t[i], t[i + 1]);
                     memcpy(tSaved + 1, t + 1, 2 * k * sizeof(Node *));
-                    while ((t4 = lkh.BestSubsequentMove(t1, t4, &G2, &Gain)));
+                    while ((t4 = BestSubsequentMove(t1, t4, &G2, &Gain)));
                     if (Gain > 0) {
                         UnmarkAdded(t2, t3);
                         return Gain;
@@ -188,7 +188,7 @@ static GainType BestKOptMoveRec(int k, GainType G0)
                         incl[incl[i] = i + 1] = i;
                     incl[incl[1] = 2 * K] = 1;
                     if (SUCt1 != SUC(t1))
-                        lkh.Reversed ^= 1;
+                        Reversed ^= 1;
                     T[2 * K] = 0;
                 }
             }
@@ -203,9 +203,9 @@ static GainType BestKOptMoveRec(int k, GainType G0)
                 if (t4 == t1 || Forbidden(t4, t1) || FixedOrCommon(t3, t4) ||
                     Added(t4, t1))
                     continue;
-                G2 = G1 + lkh.C(t3, t4);
-                if ((!lkh.c || G2 - lkh.c(t4, t1) > 0)
-                    && (Gain = G2 - lkh.C(t4, t1)) > 0) {
+                G2 = G1 + C(t3, t4);
+                if ((!c || G2 - c(t4, t1) > 0)
+                    && (Gain = G2 - C(t4, t1)) > 0) {
                     incl[incl[i ^ 1] = 1] = i ^ 1;
                     incl[incl[i] = 2 * k - 2] = i;
                     if (FeasibleKOptMove(k - 1)) {

@@ -29,7 +29,7 @@ namespace ttp {
             }
 
             double minCosts =  numeric_limits<double>::max();
-            Tour* bestTour;
+            std::vector<int> bestTour;
 
             do {
 
@@ -37,7 +37,7 @@ namespace ttp {
                 double costs = tsp.evaluate(t);
 
                 if (costs < minCosts) {
-                    bestTour = & t;
+                    bestTour = v;
                 }
 
                 //cout << t << " -> " << costs <<'\n';
@@ -45,7 +45,9 @@ namespace ttp {
             } while ( next_permutation(v.begin(),v.end()) && v [0] == 0);
 
 
-            return *bestTour;
+            Tour result(bestTour);
+
+            return result;
 
 
         }

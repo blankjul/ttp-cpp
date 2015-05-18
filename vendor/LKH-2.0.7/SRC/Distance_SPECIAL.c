@@ -30,4 +30,3 @@ int Distance_SPECIAL(Node * Na, Node * Nb)
         dy = GridSize - dy;
     return (int) (sqrt(dx * dx + dy * dy) + 0.5);
 }
-

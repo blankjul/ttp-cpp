@@ -46,8 +46,8 @@ void Flip(Node * t1, Node * t2, Node * t3)
     }
     /* Find the segment with the smallest number of nodes */
     if ((R = t2->Rank - t3->Rank) < 0)
-        R += lkh.Dimension;
-    if (2 * R > lkh.Dimension) {
+        R += Dimension;
+    if (2 * R > Dimension) {
         s1 = t3;
         t3 = t2;
         t2 = s1;
@@ -55,8 +55,8 @@ void Flip(Node * t1, Node * t2, Node * t3)
         t4 = t1;
         t1 = s1;
     }
-    Ct2t3 = lkh.C(t2, t3);
-    Ct4t1 = lkh.C(t4, t1);
+    Ct2t3 = C(t2, t3);
+    Ct4t1 = C(t4, t1);
     /* Swap segment (t3 --> t1) */
     R = t1->Rank;
     t1->Suc = 0;
@@ -74,12 +74,12 @@ void Flip(Node * t1, Node * t2, Node * t3)
     (t4->Suc = t1)->Pred = t4;
     t3->SucCost = t2->PredCost = Ct2t3;
     t1->PredCost = t4->SucCost = Ct4t1;
-    lkh.SwapStack[lkh.Swaps].t1 = t1;
-    lkh.SwapStack[lkh.Swaps].t2 = t2;
-    lkh.SwapStack[lkh.Swaps].t3 = t3;
-    lkh.SwapStack[lkh.Swaps].t4 = t4;
-    lkh.Swaps++;
-    lkh.Hash ^= (lkh.Rand[t1->Id] * lkh.Rand[t2->Id]) ^
-        (lkh.Rand[t3->Id] * lkh.Rand[t4->Id]) ^
-        (lkh.Rand[t2->Id] * lkh.Rand[t3->Id]) ^ (lkh.Rand[t4->Id] * lkh.Rand[t1->Id]);
+    SwapStack[Swaps].t1 = t1;
+    SwapStack[Swaps].t2 = t2;
+    SwapStack[Swaps].t3 = t3;
+    SwapStack[Swaps].t4 = t4;
+    Swaps++;
+    Hash ^= (Rand[t1->Id] * Rand[t2->Id]) ^
+        (Rand[t3->Id] * Rand[t4->Id]) ^
+        (Rand[t2->Id] * Rand[t3->Id]) ^ (Rand[t4->Id] * Rand[t1->Id]);
 }

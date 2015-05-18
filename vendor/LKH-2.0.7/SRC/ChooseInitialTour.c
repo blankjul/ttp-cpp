@@ -37,61 +37,61 @@ void ChooseInitialTour()
     Candidate *NN;
     int Alternatives, Count = 0, i;
 
-    if (lkh.KickType > 0 && lkh.Kicks > 0 && lkh.Trial > 1) {
-        for (Last = lkh.FirstNode; (N = Last->BestSuc) != lkh.FirstNode; Last = N)
+    if (KickType > 0 && Kicks > 0 && Trial > 1) {
+        for (Last = FirstNode; (N = Last->BestSuc) != FirstNode; Last = N)
             Follow(N, Last);
-        for (i = 1; i <= lkh.Kicks; i++)
-            KSwapKick(lkh.KickType);
+        for (i = 1; i <= Kicks; i++)
+            KSwapKick(KickType);
         return;
     }
-    if (lkh.Trial == 1 && (!lkh.FirstNode->InitialSuc || lkh.InitialTourFraction < 1)) {
-        if (lkh.InitialTourAlgorithm == BORUVKA ||
-            lkh.InitialTourAlgorithm == GREEDY ||
-            lkh.InitialTourAlgorithm == MOORE ||
-            lkh.InitialTourAlgorithm == NEAREST_NEIGHBOR ||
-            lkh.InitialTourAlgorithm == QUICK_BORUVKA ||
-            lkh.InitialTourAlgorithm == SIERPINSKI) {
-            GainType Cost = lkh.InitialTourAlgorithm == MOORE ||
-                lkh.InitialTourAlgorithm == SIERPINSKI ?
-                SFCTour(lkh.InitialTourAlgorithm) : GreedyTour();
-            if (lkh.MaxTrials == 0) {
-                lkh.BetterCost = Cost;
+    if (Trial == 1 && (!FirstNode->InitialSuc || InitialTourFraction < 1)) {
+        if (InitialTourAlgorithm == BORUVKA ||
+            InitialTourAlgorithm == GREEDY ||
+            InitialTourAlgorithm == MOORE ||
+            InitialTourAlgorithm == NEAREST_NEIGHBOR ||
+            InitialTourAlgorithm == QUICK_BORUVKA ||
+            InitialTourAlgorithm == SIERPINSKI) {
+            GainType Cost = InitialTourAlgorithm == MOORE ||
+                InitialTourAlgorithm == SIERPINSKI ?
+                SFCTour(InitialTourAlgorithm) : GreedyTour();
+            if (MaxTrials == 0) {
+                BetterCost = Cost;
                 RecordBetterTour();
             }
-            if (!lkh.FirstNode->InitialSuc)
+            if (!FirstNode->InitialSuc)
                 return;
         }
     }
 
 Start:
     /* Mark all nodes as "not chosen" by setting their V field to zero */
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         N->V = 0;
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
 
-    /* Choose lkh.FirstNode without two incident fixed or common candidate edges */
+    /* Choose FirstNode without two incident fixed or common candidate edges */
     do {
         if (FixedOrCommonCandidates(N) < 2)
             break;
     }
-    while ((N = N->Suc) != lkh.FirstNode);
-    lkh.FirstNode = N;
+    while ((N = N->Suc) != FirstNode);
+    FirstNode = N;
 
     /* Move nodes with two incident fixed or common candidate edges in 
-       front of lkh.FirstNode */
-    for (Last = lkh.FirstNode->Pred; N != Last; N = NextN) {
+       front of FirstNode */
+    for (Last = FirstNode->Pred; N != Last; N = NextN) {
         NextN = N->Suc;
         if (FixedOrCommonCandidates(N) == 2)
             Follow(N, Last);
     }
 
-    /* Mark lkh.FirstNode as chosen */
-    lkh.FirstNode->V = 1;
-    N = lkh.FirstNode;
+    /* Mark FirstNode as chosen */
+    FirstNode->V = 1;
+    N = FirstNode;
 
     /* Loop as long as not all nodes have been chosen */
-    while (N->Suc != lkh.FirstNode) {
+    while (N->Suc != FirstNode) {
         FirstAlternative = 0;
         Alternatives = 0;
         Count++;
@@ -104,8 +104,8 @@ Start:
                 FirstAlternative = NextN;
             }
         }
-        if (Alternatives == 0 && lkh.FirstNode->InitialSuc && lkh.Trial == 1 &&
-            Count <= lkh.InitialTourFraction * lkh.Dimension) {
+        if (Alternatives == 0 && FirstNode->InitialSuc && Trial == 1 &&
+            Count <= InitialTourFraction * Dimension) {
             /* Case B */
             for (NN = N->CandidateSet; (NextN = NN->To); NN++) {
                 if (!NextN->V && InInitialTour(N, NextN)) {
@@ -115,8 +115,8 @@ Start:
                 }
             }
         }
-        if (Alternatives == 0 && lkh.Trial > 1 &&
-                lkh.ProblemType != HCP && lkh.ProblemType != HPP) {
+        if (Alternatives == 0 && Trial > 1 &&
+            ProblemType != HCP && ProblemType != HPP) {
             /* Case C */
             for (NN = N->CandidateSet; (NextN = NN->To); NN++) {
                 if (!NextN->V && FixedOrCommonCandidates(NextN) < 2 &&
@@ -142,10 +142,10 @@ Start:
             /* Case E (actually not really a random choice) */
             NextN = N->Suc;
             while ((FixedOrCommonCandidates(NextN) == 2 || Forbidden(N, NextN))
-                   && NextN->Suc != lkh.FirstNode)
+                   && NextN->Suc != FirstNode)
                 NextN = NextN->Suc;
             if (FixedOrCommonCandidates(NextN) == 2 || Forbidden(N, NextN)) {
-                lkh.FirstNode = lkh.FirstNode->Suc;
+                FirstNode = FirstNode->Suc;
                 goto Start;
             }
         } else {
@@ -163,18 +163,18 @@ Start:
         N->V = 1;
     }
     if (Forbidden(N, N->Suc)) {
-        lkh.FirstNode = lkh.FirstNode->Suc;
+        FirstNode = FirstNode->Suc;
         goto Start;
     }
-    if (lkh.MaxTrials == 0) {
+    if (MaxTrials == 0) {
         GainType Cost = 0;
-        N = lkh.FirstNode;
+        N = FirstNode;
         do
-            Cost += lkh.C(N, N->Suc) - N->Pi - N->Suc->Pi;
-        while ((N = N->Suc) != lkh.FirstNode);
-        Cost /= lkh.Precision;
-        if (Cost < lkh.BetterCost) {
-            lkh.BetterCost = Cost;
+            Cost += C(N, N->Suc) - N->Pi - N->Suc->Pi;
+        while ((N = N->Suc) != FirstNode);
+        Cost /= Precision;
+        if (Cost < BetterCost) {
+            BetterCost = Cost;
             RecordBetterTour();
         }
     }
@@ -192,7 +192,7 @@ static int FixedOrCommonCandidates(Node * N)
 
     if (N->FixedTo2)
         return 2;
-    if (!N->FixedTo1 && lkh.MergeTourFiles < 2)
+    if (!N->FixedTo1 && MergeTourFiles < 2)
         return 0;
     for (NN = N->CandidateSet; NN->To; NN++)
         if (FixedOrCommon(N, NN->To))

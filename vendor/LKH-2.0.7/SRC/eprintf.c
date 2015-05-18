@@ -9,8 +9,8 @@ void eprintf(const char *fmt, ...)
 {
     va_list args;
 
-    if (lkh.LastLine && *lkh.LastLine)
-        fprintf(stderr, "\n%s\n", lkh.LastLine);
+    if (LastLine && *LastLine)
+        fprintf(stderr, "\n%s\n", LastLine);
     fprintf(stderr, "\n*** Error ***\n");
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);

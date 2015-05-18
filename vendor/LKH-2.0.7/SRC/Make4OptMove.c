@@ -10,7 +10,7 @@ Make4OptMove(Node * t1, Node * t2, Node * t3, Node * t4,
              Node * t5, Node * t6, Node * t7, Node * t8, int Case)
 {
     if (SUC(t1) != t2)
-        lkh.Reversed ^= 1;
+        Reversed ^= 1;
     switch (Case) {
     case 1:
     case 2:
@@ -47,4 +47,3 @@ Make4OptMove(Node * t1, Node * t2, Node * t3, Node * t4,
         eprintf("Make4OptMove: Internal error");
     }
 }
-

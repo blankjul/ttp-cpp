@@ -1,4 +1,4 @@
-PROBLEM_FILE = ../berlin52.tsp
+PROBLEM_FILE = ../../../data/tsplib/bayg29.tsp
 OPTIMUM = 378032
 MOVE_TYPE = 5
 PATCHING_C = 3

@@ -13,9 +13,9 @@ int Distance_1(Node * Na, Node * Nb)
 
 int Distance_ATSP(Node * Na, Node * Nb)
 {
-    int n = lkh.DimensionSaved;
+    int n = DimensionSaved;
     if ((Na->Id <= n) == (Nb->Id <= n))
-        return lkh.M;
+        return M;
     if (abs(Na->Id - Nb->Id) == n)
         return 0;
     return Na->Id < Nb->Id ? Na->C[Nb->Id - n] : Nb->C[Na->Id - n];

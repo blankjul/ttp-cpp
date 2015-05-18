@@ -32,58 +32,58 @@ void SolveKarpSubproblems()
 
     /* Compute upper bound for the original problem */
     GlobalBestCost = 0;
-    N = lkh.FirstNode;
+    N = FirstNode;
     do {
         if (!Fixed(N, N->SubproblemSuc))
-            GlobalBestCost += lkh.Distance(N, N->SubproblemSuc);
+            GlobalBestCost += Distance(N, N->SubproblemSuc);
         N->Subproblem = 0;
     }
-    while ((N = N->SubproblemSuc) != lkh.FirstNode);
-    if (lkh.TraceLevel >= 1) {
-        if (lkh.TraceLevel >= 2)
+    while ((N = N->SubproblemSuc) != FirstNode);
+    if (TraceLevel >= 1) {
+        if (TraceLevel >= 2)
             printff("\n");
         printff("*** Karp partitioning *** [Cost = " GainFormat "]\n",
                 GlobalBestCost);
     }
-    if (lkh.WeightType == GEO || lkh.WeightType == GEOM ||
-            lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS) {
-        N = lkh.FirstNode;
+    if (WeightType == GEO || WeightType == GEOM || 
+        WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS) {
+        N = FirstNode;
         do {
             N->Xc = N->X;
             N->Yc = N->Y;
             N->Zc = N->Z;
-            if (lkh.WeightType == GEO || lkh.WeightType == GEO_MEEUS)
+            if (WeightType == GEO || WeightType == GEO_MEEUS)
                 GEO2XYZ(N->Xc, N->Yc, &N->X, &N->Y, &N->Z);
             else
                 GEOM2XYZ(N->Xc, N->Yc, &N->X, &N->Y, &N->Z);
-        } while ((N = N->SubproblemSuc) != lkh.FirstNode);
-        lkh.CoordType = THREED_COORDS;
+        } while ((N = N->SubproblemSuc) != FirstNode);
+        CoordType = THREED_COORDS;
     }
-    KDTree = BuildKDTree(lkh.SubproblemSize);
-    if (lkh.WeightType == GEO || lkh.WeightType == GEOM ||
-            lkh.WeightType == GEO_MEEUS || lkh.WeightType == GEOM_MEEUS) {
-        N = lkh.FirstNode;
+    KDTree = BuildKDTree(SubproblemSize);
+    if (WeightType == GEO || WeightType == GEOM ||
+        WeightType == GEO_MEEUS || WeightType == GEOM_MEEUS) {
+        N = FirstNode;
         do {
             N->X = N->Xc;
             N->Y = N->Yc;
             N->Z = N->Zc;
-        } while ((N = N->SubproblemSuc) != lkh.FirstNode);
-        lkh.CoordType = TWOD_COORDS;
+        } while ((N = N->SubproblemSuc) != FirstNode);
+        CoordType = TWOD_COORDS;
     }
 
     Subproblems = 0;
-    CalculateSubproblems(0, lkh.Dimension - 1);
+    CalculateSubproblems(0, Dimension - 1);
     CurrentSubproblem = 0;
-    KarpPartition(0, lkh.Dimension - 1);
+    KarpPartition(0, Dimension - 1);
     free(KDTree);
     printff("\nCost = " GainFormat, GlobalBestCost);
-    if (lkh.Optimum != MINUS_INFINITY && lkh.Optimum != 0)
+    if (Optimum != MINUS_INFINITY && Optimum != 0)
         printff(", Gap = %0.4f%%",
-                100.0 * (GlobalBestCost - lkh.Optimum) / lkh.Optimum);
+                100.0 * (GlobalBestCost - Optimum) / Optimum);
     printff(", Time = %0.2f sec. %s\n", fabs(GetTime() - EntryTime),
-            GlobalBestCost < lkh.Optimum ? "<" : GlobalBestCost ==
-                                                     lkh.Optimum ? "=" : "");
-    if (lkh.SubproblemBorders && Subproblems > 1)
+            GlobalBestCost < Optimum ? "<" : GlobalBestCost ==
+            Optimum ? "=" : "");
+    if (SubproblemBorders && Subproblems > 1)
         SolveSubproblemBorderProblems(Subproblems, &GlobalBestCost);
 }
 
@@ -94,14 +94,14 @@ void SolveKarpSubproblems()
 
 static void KarpPartition(int start, int end)
 {
-    if (end - start + 1 <= lkh.SubproblemSize) {
+    if (end - start + 1 <= SubproblemSize) {
         int i;
         CurrentSubproblem++;
         for (i = start; i <= end; i++)
             KDTree[i]->Subproblem = CurrentSubproblem;
         OldGlobalBestCost = GlobalBestCost;
         SolveSubproblem(CurrentSubproblem, Subproblems, &GlobalBestCost);
-        if (lkh.SubproblemsCompressed && GlobalBestCost == OldGlobalBestCost)
+        if (SubproblemsCompressed && GlobalBestCost == OldGlobalBestCost)
             SolveCompressedSubproblem(CurrentSubproblem, Subproblems,
                                       &GlobalBestCost);
     } else {
@@ -118,7 +118,7 @@ static void KarpPartition(int start, int end)
 
 static void CalculateSubproblems(int start, int end)
 {
-    if (end - start + 1 <= lkh.SubproblemSize)
+    if (end - start + 1 <= SubproblemSize)
         Subproblems++;
     else {
         int mid = (start + end) / 2;

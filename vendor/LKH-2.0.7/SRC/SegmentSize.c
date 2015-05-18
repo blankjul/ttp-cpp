@@ -28,23 +28,23 @@ int SegmentSize(Node * ta, Node * tb)
     Pa = ta->Parent;
     Pb = tb->Parent;
     if (Pa == Pb) {
-        int n = lkh.Reversed == Pa->Reversed ? tb->Rank - ta->Rank :
+        int n = Reversed == Pa->Reversed ? tb->Rank - ta->Rank :
             ta->Rank - tb->Rank;
-        return (n < 0 ? n + lkh.Dimension : n) + 1;
+        return (n < 0 ? n + Dimension : n) + 1;
     }
     nLeft =
-            lkh.Reversed ==
+        Reversed ==
         Pa->Reversed ? Pa->Last->Rank - ta->Rank : ta->Rank -
         Pa->First->Rank;
     if (nLeft < 0)
         nLeft += Pa->Size;
-    nMid = !lkh.Reversed ? Pb->Rank - Pa->Rank : Pa->Rank - Pb->Rank;
+    nMid = !Reversed ? Pb->Rank - Pa->Rank : Pa->Rank - Pb->Rank;
     if (nMid < 0)
-        nMid += lkh.Groups;
-    nMid = nMid == 2 ? (!lkh.Reversed ? Pa->Suc : Pa->Pred)->Size
-        : (nMid - 1) * lkh.GroupSize;
+        nMid += Groups;
+    nMid = nMid == 2 ? (!Reversed ? Pa->Suc : Pa->Pred)->Size
+        : (nMid - 1) * GroupSize;
     nRight =
-            lkh.Reversed ==
+        Reversed ==
         Pb->Reversed ? tb->Rank -
         Pb->First->Rank : Pb->Last->Rank - tb->Rank;
     if (nRight < 0)

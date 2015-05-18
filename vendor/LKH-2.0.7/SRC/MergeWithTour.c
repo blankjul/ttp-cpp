@@ -36,12 +36,12 @@ GainType MergeWithTour()
     GainType Cost1 = 0, Cost2 = 0, Gain, OldCost1, MinGain = 0;
     Node *N, *NNext, *N1, *N2, *MinN1, *MinN2, *First = 0, *Last;
 
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         N->Suc->Pred = N->Next->Prev = N;
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     do {
-        Cost1 += N->Cost = lkh.C(N, N->Suc) - N->Pi - N->Suc->Pi;
+        Cost1 += N->Cost = C(N, N->Suc) - N->Pi - N->Suc->Pi;
         if ((N->Suc == N->Prev || N->Suc == N->Next) &&
             (N->Pred == N->Prev || N->Pred == N->Next))
             N->V = 0;
@@ -50,14 +50,14 @@ GainType MergeWithTour()
             NewDimension++;
             First = N;
         }
-    } while ((N = N->Suc) != lkh.FirstNode);
+    } while ((N = N->Suc) != FirstNode);
     if (NewDimension == 0)
-        return Cost1 / lkh.Precision;
+        return Cost1 / Precision;
     do {
         Cost2 += N->NextCost = N->Next == N->Pred ? N->Pred->Cost :
             N->Next == N->Suc ? N->Cost :
-            lkh.C(N, N->Next) - N->Pi - N->Next->Pi;
-    } while ((N = N->Suc) != lkh.FirstNode);
+            C(N, N->Next) - N->Pi - N->Next->Pi;
+    } while ((N = N->Suc) != FirstNode);
     OldCost1 = Cost1;
 
     /* Shrink the tours. 
@@ -183,13 +183,13 @@ GainType MergeWithTour()
 
     if (Cost1 < Cost2 ? !Improved1 : Cost2 < Cost1 ? !Improved2 :
         !Improved1 || !Improved2)
-        return OldCost1 / lkh.Precision;
+        return OldCost1 / Precision;
 
     /* Expand the best tour into a full tour */
-    N = lkh.FirstNode;
+    N = FirstNode;
     do
         N->Mark = 0;
-    while ((N = N->Suc) != lkh.FirstNode);
+    while ((N = N->Suc) != FirstNode);
     N = First;
     N->Mark = N;
     do {
@@ -208,11 +208,11 @@ GainType MergeWithTour()
             N->OldSuc = First;
         N->Mark = N;
     } while ((N = N->OldSuc) != First);
-    lkh.Hash = 0;
+    Hash = 0;
     do {
         N->OldSuc->Pred = N;
-        lkh.Hash ^= lkh.Rand[N->Id] * lkh.Rand[N->OldSuc->Id];
+        Hash ^= Rand[N->Id] * Rand[N->OldSuc->Id];
     }
     while ((N = N->Suc = N->OldSuc) != First);
-    return (Cost1 <= Cost2 ? Cost1 : Cost2) / lkh.Precision;
+    return (Cost1 <= Cost2 ? Cost1 : Cost2) / Precision;
 }

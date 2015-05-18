@@ -28,13 +28,13 @@ void MinimumSpanningTree(int Sparse)
     Candidate *NBlue;
     int d;
 
-    Blue = N = lkh.FirstNode;
+    Blue = N = FirstNode;
     Blue->Dad = 0;              /* The root of the tree has no father */
     if (Sparse && Blue->CandidateSet) {
         /* The graph is sparse */
         /* Insert all nodes in the heap */
         Blue->Loc = 0;          /* A blue node is not in the heap */
-        while ((N = N->Suc) != lkh.FirstNode) {
+        while ((N = N->Suc) != FirstNode) {
             N->Dad = Blue;
             N->Cost = N->Rank = INT_MAX;
             HeapLazyInsert(N);
@@ -76,23 +76,23 @@ void MinimumSpanningTree(int Sparse)
         }
     } else {
         /* The graph is dense */
-        while ((N = N->Suc) != lkh.FirstNode)
+        while ((N = N->Suc) != FirstNode)
             N->Cost = INT_MAX;
         /* Loop as long as there a more nodes to include in the tree */
-        while ((N = Blue->Suc) != lkh.FirstNode) {
+        while ((N = Blue->Suc) != FirstNode) {
             int Min = INT_MAX;
             /* Update all non-blue nodes (the successors of Blue in the list) */
             do {
                 if (FixedOrCommon(Blue, N)) {
                     N->Dad = Blue;
-                    N->Cost = lkh.D(Blue, N);
+                    N->Cost = D(Blue, N);
                     NextBlue = N;
                     Min = INT_MIN;
                 } else {
                     if (!Blue->FixedTo2 && !N->FixedTo2 &&
                         !Forbidden(Blue, N) &&
-                        (!lkh.c || lkh.c(Blue, N) < N->Cost) &&
-                        (d = lkh.D(Blue, N)) < N->Cost) {
+                        (!c || c(Blue, N) < N->Cost) &&
+                        (d = D(Blue, N)) < N->Cost) {
                         N->Cost = d;
                         N->Dad = Blue;
                     }
@@ -102,7 +102,7 @@ void MinimumSpanningTree(int Sparse)
                     }
                 }
             }
-            while ((N = N->Suc) != lkh.FirstNode);
+            while ((N = N->Suc) != FirstNode);
             Follow(NextBlue, Blue);
             Blue = NextBlue;
         }

@@ -24,10 +24,10 @@ Node **BuildKDTree(int Cutoff)
     Node *N;
 
     cutoff = Cutoff >= 1 ? Cutoff : 1;
-    assert(KDTree = (Node **) malloc(lkh.Dimension * sizeof(Node *)));
-    for (i = 0, N = lkh.FirstNode; i < lkh.Dimension; i++, N = N->Suc)
+    assert(KDTree = (Node **) malloc(Dimension * sizeof(Node *)));
+    for (i = 0, N = FirstNode; i < Dimension; i++, N = N->Suc)
         KDTree[i] = N;
-    BuildSubKDTree(0, lkh.Dimension - 1);
+    BuildSubKDTree(0, Dimension - 1);
     return KDTree;
 }
 
@@ -113,7 +113,7 @@ static char FindMaxSpread(int start, int end)
     Min[1] = Max[1] = N->Y;
     Min[2] = Max[2] = N->Z;
     for (i = start + 1; i <= end; i++) {
-        for (axis = lkh.CoordType == THREED_COORDS ? 2 : 1; axis >= 0; axis--) {
+        for (axis = CoordType == THREED_COORDS ? 2 : 1; axis >= 0; axis--) {
             N = KDTree[i];
             if (Coord(N, axis) < Min[axis])
                 Min[axis] = Coord(N, axis);
@@ -122,8 +122,8 @@ static char FindMaxSpread(int start, int end)
         }
     }
     if (Max[0] - Min[0] > Max[1] - Min[1])
-        return lkh.CoordType != THREED_COORDS
+        return CoordType != THREED_COORDS
             || Max[0] - Min[0] > Max[2] - Min[2] ? 0 : 2;
-    return lkh.CoordType != THREED_COORDS
+    return CoordType != THREED_COORDS
         || Max[1] - Min[1] > Max[2] - Min[2] ? 1 : 2;
 }

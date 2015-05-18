@@ -9,7 +9,7 @@
 #include <fstream>
 #include <algorithm>
 #include <combo.h>
-#include "wrapper/lkh.h"
+#include "wrapper/lkh_wrapper.h"
 
 
 

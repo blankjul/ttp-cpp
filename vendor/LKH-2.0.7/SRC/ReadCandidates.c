@@ -26,30 +26,30 @@ int ReadCandidates(int MaxCandidates)
     Node *From, *To;
     int Dimension, i, f, Id, Alpha, Count;
 
-    if (lkh.CandidateFiles == 0 ||
-        (lkh.CandidateFiles == 1 &&
-         !(CandidateFile = fopen(lkh.CandidateFileName[0], "r"))))
+    if (CandidateFiles == 0 ||
+        (CandidateFiles == 1 &&
+         !(CandidateFile = fopen(CandidateFileName[0], "r"))))
         return 0;
-    Dimension = lkh.ProblemType != ATSP ? lkh.DimensionSaved : 2 * lkh.DimensionSaved;
-    for (f = 0; f < lkh.CandidateFiles; f++) {
-        if (lkh.CandidateFiles >= 2 &&
-            !(CandidateFile = fopen(lkh.CandidateFileName[f], "r")))
+    Dimension = ProblemType != ATSP ? DimensionSaved : 2 * DimensionSaved;
+    for (f = 0; f < CandidateFiles; f++) {
+        if (CandidateFiles >= 2 &&
+            !(CandidateFile = fopen(CandidateFileName[f], "r")))
             eprintf("Cannot open CANDIDATE_FILE: \"%s\"",
-                    lkh.CandidateFileName[f]);
-        if (lkh.TraceLevel >= 1)
+                    CandidateFileName[f]);
+        if (TraceLevel >= 1)
             printff("Reading CANDIDATE_FILE: \"%s\" ... ",
-                    lkh.CandidateFileName[f]);
+                    CandidateFileName[f]);
         fscanint(CandidateFile, &i);
         if (i != Dimension)
             eprintf("CANDIDATE_FILE \"%s\" does not match problem",
-                    lkh.CandidateFileName[f]);
+                    CandidateFileName[f]);
         while (fscanint(CandidateFile, &Id) == 1 && Id != -1) {
             assert(Id >= 1 && Id <= Dimension);
-            From = &lkh.NodeSet[Id];
+            From = &NodeSet[Id];
             fscanint(CandidateFile, &Id);
             assert(Id >= 0 && Id <= Dimension);
             if (Id > 0)
-                From->Dad = &lkh.NodeSet[Id];
+                From->Dad = &NodeSet[Id];
             assert(From != From->Dad);
             fscanint(CandidateFile, &Count);
             assert(Count >= 0 && Count < Dimension);
@@ -59,13 +59,13 @@ int ReadCandidates(int MaxCandidates)
             for (i = 0; i < Count; i++) {
                 fscanint(CandidateFile, &Id);
                 assert(Id >= 1 && Id <= Dimension);
-                To = &lkh.NodeSet[Id];
+                To = &NodeSet[Id];
                 fscanint(CandidateFile, &Alpha);
-                AddCandidate(From, To, lkh.D(From, To), Alpha);
+                AddCandidate(From, To, D(From, To), Alpha);
             }
         }
         fclose(CandidateFile);
-        if (lkh.TraceLevel >= 1)
+        if (TraceLevel >= 1)
             printff("done\n");
     }
     ResetCandidateSet();
