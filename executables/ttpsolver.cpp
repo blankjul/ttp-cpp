@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <tclap/CmdLine.h>
-#include "generator/generator.h"
+#include "experiments/generator.h"
 #include <fstream>
 #include "solver/solver.h"
 #include "solver/ttpmo_exhaustive_solver.h"

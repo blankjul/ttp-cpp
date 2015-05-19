@@ -4,7 +4,7 @@
 #include "solver/tsp_lin_kernighan.h"
 #include "gtest/gtest.h"
 #include "examples/test_examples.h"
-#include "generator/generator.h"
+#include "experiments/generator.h"
 #include "solver/knp_combo.h"
 
 using namespace ttp;
@@ -18,7 +18,7 @@ using namespace ttp;
 TEST(KNPComboSolver, solve2) {
 
 
-    KnapsackProblem knp = ProblemFactory::createKNP(10000, 1000,ProblemFactory::KnapsackType::STRONLY_CORRELATED, 10);
+    KnapsackProblem knp = ProblemFactory::createKNP(10000, 1000,ProblemFactory::KnapsackType::STRONGLY_CORRELATED, 10);
     KNPComboSolver knpsolver;
     knpsolver.solve(knp);
 

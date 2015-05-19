@@ -25,7 +25,7 @@ namespace ttp {
 
     bool Map::set(int i, int j, double value) {
         // there is no distance between the city itself
-        if (i == n ) return false;
+        if (i == j ) return false;
         // out of bounds
         else if (i >= n or j >= n) return false;
         else {

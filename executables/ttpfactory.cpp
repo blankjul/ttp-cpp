@@ -4,7 +4,7 @@ using namespace ttp;
 
 int main(int argc, char* argv[]) {
 
-    Factory::create();
+    ExperimentFactory::create();
 
     return 0;
 

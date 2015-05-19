@@ -104,9 +104,9 @@ namespace ttp {
         ReadProblemFromFile(pf);
 
         // search for the best tour
-        // -> HINT: The temporary file is closed by the LKH lib!
         findBest();
 
+        fclose(pf);
 
         return BestTour;
     }

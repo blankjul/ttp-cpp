@@ -2,11 +2,12 @@
 #include "gtest/gtest.h"
 #include <sstream>
 #include <iostream>
-#include <generator/generator.h>
+#include "experiments/generator.h"
 #include <model/map.h>
 #include <model/item.h>
 #include <iostream>
 #include <model/knapsack.h>
+#include <cmath>
 
 
 
@@ -35,7 +36,6 @@ TEST(GeneratorTest, TSPRandomSeed) {
 }
 
 
-
 /**
  * Test if exeception is thrown when file does not exist
  */
@@ -50,42 +50,94 @@ TEST(GeneratorTest, TSPWrongInputFormat) {
     ASSERT_THROW(ttp::ProblemFactory::createTSPFromFile("README.md"), std::runtime_error);
 }
 
+
 /**
  * Read twice
  */
 TEST(GeneratorTest, TSPReadTwice) {
-    //ttp::ProblemFactory::createTSPFromFile("../data/tsplib/bier127.tsp");
+    ttp::ProblemFactory::createTSPFromFile("../data/tsplib/bier127.tsp");
+    ttp::ProblemFactory::createTSPFromFile("../data/tsplib/bier127.tsp");
 }
 
 
 /**
- * Test if we itemsCount is negative
+ * Check if the behavior is correct if the bounds are 10 and the strong abs would be zero! 10 * 0.01 as int is zero.
+ * But it is set to 1!
  */
-TEST(GeneratorTest, KNPCountItemsNegative) {
-    ASSERT_THROW(ttp::ProblemFactory::createKNP(-1, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED,1), std::runtime_error);
+TEST(GeneratorTest, TestDeviationForDifferentBounds) {
+
+    unsigned int bounds = 1000;
+    ttp::KnapsackProblem knp = ttp::ProblemFactory::createKNP(100, 10, ttp::ProblemFactory::KnapsackType::STRONGLY_CORRELATED, 200);
+
+    auto func = []( std::vector<ttp::ItemPtr> items) {
+        for(auto entry : items) {
+            int deviation = 1;
+            int x = abs(entry->getWeight() - entry->getValue());
+            EXPECT_TRUE(x <= deviation);
+        }
+    };
+
+    func(knp.getItems());
+
 }
 
 
 /**
- * Test if uppper bound is negative
+ * Check wether the maximal capicity is correct or not!
  */
-TEST(GeneratorTest, KNPUperBoundNegative) {
-    ASSERT_THROW(ttp::ProblemFactory::createKNP(1, -1, ttp::ProblemFactory::KnapsackType::UNCORRELATED,1), std::runtime_error);
+TEST(GeneratorTest, TestMaximalCapacity) {
+
+    unsigned int bounds = 1000;
+
+    ttp::KnapsackProblem knp = ttp::ProblemFactory::createKNP(100, bounds, ttp::ProblemFactory::KnapsackType::WEAKLY_CORRELATED, 200);
+
+    int sum = 0;
+    for(auto entry : knp.getItems()) {
+        sum += entry->getWeight();
+    }
+
+    EXPECT_TRUE(knp.getMaxWeight() <= 0.8 * sum && knp.getMaxWeight() >= 0.2 * sum);
+
+
 }
 
+
+
 /**
- * Test if we create multiple ttps
+ * Check if the Knapsack type correlation weak and strong is working or not!
  */
-TEST(GeneratorTest, KNPMultipleCreating) {
-   auto list = ttp::ProblemFactory::createMultipleKNP(100, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED, 10);EXPECT_EQ(10, list.size());
+TEST(GeneratorTest, TestDeviationForKnpCreator) {
+
+    unsigned int bounds = 1000;
+
+
+    auto func = []( std::vector<ttp::ItemPtr> items, double perc, int bounds) {
+        for(auto entry : items) {
+            int deviation = perc * bounds;
+            int x = abs(entry->getWeight() - entry->getValue());
+            EXPECT_TRUE(x <= deviation);
+        }
+    };
+
+    // test weak
+    ttp::KnapsackProblem knp = ttp::ProblemFactory::createKNP(10, bounds, ttp::ProblemFactory::KnapsackType::WEAKLY_CORRELATED, 200);
+    func(knp.getItems(), 0.1, bounds);
+
+    // test strong
+     knp = ttp::ProblemFactory::createKNP(10, bounds, ttp::ProblemFactory::KnapsackType::STRONGLY_CORRELATED, 200);
+    func(knp.getItems(), 0.01, bounds);
+
 }
+
+
 
 
 /**
  * Example test case that compares the pisinger create with this result.
+ * The uncorrelated case was not change at all!
  */
 TEST(GeneratorTest, ExampleCase) {
-    ttp::KnapsackProblem knp = ttp::ProblemFactory::createKNP(10, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED, 10, 200);
+    ttp::KnapsackProblem knp = ttp::ProblemFactory::createKNP(10, 1000, ttp::ProblemFactory::KnapsackType::UNCORRELATED, 200);
 
     // just compare the first three instances
     auto list = knp.getItems();
@@ -117,7 +169,6 @@ TEST(GeneratorTest, ExampleCase) {
     EXPECT_EQ(563, list[1]->getValue());
     EXPECT_EQ(165, list[1]->getWeight());
 
-
 }
 
 
@@ -125,9 +176,8 @@ TEST(GeneratorTest, ExampleCase) {
 /**
  * Test for loading a tsp file
  */
-/*
+
 TEST(GeneratorTest, TSPLIBBerlin) {
-    //ttp::TravellingSalesmanProblem tsp = ttp::ProblemFactory::createTSP("../test/generator/berlin4.tsp");
 
     ttp::TravellingSalesmanProblem tsp =  ttp::ProblemFactory::createTSPFromFile("../test/generator/berlin4.tsp");
 
@@ -150,8 +200,7 @@ TEST(GeneratorTest, TSPLIBBerlin) {
         }
     }
 
-
 }
-*/
+
 
 

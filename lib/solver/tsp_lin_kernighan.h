@@ -18,6 +18,7 @@ namespace ttp {
         Tour solve(TravellingSalesmanProblem & tsp);
 
 
+        bool verbose = false;
 
 
 

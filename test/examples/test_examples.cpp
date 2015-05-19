@@ -1,5 +1,5 @@
 #include "test_examples.h"
-#include "generator/generator.h"
+#include "experiments/generator.h"
 
 
 using namespace ttp;

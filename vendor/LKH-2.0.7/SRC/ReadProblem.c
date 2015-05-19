@@ -396,7 +396,7 @@ void ReadProblemFromFile(FILE* file)
     } else
         if (TraceLevel >= 1) printff("PROBLEM_FILE = %s\n",
                 ProblemFileName ? ProblemFileName : "");
-    fclose(ProblemFile);
+
     if (InitialTourFileName)
         ReadTour(InitialTourFileName, &InitialTourFile);
     if (InputTourFileName)

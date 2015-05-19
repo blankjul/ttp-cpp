@@ -29,7 +29,7 @@ class Value;
 Usage:
 \code
   using namespace Json;
-  void writeToStdout(StreamWriter::Factory const& factory, Value const& value) {
+  void writeToStdout(StreamWriter::ExperimentFactory const& factory, Value const& value) {
     std::unique_ptr<StreamWriter> const writer(
       factory.newStreamWriter());
     writer->write(value, &std::cout);
@@ -60,7 +60,7 @@ public:
      * \throw std::exception if something goes wrong (e.g. invalid settings)
      */
     virtual StreamWriter* newStreamWriter() const = 0;
-  };  // Factory
+  };  // ExperimentFactory
 };  // StreamWriter
 
 /** \brief Write into stringstream, then return string, for convenience.

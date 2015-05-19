@@ -275,7 +275,7 @@ public:
      * \throw std::exception if something goes wrong (e.g. invalid settings)
      */
     virtual CharReader* newCharReader() const = 0;
-  };  // Factory
+  };  // ExperimentFactory
 };  // CharReader
 
 /** \brief Build a CharReader implementation.

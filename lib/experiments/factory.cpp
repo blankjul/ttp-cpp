@@ -1,7 +1,7 @@
 
 
 #include "factory.h"
-#include "generator/generator.h"
+#include "generator.h"
 #include <sstream>
 #include <string>
 #include <fstream>
@@ -9,7 +9,7 @@
 using namespace ttp;
 
 
-void Factory::create() {
+void ExperimentFactory::create() {
 
     vector<int> cities {5,10,20,50,100};
 
@@ -30,8 +30,7 @@ void Factory::create() {
 
             // create knp with enough items -> first city has no items..
             int numOfItems = numberOfItemsPerCity[j] * (tsp.count() -  1);
-            KnapsackProblem knp = ProblemFactory::createKNP(numOfItems, 1000, ProblemFactory::KnapsackType::STRONLY_CORRELATED, 1, seed);
-
+            KnapsackProblem knp = ProblemFactory::createKNP(numOfItems, 1000, ProblemFactory::KnapsackType::STRONGLY_CORRELATED, seed);
 
             // create ttp and print the json to file
             TravellingThiefProblem ttp(tsp.getMap(), knp.getItems(), numberOfItemsPerCity[j], knp.getMaxWeight());

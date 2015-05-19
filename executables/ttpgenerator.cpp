@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <tclap/CmdLine.h>
-#include "generator/generator.h"
+#include "experiments/generator.h"
 #include <fstream>
 #include <cursesm.h>
 #include "algorithm"
@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
         if (seed == -1) seed = time(NULL);
 
         TravellingSalesmanProblem tsp = ProblemFactory::createTSPFromFile(filePath);
-        KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity * tsp.count(), range, type, c, seed);
+        KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity * tsp.count(), range, type, seed);
         TravellingThiefProblem ttp = ProblemFactory::createTTP(tsp, knp, itemPerCity);
 
 
