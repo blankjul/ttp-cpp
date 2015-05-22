@@ -3,10 +3,10 @@
 #include <sstream>
 #include <iostream>
 #include "experiments/generator.h"
-#include <model/map.h>
-#include <model/item.h>
+#include "model/Map.h"
+#include "model/Item.h"
 #include <iostream>
-#include <model/knapsack.h>
+#include "model/Knapsack.h"
 #include <cmath>
 
 
@@ -28,8 +28,8 @@ TEST(GeneratorTest, TSPRandom) {
 TEST(GeneratorTest, TSPRandomSeed) {
     auto m1 = ttp::ProblemFactory::createTSP(5, 100).getMap();
     auto m2 = ttp::ProblemFactory::createTSP(5, 100).getMap();
-    for (int i = 0; i < m1->count(); ++i) {
-        for (int j = 0; j < m1->count(); ++j) {
+    for (int i = 0; i < m1->size(); ++i) {
+        for (int j = 0; j < m1->size(); ++j) {
             EXPECT_EQ(m1->get(i,j), m2->get(i,j));
         }
     }
@@ -179,7 +179,7 @@ TEST(GeneratorTest, ExampleCase) {
 
 TEST(GeneratorTest, TSPLIBBerlin) {
 
-    ttp::TravellingSalesmanProblem tsp =  ttp::ProblemFactory::createTSPFromFile("../test/generator/berlin4.tsp");
+    ttp::TSP tsp =  ttp::ProblemFactory::createTSPFromFile("../test/generator/berlin4.tsp");
 
     ttp::MapPtr m = tsp.getMap();
 
@@ -193,8 +193,8 @@ TEST(GeneratorTest, TSPLIBBerlin) {
 
     expected.set(2,3,604);
 
-    for (int i = 0; i < m->count(); ++i) {
-        for (int j = 0; j < m->count(); ++j)
+    for (int i = 0; i < m->size(); ++i) {
+        for (int j = 0; j < m->size(); ++j)
         {
             EXPECT_EQ(expected.get(i,j), m->get(i,j));
         }

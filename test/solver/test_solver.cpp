@@ -3,7 +3,6 @@
 #include "solver/ttpso_exhaustive_solver.h"
 #include "solver/tsp_lin_kernighan.h"
 #include "gtest/gtest.h"
-#include "examples/test_examples.h"
 #include "experiments/generator.h"
 #include "solver/knp_combo.h"
 
@@ -12,7 +11,7 @@ using namespace ttp;
 
 
 
-
+/*
 
 
 TEST(KNPComboSolver, solve2) {
@@ -33,7 +32,7 @@ TEST(TTPExhaustiveSolver, solveSO) {
 
 
     MapPtr m = exampleMap();
-    TravellingThiefProblem ttps(m,3);
+    TravellingThiefProblemDeptr ttps(m,3);
     vector<pair<ItemPtr, int>> items = exampleItemsLarge();
     ttps.setRentingRate(1);
     ttps.addItems(items);
@@ -56,7 +55,7 @@ TEST(TTPExhaustiveSolver, solveMO) {
     MapPtr m = exampleMap();
     vector<pair<ItemPtr, int>> items = exampleItemsSmall();
 
-    TravellingThiefProblem ttpmo(m, 3);
+    TravellingThiefProblemDeptr ttpmo(m, 3);
     ttpmo.setDroppingRate(0.9);
     ttpmo.addItems(items);
 
@@ -65,3 +64,4 @@ TEST(TTPExhaustiveSolver, solveMO) {
 
 
 }
+*/

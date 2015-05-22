@@ -1,17 +1,18 @@
 #include "solver/tsp_lin_kernighan.h"
 #include "solver/tsp_exhaustive_solver.h"
-#include "examples/test_examples.h"
 #include "gtest/gtest.h"
 #include "experiments/generator.h"
 using namespace ttp;
 
 
+/*
+
 
 TEST(TSPLinKernighanSolver, Bier127) {
-    //TravellingSalesmanProblem tsp = ExperimentFactory::createTSPFromFile("../test/generator/berlin4.tsp");
+    //TSP tsp = ExperimentFactory::createTSPFromFile("../test/generator/berlin4.tsp");
 
-    TravellingSalesmanProblem tsp = ProblemFactory::createTSPFromFile("../data/tsplib/bier127.tsp");
-    //TravellingSalesmanProblem tsp = ExperimentFactory::createTSP(20);
+    TSP tsp = ProblemFactory::createTSPFromFile("../data/tsplib/bier127.tsp");
+    //TSP tsp = ExperimentFactory::createTSP(20);
 
     TSPLinKernighanSolver s;
 
@@ -26,7 +27,7 @@ TEST(TSPLinKernighanSolver, Bier127) {
 TEST(TSP, EvaluateTTPRoute) {
 
     MapPtr mPtr = exampleMap();
-    TravellingSalesmanProblem tsp(mPtr);
+    TSP tsp(mPtr);
     TSPExhaustiveSolver s;
     s.solve(tsp);
     Tour result = s.solve(tsp);
@@ -36,7 +37,7 @@ TEST(TSP, EvaluateTTPRoute) {
 
 
 TEST(TSPLinKernighanSolver, berlin52) {
-    TravellingSalesmanProblem tsp = ProblemFactory::createTSPFromFile("../data/tsplib/berlin52.tsp");
+    TSP tsp = ProblemFactory::createTSPFromFile("../data/tsplib/berlin52.tsp");
 
 
     TSPLinKernighanSolver s;
@@ -52,3 +53,4 @@ cout << tsp.evaluate(t);
 
     //EXPECT_EQ(0, m.get(1,1));
 }
+*/

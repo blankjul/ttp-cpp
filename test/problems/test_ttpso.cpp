@@ -1,22 +1,19 @@
 #include <iostream>
-#include "problems/ttp.h"
+#include "problems/TravellingThiefProblemDeptr.h"
 #include "gtest/gtest.h"
 #include <memory>
 #include <vector>
-#include "examples/test_examples.h"
 
 
 
-using namespace ttp;
 
-
-
+/*
 TEST(TTPSO, Evaluate1) {
 
     MapPtr m = exampleMap();
     vector<pair<ItemPtr, int>> items = exampleItemsLarge();
 
-    TravellingThiefProblem ttpso(m, 3);
+    TravellingThiefProblemDeptr ttpso(m, 3);
     ttpso.addItems(items);
 
 
@@ -40,7 +37,7 @@ TEST(TTPSO, Evaluate2) {
     MapPtr m = exampleMap();
     vector<pair<ItemPtr, int>> items = exampleItemsLarge();
 
-    TravellingThiefProblem ttpso(m, 3);
+    TravellingThiefProblemDeptr ttpso(m, 3);
     ttpso.addItems(items);
 
 
@@ -57,3 +54,4 @@ TEST(TTPSO, Evaluate2) {
     EXPECT_NEAR(50, targetValue, 0.01);
 
 }
+*/
