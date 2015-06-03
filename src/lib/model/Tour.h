@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <memory>
 
 
 using namespace std;
@@ -57,6 +58,7 @@ namespace ttp {
          */
         Tour getSymmetrical() const;
 
+
         //! return the vector representation
         const vector<int> &getVector() const;
 
@@ -67,6 +69,32 @@ namespace ttp {
 
 
     };
+
+    //! TourPtr for fast access
+    typedef shared_ptr<Tour> TourPtr;
+
+
+
+}
+
+namespace std
+{
+
+    //! hash function for the tours.
+    template <>
+    struct hash<ttp::Tour>
+    {
+        size_t operator()(const ttp::Tour& t) const
+        {
+            std::size_t seed = 0;
+            for(int i : t.getVector()) {
+                const int value = i;
+                seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            }
+            return seed;
+        }
+    };
+
 }
 
 

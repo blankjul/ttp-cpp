@@ -44,3 +44,18 @@ TEST_F(TourTest, IsValidFalseCauseWrongStartIndex) {
     Tour t = createTour(vector<int> {1,2,3,4});
     EXPECT_FALSE(t.isValid());
 }
+
+
+TEST_F(TourTest, SameHashValue) {
+    unordered_set<Tour> s;
+    s.insert(createTour(vector<int> {0,1,2,3}));
+    s.insert(createTour(vector<int> {0,1,2,3}));
+    EXPECT_EQ(1, s.size());
+}
+
+TEST_F(TourTest, DifferentHashValues) {
+    unordered_set<Tour> s;
+    s.insert(createTour(vector<int> {0,1,2,3}));
+    s.insert(createTour(vector<int> {1,0,2,3}));
+    EXPECT_EQ(2, s.size());
+}

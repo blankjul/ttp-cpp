@@ -2,10 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include <tclap/CmdLine.h>
-#include "experiments/generator.h"
+#include "experiment/Generator.h"
 #include <fstream>
-#include "solver/solver.h"
-#include "solver/ttpmo_exhaustive_solver.h"
 
 
 using namespace ttp;
@@ -41,8 +39,9 @@ int main(int argc, char **argv) {
 
         ifstream jsonFile (filePath);
 
-        TravellingThiefProblemDeptr ttp = TravellingThiefProblemDeptr::fromJson(jsonFile);
+        //TravellingThiefProblemDeptr ttp = TravellingThiefProblemDeptr::fromJson(jsonFile);
 
+        /*
 
         shared_ptr<TTPMOSolver> s = NULL;
 
@@ -54,6 +53,7 @@ int main(int argc, char **argv) {
         if (s == NULL) throw runtime_error("Algorithm not found.");
 
         s->solve(ttp);
+         */
 
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions

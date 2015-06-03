@@ -16,7 +16,6 @@ namespace ttp {
     class TTPOutput {
 
 
-
         friend bool operator==( TTPOutput const &left, TTPOutput const &right ) {
             return left.value == right.value && left.time == right.time;
         }
@@ -30,7 +29,8 @@ namespace ttp {
         }
 
         friend std::ostream & operator<<(std::ostream &s, TTPOutput const &sol) {
-            s << "{time:" << sol.time << ",value:" << sol.value << "}";
+            //cout.precision(15);
+            s << fixed << "{time:" << sol.getTime() << ",value:" << sol.getValue() << "}";
             return s;
         }
 
@@ -50,7 +50,7 @@ namespace ttp {
 
 
         bool isDominatedBy(TTPOutput other) const {
-            return other.time <=  getTime() && other.value >=  getValue() && *this != other;
+            return other.time <= time && other.value >= value && *this != other;
         }
 
 
@@ -77,5 +77,7 @@ namespace ttp {
 
 
 }
+
+
 
 #endif //TRAVELLING_THIEF_PROBLEM_TTPSOLUTION_H

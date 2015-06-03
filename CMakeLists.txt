@@ -5,7 +5,7 @@ project(${PROJECT_NAME_STR} C CXX)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
 
-
+include_directories(${CMAKE_SOURCE_DIR}/vendor/jMetalCpp/src)
 
 ADD_SUBDIRECTORY(vendor)
 ADD_SUBDIRECTORY(test)

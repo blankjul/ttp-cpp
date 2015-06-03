@@ -1,6 +1,7 @@
 #ifndef TRAVELLING_THIEF_PROBLEM_ALGORITHM_H
 #define TRAVELLING_THIEF_PROBLEM_ALGORITHM_H
 
+using namespace std;
 
 namespace ttp {
 

@@ -11,5 +11,11 @@ public:
         TSP tsp(mPtr);
         return tsp;
     }
+
+    MOTTP getMOTTP() {
+        ThiefMapPtr mPtr = exampleThiefMap();
+        MOTTP ttp(mPtr, 3);
+        return ttp;
+    }
 };
 

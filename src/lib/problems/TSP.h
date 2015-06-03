@@ -15,7 +15,7 @@ namespace ttp {
      * This class represents the travelling salesman problem. The shortest tour of a map that contains
      * each city only once should be found.
      */
-    class TSP : public Problem<Tour, double> {
+    class TSP : public AbstractProblem<Tour, double> {
 
 
     private:

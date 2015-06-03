@@ -5,7 +5,8 @@
 #include <algorithm>
 #include <iostream>
 
-#include "experiments/generator.h"
+#include "experiment/Generator.h"
+#include "experiment/Factory.h"
 
 #include "model/Item.h"
 #include "model/Knapsack.h"
@@ -19,9 +20,13 @@
 #include "problems/TTPOutput.h"
 #include "problems/TSP.h"
 #include "problems/TTP.h"
+#include "problems/TTPOutputSet.h"
 
 #include "tsp/TSPExhaustive.h"
 #include "tsp/TSPAlgorithm.h"
+#include "tsp/TSPLinKernighan.h"
+#include "ttpmo/Exhaustive.h"
+
 
 
 #include "gmock/gmock.h"
@@ -45,7 +50,6 @@ public:
 
     MapPtr exampleMap() {
         MapPtr m = make_shared<Map>(4);
-        // set the weights
         m->set(0,1,5);
         m->set(0,2,6);
         m->set(0,3,6);
@@ -53,6 +57,13 @@ public:
         m->set(1,3,6);
         m->set(2,3,4);
         return m;
+    }
+
+    ThiefMapPtr exampleThiefMap() {
+        ThiefMapPtr mPtr =  make_shared<ThiefMap>(exampleMap());
+        vector<pair<int,ItemPtr>> v = exampleItemsSmall();
+        mPtr->insert(v.begin(), v.end());
+        return mPtr;
     }
 
     vector<pair<int,ItemPtr>> exampleItemsLarge() {
@@ -76,10 +87,6 @@ public:
         return items;
     }
 
-
-    TSP berlin52() {
-        return ProblemFactory::createTSPFromFile("../data/tsplib/berlin52.tsp");
-    }
 
 
 

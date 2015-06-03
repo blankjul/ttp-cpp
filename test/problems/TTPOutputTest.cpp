@@ -42,6 +42,14 @@ TEST_F(TTPOutputTest, isEqualFalse) {
     EXPECT_FALSE(sol1 == sol2);
 }
 
+TEST_F(TTPOutputTest, isDominatingTrue) {
+    // time, value
+    TTPOutput sol1(2,2);
+    TTPOutput sol2(1,3);
+    EXPECT_TRUE(sol1.isDominating(sol2));
+}
+
+
 TEST_F(TTPOutputTest, isIndifferent) {
     // time, value
     TTPOutput sol1(12,4);

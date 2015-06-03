@@ -4,4 +4,5 @@ add_subdirectory(knpgenerator)
 add_subdirectory(combo)
 add_subdirectory(jsoncpp)
 add_subdirectory(tsplibreader)
+add_subdirectory(jMetalCpp)
 

@@ -14,6 +14,7 @@ public:
         ThiefMapPtr tm = make_shared<ThiefMap>(exampleMap());
         auto items = exampleItemsSmall();
         tm->insert(items.begin(), items.end());
+
         MOTTP ttp(tm, 3);
         return ttp;
     }

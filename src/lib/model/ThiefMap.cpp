@@ -34,19 +34,27 @@ void ThiefMap::insert(int city, ItemPtr ptr) {
 
 
 
-vector<ItemPtr> ThiefMap::getItemsAtCity(int city) {
+vector<ItemPtr> ThiefMap::getItemsAtCity(int city) const{
     auto it = items.find(city);
     if (it == items.end()) return vector<ItemPtr>();
     else return vector<ItemPtr>(it->second);
 }
 
-double ThiefMap::calcTime(int i, int j, double speed) {
+double ThiefMap::calcTime(int i, int j, double speed)const {
     return get(i,j) / speed;
 }
 
 
-int ThiefMap::getCityOfItem(ItemPtr ptr) {
+int ThiefMap::getCityOfItem(ItemPtr ptr) const{
     auto it = itemsmap.find(ptr);
     if (it == itemsmap.end()) return -1;
     else return it->second;
+}
+
+int ThiefMap::itemSize() const {
+    return itemslist.size();
+}
+
+const vector<ItemPtr> &ThiefMap::getItems() const {
+    return itemslist;
 }

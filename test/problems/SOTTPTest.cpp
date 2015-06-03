@@ -17,7 +17,6 @@ public:
 
 
 
-
 TEST_F(SOTTPTest, CalculateTargetValue) {
     SOTTP ttp = getTTP();
     TTPInput input = TTPInput::create(ttp.getMap(), vector<int>{0,2,1,3}, vector<int>{0,1,0,1,0,0});

@@ -3,8 +3,10 @@
 ###############################################################################
 include_directories(${CMAKE_SOURCE_DIR}/test)
 include_directories(${CMAKE_SOURCE_DIR}/src/lib)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/src/algorithm)
-
+include_directories(${CMAKE_SOURCE_DIR}/vendor/generators)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/jsoncpp/include)
 
 
 
@@ -27,6 +29,9 @@ include_directories(${GMOCK_ROOT}/gtest/include)
 # Build and Link
 ###############################################################################
 file(GLOB_RECURSE SOURCES *.cpp)
+
+
+
 add_executable(tests
     ${SOURCES}
 )
@@ -34,10 +39,12 @@ add_executable(tests
 target_link_libraries(tests
     ttp
     algorithm
+    experiment
     gmock
     gtest
 )
 
+add_test(NAME tests COMMAND tests)
 
 
 

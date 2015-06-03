@@ -1,6 +1,6 @@
 #include "Map.h"
 #include <limits>
-#include <iomanip>
+
 
 using namespace ttp;
 
@@ -39,18 +39,6 @@ int Map::size() const {
     return costs.size();
 }
 
-
-std::ostream &operator<<(std::ostream &s, Map const &m) {
-    s.precision(2);
-    for (int i = 0; i < m.size(); ++i) {
-        for (int j = 0; j < m.size(); ++j) {
-            int value = m.get(i, j);
-            s << setfill(' ') << setw(6) <<  value << " ";
-        }
-        s << '\n';
-    }
-    return s;
-}
 
 vector<double>& Map::operator[]( int index) {
     return costs[index];

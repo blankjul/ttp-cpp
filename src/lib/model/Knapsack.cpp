@@ -41,14 +41,22 @@ namespace ttp {
     }
 
 
-    std::ostream & operator<<(std::ostream & s, Knapsack const &k) {
-        s << "Knapsack[size:" << k.size() << ",weight:" << k.getWeight() << ",value:" << k.getValue() << "]\n";
+    bool operator==( Knapsack const& lhs, Knapsack const& rhs) {
+        return lhs.getItems() == rhs.getItems();
+    }
+    bool operator!=( Knapsack const& lhs, Knapsack const& rhs) {
+        return lhs.getItems() != rhs.getItems();
+    }
+    std::ostream & operator<<(std::ostream &s, Knapsack const &k) {
+        s << "Knapsack[size:" << k.size() << ",weight:" << k.getWeight() << ",value:" << k.getValue() << "]";
+        /*
         auto items = k.getItems();
         unordered_set<::std::shared_ptr<::ttp::Item>>::const_iterator it = items.begin();
         int counter = 0;
         for(; it != items.end(); ++it) {
             s << counter++ << *it << "\n";
         }
+         */
     }
 
 

@@ -9,6 +9,9 @@ public:
 };
 
 
+
+
+
 TEST_F(KnapsackTest, AddItemAndCheckWeightAndValue) {
     k.add(createItem(2,1));
     k.add(createItem(5,4));
@@ -67,5 +70,21 @@ TEST_F(KnapsackTest, PickItemsPickOneWithIntVectorAsInput) {
     vector<ItemPtr> items (3,createItem(1,1));
     k.fill(items.begin(), items.end(), b.begin(), b.end());
     EXPECT_EQ(1, k.size());
+}
+
+
+TEST_F(KnapsackTest, SameItemsAndEqual) {
+    vector<ItemPtr> items (3,createItem(1,1));
+    Knapsack k1 (items.begin(), items.end());
+    Knapsack k2 (items.begin(), items.end());
+    EXPECT_TRUE(k1 == k2);
+}
+
+TEST_F(KnapsackTest, SameItemsAndNotEqual) {
+    vector<ItemPtr> items (3,createItem(1,1));
+    Knapsack k1 (items.begin(), items.end());
+    vector<ItemPtr> items2 (3,createItem(2,1));
+    Knapsack k2 (items2.begin(), items2.end());
+    EXPECT_FALSE(k1 == k2);
 }
 

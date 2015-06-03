@@ -3,6 +3,7 @@
 
 #include "Item.h"
 #include <unordered_set>
+#include <vector>
 
 
 
@@ -20,17 +21,24 @@ namespace ttp {
     class Knapsack {
 
 
-
-        friend std::ostream & operator<<(std::ostream &, Knapsack const &);
-
     public:
 
         /**
          * Create an empty Knapsack without any items.
          */
-        Knapsack() : weight(0), value(0) {};
+        Knapsack() : weight(0), value(0) { };
 
-        template <typename ItemIterator, typename BooleanIterator>
+
+        Knapsack(vector<ItemPtr> v) : Knapsack() {
+            for (ItemPtr ptr : v) add(ptr);
+        }
+
+        template<typename ItemIterator>
+        Knapsack(ItemIterator begin, ItemIterator end) : Knapsack() {
+            for (ItemIterator it = begin; it != end; ++it) add(*it);
+        }
+
+        template<typename ItemIterator, typename BooleanIterator>
         Knapsack(ItemIterator ibegin, ItemIterator iend, BooleanIterator bbegin, BooleanIterator bend) : Knapsack() {
             fill(ibegin, iend, bbegin, bend);
         }
@@ -76,13 +84,11 @@ namespace ttp {
 
 
         //! Picks items according to the input
-        template <typename ItemIterator, typename BooleanIterator>
-        void fill(ItemIterator ibegin, ItemIterator iend, BooleanIterator bbegin, BooleanIterator bend)
-        {
+        template<typename ItemIterator, typename BooleanIterator>
+        void fill(ItemIterator ibegin, ItemIterator iend, BooleanIterator bbegin, BooleanIterator bend) {
             BooleanIterator bit = bbegin;
             ItemIterator iit = ibegin;
-            for (; iit != iend && bit != bend; ++iit, ++bit)
-            {
+            for (; iit != iend && bit != bend; ++iit, ++bit) {
                 if (*bit) add(*iit);
             }
             if (!(bit == bend && iit == iend)) throw runtime_error("Length error: different container sizes!");
@@ -91,14 +97,27 @@ namespace ttp {
     private:
 
 
-        unordered_set<ItemPtr> items; /*!< Set of all the items which were picked */
+        unordered_set<ItemPtr> items;
+        /*!< Set of all the items which were picked */
 
-        double weight; /*!< current weight */
+        double weight;
+        /*!< current weight */
 
         double value; /*!< current value */
 
 
     };
+
+    bool operator==( Knapsack const& lhs, Knapsack const& rhs);
+    bool operator!=( Knapsack const& lhs, Knapsack const& rhs);
+    std::ostream & operator<<(std::ostream &s, Knapsack const &k);
+
+
+
+
+    //! TourPtr for fast access
+    typedef shared_ptr<Knapsack> KnapsackPtr;
+
 }
 
 

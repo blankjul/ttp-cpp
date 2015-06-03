@@ -25,7 +25,7 @@ namespace ttp {
      *
      */
     template <typename Input, typename Output>
-    class TTP : public Problem<Input,Output> {
+    class TTP : public AbstractProblem<Input,Output> {
 
 
     protected:
@@ -92,7 +92,10 @@ namespace ttp {
             Knapsack k = input.getKnapsack();
             Tour t = input.getTour();
 
-            if (!t.isValid()) throw runtime_error("The given tour is not valid!");
+            if (!t.isValid()) {
+                cout << t;
+                throw runtime_error("The given tour is not valid!");
+            }
 
             // initialize the values
             double currentTime = 0;

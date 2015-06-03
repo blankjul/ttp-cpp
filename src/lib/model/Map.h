@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <iomanip>
 #include "Tour.h"
 
 
@@ -29,7 +30,17 @@ namespace ttp {
     class Map {
 
 
-        friend std::ostream & operator<<(std::ostream & s, Map const & t);
+        friend std::ostream & operator<<(std::ostream & s, Map const & m) {
+            s.precision(2);
+            for (int i = 0; i < m.size(); ++i) {
+                for (int j = 0; j < m.size(); ++j) {
+                    int value = m.get(i, j);
+                    s << setfill(' ') << setw(6) <<  value << " ";
+                }
+                s << '\n';
+            }
+            return s;
+        }
 
 
     protected:

@@ -14,7 +14,6 @@ using namespace std;
 namespace ttp {
 
 
-
     class MOTTP : public TTP<TTPInput,TTPOutput> {
 
 

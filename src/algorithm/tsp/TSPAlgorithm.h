@@ -6,6 +6,9 @@
 #include "problems/TSP.h"
 
 
+using namespace std;
+using namespace ttp;
+
 
 namespace ttp {
 

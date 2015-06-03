@@ -7,7 +7,7 @@ namespace ttp {
 
 
    template <typename Input, typename Output>
-   class Problem
+   class AbstractProblem
    {
 
       virtual Output evaluate(Input&) = 0;

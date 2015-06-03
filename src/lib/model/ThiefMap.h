@@ -48,15 +48,19 @@ namespace ttp{
         };
 
         //! returns an vector of all items at that city
-        vector<ItemPtr> getItemsAtCity(int);
+        vector<ItemPtr> getItemsAtCity(int) const;
 
         //! calculate the travelling time from i to j regarding the current speed
-        double calcTime(int i, int j, double speed);
+        double calcTime(int i, int j, double speed) const;
 
         //! returns the city where is item is located
-        int getCityOfItem(ItemPtr ptr);
+        int getCityOfItem(ItemPtr ptr) const;
 
+        //! returns how many items are distributed
+        int itemSize() const;
 
+        //! returns all the items as a vector
+        const vector<ItemPtr> &getItems() const;
 
     };
 

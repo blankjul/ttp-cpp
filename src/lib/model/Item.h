@@ -14,9 +14,7 @@ namespace ttp {
     /*! This class represents an item that has a weight and a value. */
     class Item {
 
-
         friend std::ostream & operator<<(std::ostream &, Item const &);
-
 
     public:
 

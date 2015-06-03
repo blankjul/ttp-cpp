@@ -20,7 +20,7 @@ namespace ttp {
      * a weight value. The knapsack has a maximum weight which is the constraint for maxmizing the overall value
      * of the knapsack.
      */
-    class KnapsackProblem : public Problem<Knapsack, double>{
+    class KnapsackProblem : public AbstractProblem<Knapsack, double>{
 
 
     private:

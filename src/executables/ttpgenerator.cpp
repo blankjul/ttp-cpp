@@ -2,14 +2,12 @@
 #include <iostream>
 #include <algorithm>
 #include <tclap/CmdLine.h>
-#include "experiments/generator.h"
 #include <fstream>
 #include <cursesm.h>
-#include "algorithm"
-#include "problems/TravellingThiefProblemDeptr.h"
 
 
-using namespace ttp;
+
+//using namespace ttp;
 using namespace std;
 
 int main(int argc, char **argv) {
@@ -53,6 +51,7 @@ int main(int argc, char **argv) {
         cmd.parse(argc, argv);
 
 
+        /*
         // parse all the values
         std::string filePath = argFilePath.getValue();
         int itemPerCity = argItemsCount.getValue();
@@ -67,6 +66,7 @@ int main(int argc, char **argv) {
         TSP tsp = ProblemFactory::createTSPFromFile(filePath);
         KnapsackProblem knp = ProblemFactory::createKNP(itemPerCity * tsp.count(), range, type, seed);
 
+         */
 
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
